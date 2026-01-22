@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.synapseevent.controller.UserController">
+    <TableView fx:id="userTable" onMouseClicked="#selectUser">
+        <columns>
+            <TableColumn fx:id="idColumn" text="ID" />
+            <TableColumn fx:id="emailColumn" text="Email" />
+            <TableColumn fx:id="nomColumn" text="Nom" />
+            <TableColumn fx:id="prenomColumn" text="Prenom" />
+            <TableColumn fx:id="roleColumn" text="Role" />
+            <TableColumn fx:id="enterpriseColumn" text="Enterprise" />
+        </columns>
+    </TableView>
+    <HBox>
+        <TextField fx:id="emailField" promptText="Email" />
+        <TextField fx:id="nomField" promptText="Nom" />
+        <TextField fx:id="prenomField" promptText="Prenom" />
+        <TextField fx:id="roleIdField" promptText="Role ID" />
+        <TextField fx:id="enterpriseIdField" promptText="Enterprise ID" />
+    </HBox>
+    <HBox>
+        <Button text="Add" onAction="#addUser" />
+        <Button text="Update" onAction="#updateUser" />
+        <Button text="Delete" onAction="#deleteUser" />
+    </HBox>
+</VBox>
