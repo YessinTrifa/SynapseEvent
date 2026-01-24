@@ -9,11 +9,12 @@ SynapseEvent is built using modern Java technologies and follows best practices 
 ## Features
 
 - **User Management**: Create and manage users with different roles and associated entreprises
-- **Event Management**: Define events with details like name, type, description, base price, and maximum capacity
-- **Reservation System**: Handle event reservations with participant tracking
-- **Payment Processing**: Manage payments for reservations
-- **Participant Management**: Track and manage event participants
-- **Options Management**: Configure additional options for events
+- **Event Modules**: Manage various types of events including:
+  - Paddle Events
+  - Formation Events
+  - Partying Events
+  - Team Building Events
+  - Anniversary Events
 - **Dashboard**: Centralized view for managing all aspects of the system
 
 ## Architecture
@@ -24,39 +25,33 @@ The application implements a clean, layered architecture that promotes separatio
 
 1. **Entity Layer** (`entities/`): Data model classes representing business entities
    - `User.java` - User information with role and entreprise associations
-   - `Event.java` - Event details including pricing and capacity
-   - `Reservation.java` - Reservation records
-   - `Payment.java` - Payment transactions
-   - `Participant.java` - Event participants
    - `Role.java` - User roles
    - `Entreprise.java` - Company/organization information
-   - `Option.java` - Event options
+   - `PaddleEvent.java` - Paddle event details
+   - `FormationEvent.java` - Formation event details
+   - `PartyingEvent.java` - Partying event details
+   - `TeamBuildingEvent.java` - Team building event details
+   - `AnniversaryEvent.java` - Anniversary event details
 
-2. **Data Access Layer** (`dao/`): Database interaction classes
-   - Each entity has a corresponding DAO class (e.g., `EventDAO.java`)
-   - Implements CRUD operations using JDBC
+2. **Service Layer** (`service/`): Business logic and data access encapsulation
+   - Service classes (e.g., `UserService.java`) that handle both business logic and database operations
+   - Implements CRUD operations using JDBC directly
    - Uses prepared statements for security
-   - Singleton connection management via `MaConnection`
-
-3. **Service Layer** (`service/`): Business logic encapsulation
-   - Service classes (e.g., `EventService.java`) that orchestrate DAO operations
-   - Implements business rules and validation
    - Provides a clean API for controllers
 
-4. **Presentation Layer** (`controller/`): JavaFX UI controllers
+3. **Presentation Layer** (`controller/`): JavaFX UI controllers
    - FXML-based controllers for each view
    - Handle user interactions and update the UI
    - Coordinate between services and views
 
-5. **Utility Layer** (`utils/`): Helper classes
+4. **Utility Layer** (`utils/`): Helper classes
    - `MaConnection.java` - Database connection singleton
    - `AlertsUtil.java` - UI alert utilities
    - `DateUtil.java` - Date manipulation utilities
 
 ### Design Patterns Used
 
-- **DAO Pattern**: Separates data access logic from business logic
-- **Service Layer Pattern**: Encapsulates business logic
+- **Service Layer Pattern**: Encapsulates business logic and data access
 - **Singleton Pattern**: For database connection management
 - **MVC Pattern**: Model-View-Controller for UI separation
 
@@ -108,24 +103,36 @@ Before running the application, ensure you have the following installed:
 
 3. **Create Tables**
    The application expects the following tables (you may need to create them manually or via scripts):
-   - `Evenement` (Events)
    - `Utilisateur` (Users)
    - `Role`
-   - `Entreprise`
-   - `Reservation`
-   - `Paiement` (Payments)
-   - `Participant`
-   - `Option`
+   - `Enterprise`
+   - `PaddleEvent`
+   - `FormationEvent`
+   - `PartyingEvent`
+   - `TeamBuildingEvent`
+   - `AnniversaryEvent`
 
-   Example table creation for Event:
+   Example table creation for User:
    ```sql
-   CREATE TABLE Evenement (
+   CREATE TABLE Utilisateur (
        id BIGINT AUTO_INCREMENT PRIMARY KEY,
+       email VARCHAR(255) NOT NULL,
        nom VARCHAR(255) NOT NULL,
-       type VARCHAR(100),
-       description TEXT,
-       prixBase DECIMAL(10,2),
-       capaciteMax INT
+       prenom VARCHAR(255) NOT NULL,
+       role_id BIGINT,
+       enterprise_id BIGINT,
+       FOREIGN KEY (role_id) REFERENCES Role(id),
+       FOREIGN KEY (enterprise_id) REFERENCES Enterprise(id)
+   );
+   ```
+
+   Example table creation for Event (e.g., PaddleEvent):
+   ```sql
+   CREATE TABLE PaddleEvent (
+       id BIGINT AUTO_INCREMENT PRIMARY KEY,
+       name VARCHAR(255) NOT NULL,
+       date DATE,
+       description TEXT
    );
    ```
 
@@ -157,9 +164,8 @@ src/
 │   │   ├── Main.java                 # Application entry point
 │   │   ├── TestCRUD.java             # Console CRUD test
 │   │   ├── controller/               # JavaFX controllers
-│   │   ├── dao/                      # Data Access Objects
 │   │   ├── entities/                 # Entity classes
-│   │   ├── service/                  # Business logic services
+│   │   ├── service/                  # Business logic and data access services
 │   │   └── utils/                    # Utility classes
 │   └── resources/
 │       └── fxml/                     # FXML UI files
@@ -172,20 +178,17 @@ src/
 ### Data Flow
 1. **User Interaction**: User interacts with JavaFX UI defined in FXML files
 2. **Controller Action**: Controllers handle events and call appropriate services
-3. **Business Logic**: Services implement business rules and delegate to DAOs
-4. **Data Persistence**: DAOs execute SQL queries via JDBC connection
-5. **Database**: MySQL stores and retrieves data
+3. **Business Logic & Data Access**: Services implement business rules and execute SQL queries directly via JDBC connection
+4. **Database**: MySQL stores and retrieves data
 
 ### Key Workflows
-- **Event Creation**: Admin creates events with capacity and pricing
+- **Event Management**: Create and manage various types of events (Paddle, Formation, Partying, Team Building, Anniversary)
 - **User Registration**: Users register with role and entreprise association
-- **Reservation Process**: Users reserve spots in events
-- **Payment Handling**: Process payments for reservations
-- **Participant Tracking**: Manage event attendees
 
 ## Development Guidelines
 
 - Follow the layered architecture strictly
+- Services handle both business logic and data access directly
 - Use prepared statements for all database queries
 - Implement proper error handling and logging
 - Write unit tests for services and utilities
@@ -206,7 +209,8 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 ## Future Enhancements
 
 - REST API for mobile app integration
-- Advanced reporting and analytics
-- Email notifications
+- Advanced reporting and analytics for events
+- Email notifications for event updates
 - Multi-language support
 - Cloud deployment options
+- Integration between different event types
