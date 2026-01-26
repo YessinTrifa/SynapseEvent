@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.synapseevent.controller.PartyingController">
+    <TableView fx:id="partyingTable" onMouseClicked="#selectPartyingEvent">
+        <columns>
+            <TableColumn fx:id="idColumn" text="ID" />
+            <TableColumn fx:id="nameColumn" text="Name" />
+            <TableColumn fx:id="dateColumn" text="Date" />
+            <TableColumn fx:id="descriptionColumn" text="Description" />
+        </columns>
+    </TableView>
+    <HBox>
+        <TextField fx:id="nameField" promptText="Name" />
+        <DatePicker fx:id="datePicker" promptText="Date" />
+        <TextField fx:id="descriptionField" promptText="Description" />
+    </HBox>
+    <HBox>
+        <Button text="Add" onAction="#addPartyingEvent" />
+        <Button text="Update" onAction="#updatePartyingEvent" />
+        <Button text="Delete" onAction="#deletePartyingEvent" />
+    </HBox>
+</VBox>

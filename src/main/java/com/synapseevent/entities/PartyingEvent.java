@@ -7,20 +7,23 @@ public class PartyingEvent {
     private String name;
     private LocalDate date;
     private String description;
-
+    private String status = "draft";
+    
     // Constructors
     public PartyingEvent() {}
-    public PartyingEvent(String name, LocalDate date, String description) {
+    public PartyingEvent(String name, LocalDate date, String description, String status) {
         this.name = name;
         this.date = date;
         this.description = description;
+        this.status = status;
     }
 
-    public PartyingEvent(Long id, String name, LocalDate date, String description) {
+    public PartyingEvent(Long id, String name, LocalDate date, String description, String status) {
         this.id = id;
         this.name = name;
         this.date = date;
         this.description = description;
+        this.status = status;
     }
 
     public Long getId() { return id; }
@@ -34,6 +37,9 @@ public class PartyingEvent {
 
     public String getDescription() { return description; }
     public void setDescription(String description) { this.description = description; }
+
+    public String getStatus() { return status; }
+    public void setStatus(String status) { this.status = status; }
 
     @Override
     public String toString() { return name; }

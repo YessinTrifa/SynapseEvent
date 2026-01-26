@@ -53,6 +53,17 @@ public class UserController {
         }
     }
 
+    @FXML private void selectUser() {
+        User selected = userTable.getSelectionModel().getSelectedItem();
+        if (selected != null) {
+            emailField.setText(selected.getEmail());
+            nomField.setText(selected.getNom());
+            prenomField.setText(selected.getPrenom());
+            roleComboBox.setValue(selected.getRole());
+            entrepriseComboBox.setValue(selected.getEnterprise());
+        }
+    }
+
     @FXML private void addUser() {
         String email = emailField.getText();
         String nom = nomField.getText();

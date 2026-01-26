@@ -45,7 +45,7 @@ public class PartyingController {
         LocalDate date = datePicker.getValue();
         String description = descriptionField.getText();
         if (name != null && !name.isEmpty() && date != null && description != null && !description.isEmpty()) {
-            PartyingEvent event = new PartyingEvent(name, date, description);
+            PartyingEvent event = new PartyingEvent(name, date, description, "draft");
             try {
                 partyingEventService.ajouter(event);
             } catch (Exception e) {
@@ -80,6 +80,15 @@ public class PartyingController {
                 // Handle exception
             }
             loadData();
+        }
+    }
+
+    @FXML private void selectPartyingEvent() {
+        PartyingEvent selected = partyingTable.getSelectionModel().getSelectedItem();
+        if (selected != null) {
+            nameField.setText(selected.getName());
+            datePicker.setValue(selected.getDate());
+            descriptionField.setText(selected.getDescription());
         }
     }
 

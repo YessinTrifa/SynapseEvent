@@ -11,15 +11,15 @@
             <TableColumn fx:id="nomColumn" text="Nom" />
             <TableColumn fx:id="prenomColumn" text="Prenom" />
             <TableColumn fx:id="roleColumn" text="Role" />
-            <TableColumn fx:id="enterpriseColumn" text="Enterprise" />
+            <TableColumn fx:id="entrepriseColumn" text="Enterprise" />
         </columns>
     </TableView>
     <HBox>
         <TextField fx:id="emailField" promptText="Email" />
         <TextField fx:id="nomField" promptText="Nom" />
         <TextField fx:id="prenomField" promptText="Prenom" />
-        <TextField fx:id="roleIdField" promptText="Role ID" />
-        <TextField fx:id="enterpriseIdField" promptText="Enterprise ID" />
+        <ComboBox fx:id="roleComboBox" promptText="Role" />
+        <ComboBox fx:id="entrepriseComboBox" promptText="Enterprise" />
     </HBox>
     <HBox>
         <Button text="Add" onAction="#addUser" />

@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.synapseevent.controller.AdminDashboardController">
+    <HBox>
+        <Button text="Logout" onAction="#logout"/>
+    </HBox>
+    <TabPane>
+    <Tab text="Users">
+        <VBox>
+            <TableView fx:id="usersTable">
+                <columns>
+                    <TableColumn fx:id="userNameColumn" text="Name" />
+                    <TableColumn fx:id="userEmailColumn" text="Email" />
+                    <TableColumn fx:id="userRoleColumn" text="Role" />
+                    <TableColumn fx:id="userActionColumn" text="Action" />
+                </columns>
+            </TableView>
+        </VBox>
+    </Tab>
+    <Tab text="Events">
+        <TabPane>
+            <Tab text="Anniversary">
+                <VBox>
+                    <TableView fx:id="anniversaryTable">
+                        <columns>
+                            <TableColumn fx:id="anniversaryNameColumn" text="Name" />
+                            <TableColumn fx:id="anniversaryDateColumn" text="Date" />
+                            <TableColumn fx:id="anniversaryDescriptionColumn" text="Description" />
+                            <TableColumn fx:id="anniversaryStatusColumn" text="Status" />
+                            <TableColumn fx:id="anniversaryActionColumn" text="Action" />
+                        </columns>
+                    </TableView>
+                </VBox>
+            </Tab>
+            <Tab text="Formation">
+                <VBox>
+                    <TableView fx:id="formationTable">
+                        <columns>
+                            <TableColumn fx:id="formationNameColumn" text="Name" />
+                            <TableColumn fx:id="formationDateColumn" text="Date" />
+                            <TableColumn fx:id="formationDescriptionColumn" text="Description" />
+                            <TableColumn fx:id="formationStatusColumn" text="Status" />
+                            <TableColumn fx:id="formationActionColumn" text="Action" />
+                        </columns>
+                    </TableView>
+                </VBox>
+            </Tab>
+            <Tab text="Paddle">
+                <VBox>
+                    <TableView fx:id="paddleTable">
+                        <columns>
+                            <TableColumn fx:id="paddleNameColumn" text="Name" />
+                            <TableColumn fx:id="paddleDateColumn" text="Date" />
+                            <TableColumn fx:id="paddleDescriptionColumn" text="Description" />
+                            <TableColumn fx:id="paddleStatusColumn" text="Status" />
+                            <TableColumn fx:id="paddleActionColumn" text="Action" />
+                        </columns>
+                    </TableView>
+                </VBox>
+            </Tab>
+            <Tab text="Partying">
+                <VBox>
+                    <TableView fx:id="partyingTable">
+                        <columns>
+                            <TableColumn fx:id="partyingNameColumn" text="Name" />
+                            <TableColumn fx:id="partyingDateColumn" text="Date" />
+                            <TableColumn fx:id="partyingDescriptionColumn" text="Description" />
+                            <TableColumn fx:id="partyingStatusColumn" text="Status" />
+                            <TableColumn fx:id="partyingActionColumn" text="Action" />
+                        </columns>
+                    </TableView>
+                </VBox>
+            </Tab>
+            <Tab text="Team Building">
+                <VBox>
+                    <TableView fx:id="teamBuildingTable">
+                        <columns>
+                            <TableColumn fx:id="teamBuildingNameColumn" text="Name" />
+                            <TableColumn fx:id="teamBuildingDateColumn" text="Date" />
+                            <TableColumn fx:id="teamBuildingDescriptionColumn" text="Description" />
+                            <TableColumn fx:id="teamBuildingStatusColumn" text="Status" />
+                            <TableColumn fx:id="teamBuildingActionColumn" text="Action" />
+                        </columns>
+                    </TableView>
+                </VBox>
+            </Tab>
+        </TabPane>
+    </Tab>
+    <Tab text="Bookings">
+        <VBox>
+            <TableView fx:id="bookingsTable">
+                <columns>
+                    <TableColumn fx:id="bookingUserColumn" text="User" />
+                    <TableColumn fx:id="bookingTypeColumn" text="Event Type" />
+                    <TableColumn fx:id="bookingEventIdColumn" text="Event ID" />
+                    <TableColumn fx:id="bookingDateColumn" text="Booking Date" />
+                    <TableColumn fx:id="bookingStatusColumn" text="Status" />
+                    <TableColumn fx:id="bookingActionColumn" text="Action" />
+                </columns>
+            </TableView>
+        </VBox>
+    </Tab>
+    <Tab text="Custom Requests">
+        <VBox>
+            <TableView fx:id="customRequestsTable">
+                <columns>
+                    <TableColumn fx:id="requestUserColumn" text="User" />
+                    <TableColumn fx:id="requestDetailsColumn" text="Details" />
+                    <TableColumn fx:id="requestDateColumn" text="Request Date" />
+                    <TableColumn fx:id="requestStatusColumn" text="Status" />
+                    <TableColumn fx:id="requestActionColumn" text="Action" />
+                </columns>
+            </TableView>
+        </VBox>
+    </Tab>
+</TabPane>
+</VBox>

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1">
+    <TabPane tabClosingPolicy="UNAVAILABLE" prefWidth="800" prefHeight="600">
+        <Tab text="Users">
+            <fx:include source="user.fxml" />
+        </Tab>
+        <Tab text="Anniversaries">
+            <fx:include source="anniversary.fxml" />
+        </Tab>
+        <Tab text="Formations">
+            <fx:include source="formation.fxml" />
+        </Tab>
+        <Tab text="Paddle">
+            <fx:include source="paddle.fxml" />
+        </Tab>
+        <Tab text="Partying">
+            <fx:include source="partying.fxml" />
+        </Tab>
+        <Tab text="Team Building">
+            <fx:include source="teamBuilding.fxml" />
+        </Tab>
+    </TabPane>
+</VBox>

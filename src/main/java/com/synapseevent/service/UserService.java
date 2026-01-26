@@ -8,6 +8,7 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.sql.SQLException;
+import com.synapseevent.utils.CurrentUser;
 
 public class UserService implements IService<User> {
     private Connection conn = MaConnection.getInstance().getConnection();
@@ -69,6 +70,30 @@ public class UserService implements IService<User> {
             throw e;
         }
         return null;
+    }
+
+    public User findByEmail(String email) {
+        String sql = "SELECT * FROM Utilisateur WHERE email = ?";
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, email);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                Role role = roleService.findbyId(rs.getLong("role_id"));
+                Entreprise entreprise = entrepriseService.findbyId(rs.getLong("enterprise_id"));
+                return new User(rs.getLong("id"), rs.getString("email"), rs.getString("nom"), rs.getString("prenom"), role, entreprise);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public User login(String email) {
+        User user = findByEmail(email);
+        if (user != null) {
+            CurrentUser.setCurrentUser(user);
+        }
+        return user;
     }
 
     @Override

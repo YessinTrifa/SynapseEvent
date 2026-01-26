@@ -45,7 +45,7 @@ public class PaddleController {
         LocalDate date = datePicker.getValue();
         String description = descriptionField.getText();
         if (name != null && !name.isEmpty() && date != null && description != null && !description.isEmpty()) {
-            PaddleEvent event = new PaddleEvent(name, date, description);
+            PaddleEvent event = new PaddleEvent(name, date, description, "draft");
             try {
                 paddleEventService.ajouter(event);
             } catch (Exception e) {
@@ -80,6 +80,15 @@ public class PaddleController {
                 // Handle exception
             }
             loadData();
+        }
+    }
+
+    @FXML private void selectPaddleEvent() {
+        PaddleEvent selected = paddleTable.getSelectionModel().getSelectedItem();
+        if (selected != null) {
+            nameField.setText(selected.getName());
+            datePicker.setValue(selected.getDate());
+            descriptionField.setText(selected.getDescription());
         }
     }
 

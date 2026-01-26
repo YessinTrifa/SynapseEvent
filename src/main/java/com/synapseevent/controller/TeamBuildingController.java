@@ -45,7 +45,7 @@ public class TeamBuildingController {
         LocalDate date = datePicker.getValue();
         String description = descriptionField.getText();
         if (name != null && !name.isEmpty() && date != null && description != null && !description.isEmpty()) {
-            TeamBuildingEvent event = new TeamBuildingEvent(name, date, description);
+            TeamBuildingEvent event = new TeamBuildingEvent(name, date, description, "draft");
             try {
                 teamBuildingEventService.ajouter(event);
             } catch (Exception e) {
@@ -80,6 +80,15 @@ public class TeamBuildingController {
                 // Handle exception
             }
             loadData();
+        }
+    }
+
+    @FXML private void selectTeamBuildingEvent() {
+        TeamBuildingEvent selected = teamBuildingTable.getSelectionModel().getSelectedItem();
+        if (selected != null) {
+            nameField.setText(selected.getName());
+            datePicker.setValue(selected.getDate());
+            descriptionField.setText(selected.getDescription());
         }
     }
 

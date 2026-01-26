@@ -1,6 +1,6 @@
 # SynapseEvent
 
-A comprehensive JavaFX-based event management system designed to streamline the organization and management of events, reservations, payments, and participants. This application provides a user-friendly interface for managing various aspects of event planning and execution.
+A comprehensive JavaFX-based event management system designed to streamline the organization and management of corporate events, bookings, and custom requests. This application provides a user-friendly interface for managing various aspects of event planning and execution within enterprises.
 
 ## Overview
 
@@ -8,14 +8,17 @@ SynapseEvent is built using modern Java technologies and follows best practices 
 
 ## Features
 
-- **User Management**: Create and manage users with different roles and associated entreprises
-- **Event Modules**: Manage various types of events including:
-  - Paddle Events
+- **User Management**: Create and manage users with different roles (Admin, User, Manager) and associated enterprises
+- **Event Management**: Admins can create, draft, publish, and manage various types of events including:
+  - Anniversary Events
   - Formation Events
+  - Paddle Events
   - Partying Events
   - Team Building Events
-  - Anniversary Events
-- **Dashboard**: Centralized view for managing all aspects of the system
+- **Event Booking**: Users can view published events and make bookings
+- **Booking Management**: Admins can view and manage user bookings
+- **Custom Event Requests**: Users can submit requests for custom events; admins can approve or manage them
+- **Dashboards**: Separate dashboards for admins (full management) and users (booking and requests)
 
 ## Architecture
 
@@ -24,30 +27,35 @@ The application implements a clean, layered architecture that promotes separatio
 ### Layers
 
 1. **Entity Layer** (`entities/`): Data model classes representing business entities
-   - `User.java` - User information with role and entreprise associations
-   - `Role.java` - User roles
-   - `Entreprise.java` - Company/organization information
-   - `PaddleEvent.java` - Paddle event details
-   - `FormationEvent.java` - Formation event details
-   - `PartyingEvent.java` - Partying event details
-   - `TeamBuildingEvent.java` - Team building event details
-   - `AnniversaryEvent.java` - Anniversary event details
+    - `User.java` - User information with role and entreprise associations
+    - `Role.java` - User roles
+    - `Entreprise.java` - Company/organization information
+    - `AnniversaryEvent.java` - Anniversary event details
+    - `FormationEvent.java` - Formation event details
+    - `PaddleEvent.java` - Paddle event details
+    - `PartyingEvent.java` - Partying event details
+    - `TeamBuildingEvent.java` - Team building event details
+    - `Booking.java` - Booking information linking users to events
+    - `CustomEventRequest.java` - Custom event request details
+    - `EventSummary.java` - Unified event summary for display purposes
 
 2. **Service Layer** (`service/`): Business logic and data access encapsulation
-   - Service classes (e.g., `UserService.java`) that handle both business logic and database operations
-   - Implements CRUD operations using JDBC directly
-   - Uses prepared statements for security
-   - Provides a clean API for controllers
+    - Service classes for each entity (e.g., `UserService.java`, `BookingService.java`, `CustomEventRequestService.java`, and event-specific services like `AnniversaryEventService.java`) that handle both business logic and database operations
+    - Implements CRUD operations using JDBC directly
+    - Uses prepared statements for security
+    - Provides a clean API for controllers
 
 3. **Presentation Layer** (`controller/`): JavaFX UI controllers
-   - FXML-based controllers for each view
-   - Handle user interactions and update the UI
-   - Coordinate between services and views
+    - FXML-based controllers for login, admin dashboard, user dashboard, and individual event management views
+    - Handle user interactions and update the UI
+    - Coordinate between services and views
 
 4. **Utility Layer** (`utils/`): Helper classes
-   - `MaConnection.java` - Database connection singleton
-   - `AlertsUtil.java` - UI alert utilities
-   - `DateUtil.java` - Date manipulation utilities
+    - `MaConnection.java` - Database connection singleton
+    - `AlertsUtil.java` - UI alert utilities
+    - `DateUtil.java` - Date manipulation utilities
+    - `CurrentUser.java` - Current user session management
+    - `DatabaseInitializer.java` - Database initialization from schema.sql
 
 ### Design Patterns Used
 
@@ -88,53 +96,25 @@ Before running the application, ensure you have the following installed:
 ## Database Setup
 
 1. **Create Database**
-   ```sql
-   CREATE DATABASE synapse_event;
-   ```
+    ```sql
+    CREATE DATABASE synapse_event;
+    ```
 
 2. **Update Connection Configuration**
-   - Open `src/main/java/com/synapseevent/utils/MaConnection.java`
-   - Modify the connection parameters if needed:
-     ```java
-     String url = "jdbc:mysql://localhost:3306/synapse_event";
-     String user = "root"; // Change as needed
-     String password = ""; // Change as needed
-     ```
+    - Open `src/main/java/com/synapseevent/utils/MaConnection.java`
+    - Modify the connection parameters if needed:
+      ```java
+      String url = "jdbc:mysql://localhost:3306/synapse_event";
+      String user = "root"; // Change as needed
+      String password = ""; // Change as needed
+      ```
 
-3. **Create Tables**
-   The application expects the following tables (you may need to create them manually or via scripts):
-   - `Utilisateur` (Users)
-   - `Role`
-   - `Enterprise`
-   - `PaddleEvent`
-   - `FormationEvent`
-   - `PartyingEvent`
-   - `TeamBuildingEvent`
-   - `AnniversaryEvent`
-
-   Example table creation for User:
-   ```sql
-   CREATE TABLE Utilisateur (
-       id BIGINT AUTO_INCREMENT PRIMARY KEY,
-       email VARCHAR(255) NOT NULL,
-       nom VARCHAR(255) NOT NULL,
-       prenom VARCHAR(255) NOT NULL,
-       role_id BIGINT,
-       enterprise_id BIGINT,
-       FOREIGN KEY (role_id) REFERENCES Role(id),
-       FOREIGN KEY (enterprise_id) REFERENCES Enterprise(id)
-   );
-   ```
-
-   Example table creation for Event (e.g., PaddleEvent):
-   ```sql
-   CREATE TABLE PaddleEvent (
-       id BIGINT AUTO_INCREMENT PRIMARY KEY,
-       name VARCHAR(255) NOT NULL,
-       date DATE,
-       description TEXT
-   );
-   ```
+3. **Initialize Database**
+    Run the InitDatabase class to create tables and insert sample data:
+    ```bash
+    java -cp target/classes com.synapseevent.InitDatabase
+    ```
+    This will execute the `schema.sql` file automatically, creating all necessary tables and inserting sample data.
 
 ## Running the Application
 
@@ -161,6 +141,7 @@ This will perform basic CRUD operations on Role, Entreprise, and User entities.
 src/
 ├── main/
 │   ├── java/com/synapseevent/
+│   │   ├── InitDatabase.java         # Database initialization
 │   │   ├── Main.java                 # Application entry point
 │   │   ├── TestCRUD.java             # Console CRUD test
 │   │   ├── controller/               # JavaFX controllers
@@ -168,6 +149,7 @@ src/
 │   │   ├── service/                  # Business logic and data access services
 │   │   └── utils/                    # Utility classes
 │   └── resources/
+│       ├── schema.sql                # Database schema and sample data
 │       └── fxml/                     # FXML UI files
 └── test/
     └── java/                         # Unit tests
@@ -182,8 +164,11 @@ src/
 4. **Database**: MySQL stores and retrieves data
 
 ### Key Workflows
-- **Event Management**: Create and manage various types of events (Paddle, Formation, Partying, Team Building, Anniversary)
-- **User Registration**: Users register with role and entreprise association
+- **User Authentication**: Users log in based on their roles (Admin, User, Manager)
+- **Admin Event Management**: Admins create events in draft status, then publish them; manage bookings and custom requests
+- **User Event Booking**: Users view published events and make bookings
+- **Custom Event Requests**: Users submit custom event requests; admins review and update statuses
+- **Dashboard Management**: Role-based dashboards provide appropriate functionalities
 
 ## Development Guidelines
 

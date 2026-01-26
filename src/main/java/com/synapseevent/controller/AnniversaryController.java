@@ -45,7 +45,7 @@ public class AnniversaryController {
         LocalDate date = datePicker.getValue();
         String description = descriptionField.getText();
         if (name != null && !name.isEmpty() && date != null && description != null && !description.isEmpty()) {
-            AnniversaryEvent event = new AnniversaryEvent(name, date, description);
+            AnniversaryEvent event = new AnniversaryEvent(name, date, description, "draft");
             try {
                 anniversaryEventService.ajouter(event);
             } catch (Exception e) {
@@ -80,6 +80,15 @@ public class AnniversaryController {
                 // Handle exception
             }
             loadData();
+        }
+    }
+
+    @FXML private void selectAnniversaryEvent() {
+        AnniversaryEvent selected = anniversaryTable.getSelectionModel().getSelectedItem();
+        if (selected != null) {
+            nameField.setText(selected.getName());
+            datePicker.setValue(selected.getDate());
+            descriptionField.setText(selected.getDescription());
         }
     }
 

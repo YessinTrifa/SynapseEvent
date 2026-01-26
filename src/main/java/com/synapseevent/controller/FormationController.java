@@ -45,7 +45,7 @@ public class FormationController {
         LocalDate date = datePicker.getValue();
         String description = descriptionField.getText();
         if (name != null && !name.isEmpty() && date != null && description != null && !description.isEmpty()) {
-            FormationEvent event = new FormationEvent(name, date, description);
+            FormationEvent event = new FormationEvent(name, date, description, "draft");
             try {
                 formationEventService.ajouter(event);
             } catch (Exception e) {
@@ -80,6 +80,15 @@ public class FormationController {
                 // Handle exception
             }
             loadData();
+        }
+    }
+
+    @FXML private void selectFormationEvent() {
+        FormationEvent selected = formationTable.getSelectionModel().getSelectedItem();
+        if (selected != null) {
+            nameField.setText(selected.getName());
+            datePicker.setValue(selected.getDate());
+            descriptionField.setText(selected.getDescription());
         }
     }
 

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.synapseevent.controller.UserDashboardController">
+    <HBox>
+        <Button text="Logout" onAction="#logout"/>
+    </HBox>
+    <TabPane>
+    <Tab text="Available Events">
+        <VBox>
+            <TableView fx:id="eventsTable">
+                <columns>
+                    <TableColumn fx:id="eventTypeColumn" text="Type" />
+                    <TableColumn fx:id="eventNameColumn" text="Name" />
+                    <TableColumn fx:id="eventDateColumn" text="Date" />
+                    <TableColumn fx:id="eventDescriptionColumn" text="Description" />
+                    <TableColumn fx:id="bookColumn" text="Action" />
+                </columns>
+            </TableView>
+        </VBox>
+    </Tab>
+    <Tab text="My Bookings">
+        <VBox>
+            <TableView fx:id="bookingsTable">
+                <columns>
+                    <TableColumn fx:id="bookingTypeColumn" text="Event Type" />
+                    <TableColumn fx:id="bookingEventIdColumn" text="Event ID" />
+                    <TableColumn fx:id="bookingDateColumn" text="Booking Date" />
+                    <TableColumn fx:id="bookingStatusColumn" text="Status" />
+                </columns>
+            </TableView>
+        </VBox>
+    </Tab>
+    <Tab text="Custom Request">
+        <VBox>
+            <Label text="Event Type:" />
+            <ComboBox fx:id="eventTypeCombo" />
+            <Label text="Event Date:" />
+            <DatePicker fx:id="eventDatePicker" />
+            <Label text="Description:" />
+            <TextArea fx:id="descriptionArea" promptText="Enter event description" />
+            <Button fx:id="submitRequestButton" text="Submit Request" onAction="#submitCustomRequest" />
+        </VBox>
+    </Tab>
+    </TabPane>
+</VBox>
