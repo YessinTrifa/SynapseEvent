@@ -45,7 +45,7 @@ public class AnniversaryController {
         LocalDate date = datePicker.getValue();
         String description = descriptionField.getText();
         if (name != null && !name.isEmpty() && date != null && description != null && !description.isEmpty()) {
-            AnniversaryEvent event = new AnniversaryEvent(name, date, description, "draft");
+            AnniversaryEvent event = new AnniversaryEvent(name, date, null, null, null, null, null, null, null, description, "draft");
             try {
                 anniversaryEventService.ajouter(event);
             } catch (Exception e) {

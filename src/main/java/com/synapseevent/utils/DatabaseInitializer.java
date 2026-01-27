@@ -9,8 +9,8 @@ import java.util.stream.Collectors;
 
 public class DatabaseInitializer {
     public static void initializeDatabase() {
-        try (Connection conn = MaConnection.getInstance().getConnection();
-             Statement stmt = conn.createStatement()) {
+        Connection conn = MaConnection.getInstance().getConnection();
+        try (Statement stmt = conn.createStatement()) {
 
             // Read the schema.sql file
             InputStream is = DatabaseInitializer.class.getClassLoader().getResourceAsStream("schema.sql");

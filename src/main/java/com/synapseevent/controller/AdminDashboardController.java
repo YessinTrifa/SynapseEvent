@@ -325,7 +325,7 @@ public class AdminDashboardController {
 
     private void setupCustomRequestsTable() {
         requestUserColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getUser().getNom()));
-        requestDetailsColumn.setCellValueFactory(new PropertyValueFactory<>("requestDetails"));
+        requestDetailsColumn.setCellValueFactory(new PropertyValueFactory<>("description"));
         requestDateColumn.setCellValueFactory(new PropertyValueFactory<>("createdDate"));
         requestStatusColumn.setCellValueFactory(new PropertyValueFactory<>("status"));
 

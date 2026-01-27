@@ -1,6 +1,21 @@
 -- Database schema for SynapseEvent application
 -- MySQL database: synapse_event
 
+-- Drop tables if they exist to allow re-initialization
+DROP TABLE IF EXISTS Review;
+DROP TABLE IF EXISTS UserPreferences;
+DROP TABLE IF EXISTS Booking;
+DROP TABLE IF EXISTS CustomEventRequest;
+DROP TABLE IF EXISTS EventTemplate;
+DROP TABLE IF EXISTS AnniversaryEvent;
+DROP TABLE IF EXISTS FormationEvent;
+DROP TABLE IF EXISTS PaddleEvent;
+DROP TABLE IF EXISTS PartyingEvent;
+DROP TABLE IF EXISTS TeamBuildingEvent;
+DROP TABLE IF EXISTS Utilisateur;
+DROP TABLE IF EXISTS Enterprise;
+DROP TABLE IF EXISTS Role;
+
 -- Create Role table
 CREATE TABLE IF NOT EXISTS Role (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
@@ -18,8 +33,12 @@ CREATE TABLE IF NOT EXISTS Enterprise (
 CREATE TABLE IF NOT EXISTS Utilisateur (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
     email VARCHAR(255) NOT NULL UNIQUE,
+    password VARCHAR(255),
     nom VARCHAR(255) NOT NULL,
     prenom VARCHAR(255) NOT NULL,
+    phone VARCHAR(20),
+    address TEXT,
+    profile_picture VARCHAR(500),
     role_id BIGINT NOT NULL,
     enterprise_id BIGINT NOT NULL,
     FOREIGN KEY (role_id) REFERENCES Role(id) ON DELETE CASCADE,
@@ -31,6 +50,13 @@ CREATE TABLE IF NOT EXISTS AnniversaryEvent (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
     date DATE NOT NULL,
+    start_time TIME,
+    end_time TIME,
+    location VARCHAR(255),
+    capacity INT,
+    price DECIMAL(10,2),
+    organizer VARCHAR(255),
+    category VARCHAR(100),
     description TEXT,
     status VARCHAR(20) DEFAULT 'draft'
 );
@@ -102,19 +128,19 @@ INSERT INTO Enterprise (nom, siret) VALUES
 ('Global Solutions', '90123456789012');
 
 -- Insert sample data for Utilisateur
-INSERT INTO Utilisateur (email, nom, prenom, role_id, enterprise_id) VALUES
-('admin@techcorp.com', 'Dupont', 'Jean', 1, 1),
-('user@innovate.com', 'Martin', 'Marie', 2, 2),
-('manager@global.com', 'Durand', 'Pierre', 3, 3);
+-- Passwords are plain text for simplicity, default password is 'password123'
+INSERT INTO Utilisateur (email, password, nom, prenom, phone, address, profile_picture, role_id, enterprise_id) VALUES
+('admin@techcorp.com', 'password123', 'Dupont', 'Jean', '0123456789', '123 Tech Street, Paris', NULL, 1, 1),
+('user@innovate.com', 'password123', 'Martin', 'Marie', '0987654321', '456 Innovate Ave, Lyon', NULL, 2, 2),
+('manager@global.com', 'password123', 'Durand', 'Pierre', '0555123456', '789 Global Blvd, Marseille', NULL, 3, 3);
 
 -- Insert sample data for AnniversaryEvent
-INSERT INTO AnniversaryEvent (name, date, description) VALUES
-('Anniversaire 10 ans TechCorp', '2024-05-15', 'Célébration des 10 ans de l\'entreprise avec gâteau et discours'),
-('Anniversaire 5 ans Innovate', '2024-07-20', 'Fête d\'anniversaire avec activités ludiques'),
-('Anniversaire 20 ans Global', '2024-09-10', 'Grande célébration avec invités externes'),
-('Anniversaire 1 an Startup', '2024-11-05', 'Petite fête pour le premier anniversaire'),
-('Anniversaire 15 ans Entreprise', '2024-12-18', 'Événement spécial avec remise de prix'),
-('Anniversaire 3 ans Société', '2025-02-14', 'Célébration romantique pour la Saint-Valentin');
+INSERT INTO AnniversaryEvent (name, date, start_time, end_time, location, capacity, price, organizer, category, description, status) VALUES
+('Anniversaire 10 ans TechCorp', '2024-05-15', '10:00:00', '18:00:00', 'Salle de fête TechCorp', 100, 0.00, 'Jean Dupont', 'Corporate', 'Célébration des 10 ans de l\'entreprise avec gâteau et discours', 'published'),
+('Anniversaire 5 ans Innovate', '2024-07-20', '14:00:00', '20:00:00', 'Parc Innovate', 50, 25.00, 'Marie Martin', 'Team Building', 'Fête d\'anniversaire avec activités ludiques', 'published'),
+('Anniversaire 20 ans Global', '2024-09-10', '09:00:00', '22:00:00', 'Hôtel Global', 200, 50.00, 'Pierre Durand', 'Corporate', 'Grande célébration avec invités externes', 'published'),
+('Anniversaire 1 an Startup', '2024-11-05', '16:00:00', '19:00:00', 'Café Startup', 20, 10.00, 'Alice Nouveau', 'Casual', 'Petite fête pour le premier anniversaire', 'published'),
+('Anniversaire 15 ans Entreprise', '2024-12-18', '11:00:00', '17:00:00', 'Salle des fêtes Municipale', 150, 30.00, 'Bob Ancien', 'Corporate', 'Événement spécial avec remise de prix', 'published');
 
 -- Insert sample data for FormationEvent
 INSERT INTO FormationEvent (name, date, description) VALUES
@@ -159,7 +185,58 @@ INSERT INTO Booking (user_id, event_type, event_id, booking_date, status) VALUES
 (3, 'PartyingEvent', 1, '2024-06-20', 'confirmed');
 
 -- Insert sample data for CustomEventRequest
-INSERT INTO CustomEventRequest (user_id, request_details, status, created_date) VALUES
-(1, 'Request for a custom team building event with outdoor activities', 'pending', '2024-05-01'),
-(2, 'Need a special anniversary celebration with fireworks', 'approved', '2024-04-15'),
-(3, 'Custom formation on advanced AI topics', 'pending', '2024-05-10');
+INSERT INTO CustomEventRequest (user_id, event_type, event_date, description, status, created_date) VALUES
+(1, 'TeamBuilding', '2024-06-01', 'Request for a custom team building event with outdoor activities', 'pending', '2024-05-01'),
+(2, 'Anniversary', '2024-05-01', 'Need a special anniversary celebration with fireworks', 'approved', '2024-04-15'),
+(3, 'Formation', '2024-07-01', 'Custom formation on advanced AI topics', 'pending', '2024-05-10');
+
+-- Create Review table
+CREATE TABLE IF NOT EXISTS Review (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    user_id BIGINT NOT NULL,
+    event_type VARCHAR(50) NOT NULL,
+    event_id BIGINT NOT NULL,
+    rating INT NOT NULL CHECK (rating >= 1 AND rating <= 5),
+    comment TEXT,
+    created_at TIMESTAMP NOT NULL,
+    FOREIGN KEY (user_id) REFERENCES Utilisateur(id) ON DELETE CASCADE
+);
+
+-- Insert sample data for Review
+INSERT INTO Review (user_id, event_type, event_id, rating, comment, created_at) VALUES
+(2, 'AnniversaryEvent', 1, 5, 'Excellent event, highly recommended!', '2024-05-16 10:00:00'),
+(2, 'AnniversaryEvent', 2, 4, 'Good event, but could be better organized.', '2024-07-21 14:00:00');
+
+-- Create UserPreferences table
+CREATE TABLE IF NOT EXISTS UserPreferences (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    user_id BIGINT NOT NULL UNIQUE,
+    preferred_categories VARCHAR(500),
+    preferred_locations VARCHAR(500),
+    max_price DECIMAL(10,2),
+    min_rating INT,
+    FOREIGN KEY (user_id) REFERENCES Utilisateur(id) ON DELETE CASCADE
+);
+
+-- Insert sample data for UserPreferences
+INSERT INTO UserPreferences (user_id, preferred_categories, preferred_locations, max_price, min_rating) VALUES
+(2, 'Corporate,Team Building', 'Paris,Lyon', 50.00, 4);
+
+-- Create EventTemplate table
+CREATE TABLE IF NOT EXISTS EventTemplate (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    event_type VARCHAR(50) NOT NULL,
+    default_start_time TIME,
+    default_end_time TIME,
+    default_capacity INT,
+    default_price DECIMAL(10,2),
+    default_category VARCHAR(100),
+    default_description TEXT,
+    template_description TEXT
+);
+
+-- Insert sample data for EventTemplate
+INSERT INTO EventTemplate (name, event_type, default_start_time, default_end_time, default_capacity, default_price, default_category, default_description, template_description) VALUES
+('Standard Anniversary', 'AnniversaryEvent', '10:00:00', '18:00:00', 100, 0.00, 'Corporate', 'Standard anniversary celebration template', 'Template for corporate anniversary events'),
+('Team Building Workshop', 'TeamBuildingEvent', '09:00:00', '17:00:00', 20, 150.00, 'Team Building', 'Interactive team building activities', 'Template for team building workshops');
