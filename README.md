@@ -9,19 +9,21 @@ SynapseEvent is built using modern Java technologies and follows best practices 
 ## Features
 
 - **User Management**: Create and manage users with different roles (Admin, User, Manager) and associated enterprises
-- **Event Management**: Admins can create, draft, publish, and manage various types of events including:
+- **Unified Event Management**: All events are managed through a unified EventInstance system with type classification:
   - Anniversary Events
   - Formation Events
   - Paddle Events
   - Partying Events
   - Team Building Events
-- **Event Booking**: Users can view published events and make bookings
+- **Event Browsing by Type**: Users can browse available events organized by type in separate tabs, preventing information overload
+- **Event Booking**: Users can view published events and make bookings with a streamlined booking system
 - **Booking Management**: Admins can view and manage user bookings
 - **Custom Event Requests**: Users can submit requests for custom events; admins can approve or manage them
 - **Review System**: Users can submit reviews for events and bookings to provide feedback
 - **User Preferences**: Users can set preferences for event types, notifications, and personalization
 - **Event Templates**: Admins can create and manage event templates for quick and consistent event creation
-- **Dashboards**: Separate dashboards for admins (full management) and users (booking, requests, reviews, and preferences)
+- **Role-Based Dashboards**: Separate dashboards for admins (full management) and users (booking, requests, reviews, and preferences)
+- **Data Migration**: Utility to migrate existing data to the unified event structure
 
 ## Architecture
 
@@ -33,20 +35,20 @@ The application implements a clean, layered architecture that promotes separatio
     - `User.java` - User information with role and entreprise associations
     - `Role.java` - User roles
     - `Entreprise.java` - Company/organization information
-    - `AnniversaryEvent.java` - Anniversary event details
-    - `FormationEvent.java` - Formation event details
-    - `PaddleEvent.java` - Paddle event details
-    - `PartyingEvent.java` - Partying event details
-    - `TeamBuildingEvent.java` - Team building event details
+    - `EventInstance.java` - Unified event entity with type classification (Anniversary, Formation, Paddle, Partying, TeamBuilding)
     - `Booking.java` - Booking information linking users to events
     - `CustomEventRequest.java` - Custom event request details
-    - `EventSummary.java` - Unified event summary for display purposes
+    - `EventSummary.java` - Event summary for display purposes
+    - `EventInstanceSummary.java` - Enhanced event summary with full details
     - `Review.java` - Review details for events and bookings
     - `UserPreferences.java` - User preference settings
     - `EventTemplate.java` - Event template information
+    - Legacy entities (`AnniversaryEvent.java`, `FormationEvent.java`, etc.) - Maintained for compatibility
 
 2. **Service Layer** (`service/`): Business logic and data access encapsulation
-    - Service classes for each entity (e.g., `UserService.java`, `BookingService.java`, `CustomEventRequestService.java`, `ReviewService.java`, `UserPreferencesService.java`, `EventTemplateService.java`, and event-specific services like `AnniversaryEventService.java`) that handle both business logic and database operations
+    - `EventInstanceService.java` - Unified service for all event operations with type-based filtering
+    - Service classes for each entity (e.g., `UserService.java`, `BookingService.java`, `CustomEventRequestService.java`, `ReviewService.java`, `UserPreferencesService.java`, `EventTemplateService.java`)
+    - Legacy event services (`AnniversaryEventService.java`, `FormationEventService.java`, etc.) maintained for compatibility
     - Implements CRUD operations using JDBC directly
     - Uses prepared statements for security
     - Provides a clean API for controllers
@@ -63,6 +65,7 @@ The application implements a clean, layered architecture that promotes separatio
     - `CurrentUser.java` - Current user session management
     - `DatabaseInitializer.java` - Database initialization from schema.sql
     - `PasswordUtil.java` - Password hashing and verification utilities
+    - `DataMigration.java` - Utility for migrating existing event data to unified structure
 
 ### Design Patterns Used
 
@@ -123,6 +126,13 @@ Before running the application, ensure you have the following installed:
     ```
     This will execute the `schema.sql` file automatically, creating all necessary tables and inserting sample data.
 
+4. **Migrate Existing Data (if upgrading)**
+    If you have existing event data from previous versions, run the data migration utility:
+    ```bash
+    java -cp target/classes com.synapseevent.utils.DataMigration
+    ```
+    This will consolidate events from separate tables (AnniversaryEvent, FormationEvent, etc.) into the unified `event_instance` table with proper type classification.
+
 ## Running the Application
 
 ### From IDE
@@ -172,12 +182,14 @@ src/
 
 ### Key Workflows
 - **User Authentication**: Users log in based on their roles (Admin, User, Manager)
-- **Admin Event Management**: Admins create events in draft status, then publish them; manage bookings and custom requests; create and manage event templates
-- **User Event Booking**: Users view published events and make bookings
+- **Admin Event Management**: Admins create and manage events through the unified EventInstance system, organized by type (Formation, Paddle, Partying, etc.); manage bookings and custom requests; create and manage event templates
+- **User Event Browsing**: Users browse published events organized by type in separate tabs, preventing information overload and improving discoverability
+- **User Event Booking**: Users view published events by type and make bookings with a streamlined process
 - **Custom Event Requests**: Users submit custom event requests; admins review and update statuses
 - **Review Submission**: Users can submit reviews for events and bookings to provide feedback
 - **User Preferences Management**: Users can set and update their preferences for event types and notifications
 - **Dashboard Management**: Role-based dashboards provide appropriate functionalities including reviews and preferences
+- **Data Migration**: One-time migration utility to consolidate existing event data into the unified structure
 
 ## Development Guidelines
 
