@@ -20,12 +20,35 @@ import java.util.List;
 
 public class UserDashboardController {
 
-    @FXML private TableView<EventSummary> eventsTable;
-    @FXML private TableColumn<EventSummary, String> eventTypeColumn;
-    @FXML private TableColumn<EventSummary, String> eventNameColumn;
-    @FXML private TableColumn<EventSummary, LocalDate> eventDateColumn;
-    @FXML private TableColumn<EventSummary, String> eventDescriptionColumn;
-    @FXML private TableColumn<EventSummary, Void> bookColumn;
+    @FXML private TableView<EventSummary> anniversaryTable;
+    @FXML private TableColumn<EventSummary, String> anniversaryNameColumn;
+    @FXML private TableColumn<EventSummary, LocalDate> anniversaryDateColumn;
+    @FXML private TableColumn<EventSummary, String> anniversaryDescriptionColumn;
+    @FXML private TableColumn<EventSummary, Void> anniversaryBookColumn;
+
+    @FXML private TableView<EventSummary> formationTable;
+    @FXML private TableColumn<EventSummary, String> formationNameColumn;
+    @FXML private TableColumn<EventSummary, LocalDate> formationDateColumn;
+    @FXML private TableColumn<EventSummary, String> formationDescriptionColumn;
+    @FXML private TableColumn<EventSummary, Void> formationBookColumn;
+
+    @FXML private TableView<EventSummary> paddleTable;
+    @FXML private TableColumn<EventSummary, String> paddleNameColumn;
+    @FXML private TableColumn<EventSummary, LocalDate> paddleDateColumn;
+    @FXML private TableColumn<EventSummary, String> paddleDescriptionColumn;
+    @FXML private TableColumn<EventSummary, Void> paddleBookColumn;
+
+    @FXML private TableView<EventSummary> partyingTable;
+    @FXML private TableColumn<EventSummary, String> partyingNameColumn;
+    @FXML private TableColumn<EventSummary, LocalDate> partyingDateColumn;
+    @FXML private TableColumn<EventSummary, String> partyingDescriptionColumn;
+    @FXML private TableColumn<EventSummary, Void> partyingBookColumn;
+
+    @FXML private TableView<EventSummary> teamBuildingTable;
+    @FXML private TableColumn<EventSummary, String> teamBuildingNameColumn;
+    @FXML private TableColumn<EventSummary, LocalDate> teamBuildingDateColumn;
+    @FXML private TableColumn<EventSummary, String> teamBuildingDescriptionColumn;
+    @FXML private TableColumn<EventSummary, Void> teamBuildingBookColumn;
 
     @FXML private TableView<Booking> bookingsTable;
     @FXML private TableColumn<Booking, String> bookingTypeColumn;
@@ -48,22 +71,18 @@ public class UserDashboardController {
 
     @FXML
     public void initialize() {
-        // Setup events table
-        eventTypeColumn.setCellValueFactory(new PropertyValueFactory<>("type"));
-        eventNameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
-        eventDateColumn.setCellValueFactory(new PropertyValueFactory<>("date"));
-        eventDescriptionColumn.setCellValueFactory(new PropertyValueFactory<>("description"));
-
-        bookColumn.setCellFactory(param -> new TableCell<EventSummary, Void>() {
+        // Setup anniversary table
+        anniversaryNameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
+        anniversaryDateColumn.setCellValueFactory(new PropertyValueFactory<>("date"));
+        anniversaryDescriptionColumn.setCellValueFactory(new PropertyValueFactory<>("description"));
+        anniversaryBookColumn.setCellFactory(param -> new TableCell<EventSummary, Void>() {
             private final Button bookButton = new Button("Book");
-
             {
                 bookButton.setOnAction(event -> {
                     EventSummary es = getTableView().getItems().get(getIndex());
                     bookEvent(es);
                 });
             }
-
             @Override
             protected void updateItem(Void item, boolean empty) {
                 super.updateItem(item, empty);
@@ -72,7 +91,98 @@ public class UserDashboardController {
                 } else {
                     setGraphic(bookButton);
                 }
-            
+            }
+        });
+
+        // Setup formation table
+        formationNameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
+        formationDateColumn.setCellValueFactory(new PropertyValueFactory<>("date"));
+        formationDescriptionColumn.setCellValueFactory(new PropertyValueFactory<>("description"));
+        formationBookColumn.setCellFactory(param -> new TableCell<EventSummary, Void>() {
+            private final Button bookButton = new Button("Book");
+            {
+                bookButton.setOnAction(event -> {
+                    EventSummary es = getTableView().getItems().get(getIndex());
+                    bookEvent(es);
+                });
+            }
+            @Override
+            protected void updateItem(Void item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty) {
+                    setGraphic(null);
+                } else {
+                    setGraphic(bookButton);
+                }
+            }
+        });
+
+        // Setup paddle table
+        paddleNameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
+        paddleDateColumn.setCellValueFactory(new PropertyValueFactory<>("date"));
+        paddleDescriptionColumn.setCellValueFactory(new PropertyValueFactory<>("description"));
+        paddleBookColumn.setCellFactory(param -> new TableCell<EventSummary, Void>() {
+            private final Button bookButton = new Button("Book");
+            {
+                bookButton.setOnAction(event -> {
+                    EventSummary es = getTableView().getItems().get(getIndex());
+                    bookEvent(es);
+                });
+            }
+            @Override
+            protected void updateItem(Void item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty) {
+                    setGraphic(null);
+                } else {
+                    setGraphic(bookButton);
+                }
+            }
+        });
+
+        // Setup partying table
+        partyingNameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
+        partyingDateColumn.setCellValueFactory(new PropertyValueFactory<>("date"));
+        partyingDescriptionColumn.setCellValueFactory(new PropertyValueFactory<>("description"));
+        partyingBookColumn.setCellFactory(param -> new TableCell<EventSummary, Void>() {
+            private final Button bookButton = new Button("Book");
+            {
+                bookButton.setOnAction(event -> {
+                    EventSummary es = getTableView().getItems().get(getIndex());
+                    bookEvent(es);
+                });
+            }
+            @Override
+            protected void updateItem(Void item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty) {
+                    setGraphic(null);
+                } else {
+                    setGraphic(bookButton);
+                }
+            }
+        });
+
+        // Setup teamBuilding table
+        teamBuildingNameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
+        teamBuildingDateColumn.setCellValueFactory(new PropertyValueFactory<>("date"));
+        teamBuildingDescriptionColumn.setCellValueFactory(new PropertyValueFactory<>("description"));
+        teamBuildingBookColumn.setCellFactory(param -> new TableCell<EventSummary, Void>() {
+            private final Button bookButton = new Button("Book");
+            {
+                bookButton.setOnAction(event -> {
+                    EventSummary es = getTableView().getItems().get(getIndex());
+                    bookEvent(es);
+                });
+            }
+            @Override
+            protected void updateItem(Void item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty) {
+                    setGraphic(null);
+                } else {
+                    setGraphic(bookButton);
+                }
             }
         });
 
@@ -83,32 +193,72 @@ public class UserDashboardController {
         bookingStatusColumn.setCellValueFactory(new PropertyValueFactory<>("status"));
 
         eventTypeCombo.getItems().addAll("Anniversary", "Formation", "Paddle", "Partying", "TeamBuilding");
-        loadEvents();
+        loadAnniversaryEvents();
+        loadFormationEvents();
+        loadPaddleEvents();
+        loadPartyingEvents();
+        loadTeamBuildingEvents();
         loadBookings();
     }
 
-    private void loadEvents() {
+    private void loadAnniversaryEvents() {
         List<EventSummary> events = new ArrayList<>();
         try {
             for (AnniversaryEvent e : anniversaryService.getPublishedEvents()) {
                 events.add(new EventSummary("Anniversary", e.getId(), e.getName(), e.getDate(), e.getDescription()));
             }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        anniversaryTable.setItems(FXCollections.observableArrayList(events));
+    }
+
+    private void loadFormationEvents() {
+        List<EventSummary> events = new ArrayList<>();
+        try {
             for (FormationEvent e : formationService.getPublishedEvents()) {
                 events.add(new EventSummary("Formation", e.getId(), e.getName(), e.getDate(), e.getDescription()));
             }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        formationTable.setItems(FXCollections.observableArrayList(events));
+    }
+
+    private void loadPaddleEvents() {
+        List<EventSummary> events = new ArrayList<>();
+        try {
             for (PaddleEvent e : paddleService.getPublishedEvents()) {
                 events.add(new EventSummary("Paddle", e.getId(), e.getName(), e.getDate(), e.getDescription()));
             }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        paddleTable.setItems(FXCollections.observableArrayList(events));
+    }
+
+    private void loadPartyingEvents() {
+        List<EventSummary> events = new ArrayList<>();
+        try {
             for (PartyingEvent e : partyingService.getPublishedEvents()) {
                 events.add(new EventSummary("Partying", e.getId(), e.getName(), e.getDate(), e.getDescription()));
             }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        partyingTable.setItems(FXCollections.observableArrayList(events));
+    }
+
+    private void loadTeamBuildingEvents() {
+        List<EventSummary> events = new ArrayList<>();
+        try {
             for (TeamBuildingEvent e : teamBuildingService.getPublishedEvents()) {
                 events.add(new EventSummary("TeamBuilding", e.getId(), e.getName(), e.getDate(), e.getDescription()));
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        eventsTable.setItems(FXCollections.observableArrayList(events));
+        teamBuildingTable.setItems(FXCollections.observableArrayList(events));
     }
 
     private void loadBookings() {
@@ -156,7 +306,7 @@ public class UserDashboardController {
 
     private void loadFXML(String fxmlPath) {
         try {
-            Stage stage = (Stage) eventsTable.getScene().getWindow();
+            Stage stage = (Stage) anniversaryTable.getScene().getWindow();
             Parent root = FXMLLoader.load(getClass().getResource(fxmlPath));
             stage.setScene(new Scene(root));
         } catch (Exception e) {

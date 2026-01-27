@@ -4,7 +4,7 @@ A comprehensive JavaFX-based event management system designed to streamline the 
 
 ## Overview
 
-SynapseEvent is built using modern Java technologies and follows best practices in software architecture. It serves as a complete solution for event organizers to handle everything from user management to payment processing.
+SynapseEvent is built using modern Java technologies and follows best practices in software architecture. It serves as a complete solution for event organizers to handle everything from user management to event booking, reviews, and custom requests.
 
 ## Features
 
@@ -18,7 +18,10 @@ SynapseEvent is built using modern Java technologies and follows best practices 
 - **Event Booking**: Users can view published events and make bookings
 - **Booking Management**: Admins can view and manage user bookings
 - **Custom Event Requests**: Users can submit requests for custom events; admins can approve or manage them
-- **Dashboards**: Separate dashboards for admins (full management) and users (booking and requests)
+- **Review System**: Users can submit reviews for events and bookings to provide feedback
+- **User Preferences**: Users can set preferences for event types, notifications, and personalization
+- **Event Templates**: Admins can create and manage event templates for quick and consistent event creation
+- **Dashboards**: Separate dashboards for admins (full management) and users (booking, requests, reviews, and preferences)
 
 ## Architecture
 
@@ -38,9 +41,12 @@ The application implements a clean, layered architecture that promotes separatio
     - `Booking.java` - Booking information linking users to events
     - `CustomEventRequest.java` - Custom event request details
     - `EventSummary.java` - Unified event summary for display purposes
+    - `Review.java` - Review details for events and bookings
+    - `UserPreferences.java` - User preference settings
+    - `EventTemplate.java` - Event template information
 
 2. **Service Layer** (`service/`): Business logic and data access encapsulation
-    - Service classes for each entity (e.g., `UserService.java`, `BookingService.java`, `CustomEventRequestService.java`, and event-specific services like `AnniversaryEventService.java`) that handle both business logic and database operations
+    - Service classes for each entity (e.g., `UserService.java`, `BookingService.java`, `CustomEventRequestService.java`, `ReviewService.java`, `UserPreferencesService.java`, `EventTemplateService.java`, and event-specific services like `AnniversaryEventService.java`) that handle both business logic and database operations
     - Implements CRUD operations using JDBC directly
     - Uses prepared statements for security
     - Provides a clean API for controllers
@@ -56,6 +62,7 @@ The application implements a clean, layered architecture that promotes separatio
     - `DateUtil.java` - Date manipulation utilities
     - `CurrentUser.java` - Current user session management
     - `DatabaseInitializer.java` - Database initialization from schema.sql
+    - `PasswordUtil.java` - Password hashing and verification utilities
 
 ### Design Patterns Used
 
@@ -165,10 +172,12 @@ src/
 
 ### Key Workflows
 - **User Authentication**: Users log in based on their roles (Admin, User, Manager)
-- **Admin Event Management**: Admins create events in draft status, then publish them; manage bookings and custom requests
+- **Admin Event Management**: Admins create events in draft status, then publish them; manage bookings and custom requests; create and manage event templates
 - **User Event Booking**: Users view published events and make bookings
 - **Custom Event Requests**: Users submit custom event requests; admins review and update statuses
-- **Dashboard Management**: Role-based dashboards provide appropriate functionalities
+- **Review Submission**: Users can submit reviews for events and bookings to provide feedback
+- **User Preferences Management**: Users can set and update their preferences for event types and notifications
+- **Dashboard Management**: Role-based dashboards provide appropriate functionalities including reviews and preferences
 
 ## Development Guidelines
 
