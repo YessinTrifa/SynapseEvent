@@ -12,6 +12,7 @@ DROP TABLE IF EXISTS FormationEvent;
 DROP TABLE IF EXISTS PaddleEvent;
 DROP TABLE IF EXISTS PartyingEvent;
 DROP TABLE IF EXISTS TeamBuildingEvent;
+DROP TABLE IF EXISTS event_instance;
 DROP TABLE IF EXISTS Utilisateur;
 DROP TABLE IF EXISTS Enterprise;
 DROP TABLE IF EXISTS Role;
@@ -236,7 +237,32 @@ CREATE TABLE IF NOT EXISTS EventTemplate (
     template_description TEXT
 );
 
+-- Create event_instance table
+CREATE TABLE IF NOT EXISTS event_instance (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    date DATE NOT NULL,
+    start_time TIME,
+    end_time TIME,
+    location VARCHAR(255),
+    capacity INT,
+    price DECIMAL(10,2),
+    organizer VARCHAR(255),
+    description TEXT,
+    status VARCHAR(20) DEFAULT 'draft',
+    type VARCHAR(50) NOT NULL
+);
+
 -- Insert sample data for EventTemplate
 INSERT INTO EventTemplate (name, event_type, default_start_time, default_end_time, default_capacity, default_price, default_category, default_description, template_description) VALUES
 ('Standard Anniversary', 'AnniversaryEvent', '10:00:00', '18:00:00', 100, 0.00, 'Corporate', 'Standard anniversary celebration template', 'Template for corporate anniversary events'),
 ('Team Building Workshop', 'TeamBuildingEvent', '09:00:00', '17:00:00', 20, 150.00, 'Team Building', 'Interactive team building activities', 'Template for team building workshops');
+
+-- Insert sample data for event_instance
+INSERT INTO event_instance (name, date, start_time, end_time, location, capacity, price, organizer, description, status, type) VALUES
+('Formation Java Avancé', '2024-06-10', NULL, NULL, NULL, NULL, NULL, NULL, 'Cours intensif sur les concepts avancés de Java', 'published', 'Formation'),
+('Atelier Management', '2024-08-15', NULL, NULL, NULL, NULL, NULL, NULL, 'Formation sur les techniques de management d\'équipe', 'published', 'Formation'),
+('Tournoi Paddle Entreprise', '2024-07-05', NULL, NULL, NULL, NULL, NULL, NULL, 'Compétition amicale entre collègues', 'published', 'Paddle'),
+('Soirée d\'Entreprise TechCorp', '2024-06-25', NULL, NULL, NULL, NULL, NULL, NULL, 'Fête avec DJ et buffet', 'published', 'Partying'),
+('Escape Game Team', '2024-08-12', NULL, NULL, NULL, NULL, NULL, NULL, 'Aventure en équipe pour résoudre énigmes', 'published', 'TeamBuilding'),
+('Anniversaire 10 ans TechCorp', '2024-05-15', '10:00:00', '18:00:00', 'Salle de fête TechCorp', 100, 0.00, 'Jean Dupont', 'Célébration des 10 ans de l\'entreprise avec gâteau et discours', 'published', 'Anniversary');

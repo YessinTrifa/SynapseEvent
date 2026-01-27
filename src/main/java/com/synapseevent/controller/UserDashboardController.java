@@ -11,44 +11,20 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 public class UserDashboardController {
 
-    @FXML private TableView<EventSummary> anniversaryTable;
-    @FXML private TableColumn<EventSummary, String> anniversaryNameColumn;
-    @FXML private TableColumn<EventSummary, LocalDate> anniversaryDateColumn;
-    @FXML private TableColumn<EventSummary, String> anniversaryDescriptionColumn;
-    @FXML private TableColumn<EventSummary, Void> anniversaryBookColumn;
-
-    @FXML private TableView<EventSummary> formationTable;
-    @FXML private TableColumn<EventSummary, String> formationNameColumn;
-    @FXML private TableColumn<EventSummary, LocalDate> formationDateColumn;
-    @FXML private TableColumn<EventSummary, String> formationDescriptionColumn;
-    @FXML private TableColumn<EventSummary, Void> formationBookColumn;
-
-    @FXML private TableView<EventSummary> paddleTable;
-    @FXML private TableColumn<EventSummary, String> paddleNameColumn;
-    @FXML private TableColumn<EventSummary, LocalDate> paddleDateColumn;
-    @FXML private TableColumn<EventSummary, String> paddleDescriptionColumn;
-    @FXML private TableColumn<EventSummary, Void> paddleBookColumn;
-
-    @FXML private TableView<EventSummary> partyingTable;
-    @FXML private TableColumn<EventSummary, String> partyingNameColumn;
-    @FXML private TableColumn<EventSummary, LocalDate> partyingDateColumn;
-    @FXML private TableColumn<EventSummary, String> partyingDescriptionColumn;
-    @FXML private TableColumn<EventSummary, Void> partyingBookColumn;
-
-    @FXML private TableView<EventSummary> teamBuildingTable;
-    @FXML private TableColumn<EventSummary, String> teamBuildingNameColumn;
-    @FXML private TableColumn<EventSummary, LocalDate> teamBuildingDateColumn;
-    @FXML private TableColumn<EventSummary, String> teamBuildingDescriptionColumn;
-    @FXML private TableColumn<EventSummary, Void> teamBuildingBookColumn;
+    @FXML private TabPane categoryTabPane;
+    @FXML private TabPane eventsTabPane;
 
     @FXML private TableView<Booking> bookingsTable;
     @FXML private TableColumn<Booking, String> bookingTypeColumn;
@@ -61,204 +37,108 @@ public class UserDashboardController {
     @FXML private TextArea descriptionArea;
     @FXML private Button submitRequestButton;
 
-    private AnniversaryEventService anniversaryService = new AnniversaryEventService();
-    private FormationEventService formationService = new FormationEventService();
-    private PaddleEventService paddleService = new PaddleEventService();
-    private PartyingEventService partyingService = new PartyingEventService();
-    private TeamBuildingEventService teamBuildingService = new TeamBuildingEventService();
+    private EventInstanceService eventInstanceService = new EventInstanceService();
     private BookingService bookingService = new BookingService();
     private CustomEventRequestService customRequestService = new CustomEventRequestService();
 
+    private Map<String, List<EventInstance>> eventsByType;
+
     @FXML
     public void initialize() {
-        // Setup anniversary table
-        anniversaryNameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
-        anniversaryDateColumn.setCellValueFactory(new PropertyValueFactory<>("date"));
-        anniversaryDescriptionColumn.setCellValueFactory(new PropertyValueFactory<>("description"));
-        anniversaryBookColumn.setCellFactory(param -> new TableCell<EventSummary, Void>() {
-            private final Button bookButton = new Button("Book");
-            {
-                bookButton.setOnAction(event -> {
-                    EventSummary es = getTableView().getItems().get(getIndex());
-                    bookEvent(es);
-                });
-            }
-            @Override
-            protected void updateItem(Void item, boolean empty) {
-                super.updateItem(item, empty);
-                if (empty) {
-                    setGraphic(null);
-                } else {
-                    setGraphic(bookButton);
-                }
-            }
-        });
-
-        // Setup formation table
-        formationNameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
-        formationDateColumn.setCellValueFactory(new PropertyValueFactory<>("date"));
-        formationDescriptionColumn.setCellValueFactory(new PropertyValueFactory<>("description"));
-        formationBookColumn.setCellFactory(param -> new TableCell<EventSummary, Void>() {
-            private final Button bookButton = new Button("Book");
-            {
-                bookButton.setOnAction(event -> {
-                    EventSummary es = getTableView().getItems().get(getIndex());
-                    bookEvent(es);
-                });
-            }
-            @Override
-            protected void updateItem(Void item, boolean empty) {
-                super.updateItem(item, empty);
-                if (empty) {
-                    setGraphic(null);
-                } else {
-                    setGraphic(bookButton);
-                }
-            }
-        });
-
-        // Setup paddle table
-        paddleNameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
-        paddleDateColumn.setCellValueFactory(new PropertyValueFactory<>("date"));
-        paddleDescriptionColumn.setCellValueFactory(new PropertyValueFactory<>("description"));
-        paddleBookColumn.setCellFactory(param -> new TableCell<EventSummary, Void>() {
-            private final Button bookButton = new Button("Book");
-            {
-                bookButton.setOnAction(event -> {
-                    EventSummary es = getTableView().getItems().get(getIndex());
-                    bookEvent(es);
-                });
-            }
-            @Override
-            protected void updateItem(Void item, boolean empty) {
-                super.updateItem(item, empty);
-                if (empty) {
-                    setGraphic(null);
-                } else {
-                    setGraphic(bookButton);
-                }
-            }
-        });
-
-        // Setup partying table
-        partyingNameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
-        partyingDateColumn.setCellValueFactory(new PropertyValueFactory<>("date"));
-        partyingDescriptionColumn.setCellValueFactory(new PropertyValueFactory<>("description"));
-        partyingBookColumn.setCellFactory(param -> new TableCell<EventSummary, Void>() {
-            private final Button bookButton = new Button("Book");
-            {
-                bookButton.setOnAction(event -> {
-                    EventSummary es = getTableView().getItems().get(getIndex());
-                    bookEvent(es);
-                });
-            }
-            @Override
-            protected void updateItem(Void item, boolean empty) {
-                super.updateItem(item, empty);
-                if (empty) {
-                    setGraphic(null);
-                } else {
-                    setGraphic(bookButton);
-                }
-            }
-        });
-
-        // Setup teamBuilding table
-        teamBuildingNameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
-        teamBuildingDateColumn.setCellValueFactory(new PropertyValueFactory<>("date"));
-        teamBuildingDescriptionColumn.setCellValueFactory(new PropertyValueFactory<>("description"));
-        teamBuildingBookColumn.setCellFactory(param -> new TableCell<EventSummary, Void>() {
-            private final Button bookButton = new Button("Book");
-            {
-                bookButton.setOnAction(event -> {
-                    EventSummary es = getTableView().getItems().get(getIndex());
-                    bookEvent(es);
-                });
-            }
-            @Override
-            protected void updateItem(Void item, boolean empty) {
-                super.updateItem(item, empty);
-                if (empty) {
-                    setGraphic(null);
-                } else {
-                    setGraphic(bookButton);
-                }
-            }
-        });
-
         // Setup bookings table
-        bookingTypeColumn.setCellValueFactory(new PropertyValueFactory<>("eventType"));
+        bookingTypeColumn.setCellValueFactory(cellData -> {
+            Booking booking = cellData.getValue();
+            String displayName = "Unknown Event";
+            if ("instance".equals(booking.getEventType())) {
+                try {
+                    EventInstance instance = eventInstanceService.findbyId(booking.getEventId());
+                    if (instance != null) {
+                        displayName = instance.getName();
+                    }
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+            return new SimpleStringProperty(displayName);
+        });
         bookingEventIdColumn.setCellValueFactory(new PropertyValueFactory<>("eventId"));
         bookingDateColumn.setCellValueFactory(new PropertyValueFactory<>("bookingDate"));
         bookingStatusColumn.setCellValueFactory(new PropertyValueFactory<>("status"));
 
         eventTypeCombo.getItems().addAll("Anniversary", "Formation", "Paddle", "Partying", "TeamBuilding");
-        loadAnniversaryEvents();
-        loadFormationEvents();
-        loadPaddleEvents();
-        loadPartyingEvents();
-        loadTeamBuildingEvents();
+        loadEvents();
         loadBookings();
     }
 
-    private void loadAnniversaryEvents() {
-        List<EventSummary> events = new ArrayList<>();
+    private void loadEvents() {
         try {
-            for (AnniversaryEvent e : anniversaryService.getPublishedEvents()) {
-                events.add(new EventSummary("Anniversary", e.getId(), e.getName(), e.getDate(), e.getDescription()));
+            List<EventInstance> instances = eventInstanceService.getPublishedEvents();
+
+            eventsByType = instances.stream()
+                .collect(Collectors.groupingBy(EventInstance::getType));
+
+            // Clear existing tabs
+            eventsTabPane.getTabs().clear();
+
+            // Create tabs for each type
+            for (Map.Entry<String, List<EventInstance>> entry : eventsByType.entrySet()) {
+                String typeName = entry.getKey();
+                List<EventInstance> typeEvents = entry.getValue();
+
+                Tab typeTab = new Tab(typeName);
+                TableView<EventInstance> table = createEventTable();
+                table.setItems(FXCollections.observableArrayList(typeEvents));
+
+                VBox vbox = new VBox(table);
+                typeTab.setContent(vbox);
+                eventsTabPane.getTabs().add(typeTab);
             }
+
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        anniversaryTable.setItems(FXCollections.observableArrayList(events));
     }
 
-    private void loadFormationEvents() {
-        List<EventSummary> events = new ArrayList<>();
-        try {
-            for (FormationEvent e : formationService.getPublishedEvents()) {
-                events.add(new EventSummary("Formation", e.getId(), e.getName(), e.getDate(), e.getDescription()));
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        formationTable.setItems(FXCollections.observableArrayList(events));
-    }
+    private TableView<EventInstance> createEventTable() {
+        TableView<EventInstance> table = new TableView<>();
 
-    private void loadPaddleEvents() {
-        List<EventSummary> events = new ArrayList<>();
-        try {
-            for (PaddleEvent e : paddleService.getPublishedEvents()) {
-                events.add(new EventSummary("Paddle", e.getId(), e.getName(), e.getDate(), e.getDescription()));
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        paddleTable.setItems(FXCollections.observableArrayList(events));
-    }
+        TableColumn<EventInstance, String> nameColumn = new TableColumn<>("Name");
+        nameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
 
-    private void loadPartyingEvents() {
-        List<EventSummary> events = new ArrayList<>();
-        try {
-            for (PartyingEvent e : partyingService.getPublishedEvents()) {
-                events.add(new EventSummary("Partying", e.getId(), e.getName(), e.getDate(), e.getDescription()));
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        partyingTable.setItems(FXCollections.observableArrayList(events));
-    }
+        TableColumn<EventInstance, LocalDate> dateColumn = new TableColumn<>("Date");
+        dateColumn.setCellValueFactory(new PropertyValueFactory<>("date"));
 
-    private void loadTeamBuildingEvents() {
-        List<EventSummary> events = new ArrayList<>();
-        try {
-            for (TeamBuildingEvent e : teamBuildingService.getPublishedEvents()) {
-                events.add(new EventSummary("TeamBuilding", e.getId(), e.getName(), e.getDate(), e.getDescription()));
+        TableColumn<EventInstance, String> locationColumn = new TableColumn<>("Location");
+        locationColumn.setCellValueFactory(new PropertyValueFactory<>("location"));
+
+        TableColumn<EventInstance, Double> priceColumn = new TableColumn<>("Price");
+        priceColumn.setCellValueFactory(new PropertyValueFactory<>("price"));
+
+        TableColumn<EventInstance, String> descriptionColumn = new TableColumn<>("Description");
+        descriptionColumn.setCellValueFactory(new PropertyValueFactory<>("description"));
+
+        TableColumn<EventInstance, Void> bookColumn = new TableColumn<>("Action");
+        bookColumn.setCellFactory(param -> new TableCell<EventInstance, Void>() {
+            private final Button bookButton = new Button("Book");
+            {
+                bookButton.setOnAction(event -> {
+                    EventInstance ei = getTableView().getItems().get(getIndex());
+                    bookEvent(ei);
+                });
             }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        teamBuildingTable.setItems(FXCollections.observableArrayList(events));
+            @Override
+            protected void updateItem(Void item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty) {
+                    setGraphic(null);
+                } else {
+                    setGraphic(bookButton);
+                }
+            }
+        });
+
+        table.getColumns().addAll(nameColumn, dateColumn, locationColumn, priceColumn, descriptionColumn, bookColumn);
+        return table;
     }
 
     private void loadBookings() {
@@ -270,8 +150,8 @@ public class UserDashboardController {
     
     }
 
-    private void bookEvent(EventSummary es) {
-        Booking booking = new Booking(CurrentUser.getCurrentUser(), es.getType().toLowerCase(), es.getId(), LocalDate.now(), "pending");
+    private void bookEvent(EventInstance ei) {
+        Booking booking = new Booking(CurrentUser.getCurrentUser(), "instance", ei.getId(), LocalDate.now(), "pending");
         try {
             bookingService.ajouter(booking);
             loadBookings();
@@ -306,7 +186,7 @@ public class UserDashboardController {
 
     private void loadFXML(String fxmlPath) {
         try {
-            Stage stage = (Stage) anniversaryTable.getScene().getWindow();
+            Stage stage = (Stage) categoryTabPane.getScene().getWindow();
             Parent root = FXMLLoader.load(getClass().getResource(fxmlPath));
             stage.setScene(new Scene(root));
         } catch (Exception e) {
