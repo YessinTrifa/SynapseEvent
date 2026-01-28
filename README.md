@@ -16,6 +16,7 @@ SynapseEvent is built using modern Java technologies and follows best practices 
   - Partying Events
   - Team Building Events
 - **Event Browsing by Type**: Users can browse available events organized by type in separate tabs, preventing information overload
+- **Consolidated Admin Dashboard**: Admins can view and manage all events in a single consolidated interface with dynamic filtering by event type and the ability to create new event categories on-the-fly
 - **Event Booking**: Users can view published events and make bookings with a streamlined booking system
 - **Booking Management**: Admins can view and manage user bookings
 - **Custom Event Requests**: Users can submit requests for custom events; admins can approve or manage them
@@ -182,7 +183,7 @@ src/
 
 ### Key Workflows
 - **User Authentication**: Users log in based on their roles (Admin, User, Manager)
-- **Admin Event Management**: Admins create and manage events through the unified EventInstance system, organized by type (Formation, Paddle, Partying, etc.); manage bookings and custom requests; create and manage event templates
+- **Admin Event Management**: Admins create and manage events through a consolidated dashboard with unified EventInstance system; view all events in one table with dynamic filtering by type (Formation, Paddle, Partying, TeamBuilding, Anniversary, and custom types); create new event categories on-the-fly; manage bookings and custom requests; create and manage event templates
 - **User Event Browsing**: Users browse published events organized by type in separate tabs, preventing information overload and improving discoverability
 - **User Event Booking**: Users view published events by type and make bookings with a streamlined process
 - **Custom Event Requests**: Users submit custom event requests; admins review and update statuses
@@ -211,6 +212,14 @@ src/
 ## License
 
 This project is licensed under the MIT License - see the LICENSE file for details.
+
+## Recent Updates
+
+### v1.1.0 - Admin Dashboard UI Consolidation
+- **Consolidated Event Management**: Unified all event type tabs (Formation, Paddle, Partying, TeamBuilding, Anniversary) into a single "Events" tab for improved admin user experience
+- **Dynamic Event Filtering**: Added ComboBox filter to view events by type or see all events at once
+- **Dynamic Event Type Creation**: Admins can now create new event categories directly from the UI without code changes
+- **Streamlined Interface**: Reduced tab clutter and improved navigation efficiency in the admin dashboard
 
 ## Future Enhancements
 
