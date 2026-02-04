@@ -10,16 +10,47 @@
             <TableColumn fx:id="nameColumn" text="Name" />
             <TableColumn fx:id="dateColumn" text="Date" />
             <TableColumn fx:id="descriptionColumn" text="Description" />
+            <TableColumn fx:id="locationColumn" text="Location" />
+            <TableColumn fx:id="capacityColumn" text="Capacity" />
+            <TableColumn fx:id="priceColumn" text="Price" />
+            <TableColumn fx:id="statusColumn" text="Status" />
         </columns>
     </TableView>
-    <HBox>
-        <TextField fx:id="nameField" promptText="Name" />
-        <DatePicker fx:id="datePicker" promptText="Date" />
-        <TextField fx:id="descriptionField" promptText="Description" />
-    </HBox>
-    <HBox>
+
+    <GridPane hgap="10" vgap="10">
+        <Label text="Name:" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+        <TextField fx:id="nameField" promptText="Name" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
+
+        <Label text="Date:" GridPane.columnIndex="2" GridPane.rowIndex="0"/>
+        <DatePicker fx:id="datePicker" promptText="Date" GridPane.columnIndex="3" GridPane.rowIndex="0"/>
+
+        <Label text="Start Time:" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+        <Spinner fx:id="startTimeHourSpinner" promptText="HH" GridPane.columnIndex="1" GridPane.rowIndex="1" min="0" max="23" initialValue="14"/>
+
+        <Label text="End Time:" GridPane.columnIndex="2" GridPane.rowIndex="1"/>
+        <Spinner fx:id="endTimeHourSpinner" promptText="HH" GridPane.columnIndex="3" GridPane.rowIndex="1" min="0" max="23" initialValue="22"/>
+
+        <Label text="Location:" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
+        <TextField fx:id="locationField" promptText="Location" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+
+        <Label text="Capacity:" GridPane.columnIndex="2" GridPane.rowIndex="2"/>
+        <Spinner fx:id="capacitySpinner" promptText="Capacity" GridPane.columnIndex="3" GridPane.rowIndex="2" min="1" max="1000" initialValue="40"/>
+
+        <Label text="Price (€):" GridPane.columnIndex="0" GridPane.rowIndex="3"/>
+        <Spinner fx:id="priceSpinner" promptText="Price" GridPane.columnIndex="1" GridPane.rowIndex="3" min="0" max="10000" initialValue="0" amountToStepBy="10"/>
+
+        <Label text="Status:" GridPane.columnIndex="2" GridPane.rowIndex="3"/>
+        <ComboBox fx:id="statusComboBox" GridPane.columnIndex="3" GridPane.rowIndex="3"/>
+
+        <Label text="Description:" GridPane.columnIndex="0" GridPane.rowIndex="4"/>
+        <TextArea fx:id="descriptionField" promptText="Description" wrapText="true" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="4"/>
+    </GridPane>
+
+    <HBox spacing="10">
         <Button text="Add" onAction="#addAnniversaryEvent" />
         <Button text="Update" onAction="#updateAnniversaryEvent" />
         <Button text="Delete" onAction="#deleteAnniversaryEvent" />
+        <Button text="Publish" onAction="#publishEvent" style="-fx-background-color: #4CAF50; -fx-text-fill: white;"/>
+        <Button text="Save as Draft" onAction="#saveAsDraft" />
     </HBox>
 </VBox>

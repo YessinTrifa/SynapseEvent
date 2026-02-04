@@ -88,9 +88,15 @@ public class AdminDashboardController {
         userRoleColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getRole().getName()));
 
         userActionColumn.setCellFactory(param -> new TableCell<User, Void>() {
+            private final Button editButton = new Button("Edit");
             private final Button deleteButton = new Button("Delete");
+            private final HBox buttonBox = new HBox(5, editButton, deleteButton);
 
             {
+                editButton.setOnAction(event -> {
+                    User user = getTableView().getItems().get(getIndex());
+                    editUser(user);
+                });
                 deleteButton.setOnAction(event -> {
                     User user = getTableView().getItems().get(getIndex());
                     deleteUser(user);
@@ -103,7 +109,7 @@ public class AdminDashboardController {
                 if (empty) {
                     setGraphic(null);
                 } else {
-                    setGraphic(deleteButton);
+                    setGraphic(buttonBox);
                 }
             }
         });
@@ -118,12 +124,22 @@ public class AdminDashboardController {
         bookingStatusColumn.setCellValueFactory(new PropertyValueFactory<>("status"));
 
         bookingActionColumn.setCellFactory(param -> new TableCell<Booking, Void>() {
-            private final Button actionButton = new Button();
+            private final Button approveButton = new Button("Approve");
+            private final Button denyButton = new Button("Deny");
+            private final HBox buttonBox = new HBox(5, approveButton, denyButton);
 
             {
-                actionButton.setOnAction(actionEvent -> {
+                approveButton.setStyle("-fx-background-color: #4CAF50; -fx-text-fill: white;");
+                denyButton.setStyle("-fx-background-color: #f44336; -fx-text-fill: white;");
+
+                approveButton.setOnAction(actionEvent -> {
                     Booking booking = getTableView().getItems().get(getIndex());
-                    toggleBookingStatus(booking);
+                    approveBooking(booking);
+                });
+
+                denyButton.setOnAction(actionEvent -> {
+                    Booking booking = getTableView().getItems().get(getIndex());
+                    denyBooking(booking);
                 });
             }
 
@@ -134,8 +150,11 @@ public class AdminDashboardController {
                     setGraphic(null);
                 } else {
                     Booking booking = getTableView().getItems().get(getIndex());
-                    actionButton.setText("approved".equals(booking.getStatus()) ? "Reject" : "Approve");
-                    setGraphic(actionButton);
+                    // Disable buttons if already processed
+                    boolean isProcessed = "approved".equals(booking.getStatus()) || "denied".equals(booking.getStatus());
+                    approveButton.setDisable(isProcessed);
+                    denyButton.setDisable(isProcessed);
+                    setGraphic(buttonBox);
                 }
             }
         });
@@ -148,12 +167,22 @@ public class AdminDashboardController {
         requestStatusColumn.setCellValueFactory(new PropertyValueFactory<>("status"));
 
         requestActionColumn.setCellFactory(param -> new TableCell<CustomEventRequest, Void>() {
-            private final Button actionButton = new Button();
+            private final Button approveButton = new Button("Approve");
+            private final Button denyButton = new Button("Deny");
+            private final HBox buttonBox = new HBox(5, approveButton, denyButton);
 
             {
-                actionButton.setOnAction(actionEvent -> {
+                approveButton.setStyle("-fx-background-color: #4CAF50; -fx-text-fill: white;");
+                denyButton.setStyle("-fx-background-color: #f44336; -fx-text-fill: white;");
+
+                approveButton.setOnAction(actionEvent -> {
                     CustomEventRequest request = getTableView().getItems().get(getIndex());
-                    toggleRequestStatus(request);
+                    approveRequest(request);
+                });
+
+                denyButton.setOnAction(actionEvent -> {
+                    CustomEventRequest request = getTableView().getItems().get(getIndex());
+                    denyRequest(request);
                 });
             }
 
@@ -164,8 +193,11 @@ public class AdminDashboardController {
                     setGraphic(null);
                 } else {
                     CustomEventRequest request = getTableView().getItems().get(getIndex());
-                    actionButton.setText("approved".equals(request.getStatus()) ? "Reject" : "Approve");
-                    setGraphic(actionButton);
+                    // Disable buttons if already processed
+                    boolean isProcessed = "approved".equals(request.getStatus()) || "denied".equals(request.getStatus());
+                    approveButton.setDisable(isProcessed);
+                    denyButton.setDisable(isProcessed);
+                    setGraphic(buttonBox);
                 }
             }
         });
@@ -252,9 +284,47 @@ public class AdminDashboardController {
         }
     }
 
+    private void editUser(User user) {
+        TextInputDialog nameDialog = new TextInputDialog(user.getNom());
+        nameDialog.setTitle("Edit User");
+        nameDialog.setHeaderText("Edit name for user: " + user.getEmail());
+        nameDialog.setContentText("New Name:");
 
+        nameDialog.showAndWait().ifPresent(newName -> {
+            if (!newName.trim().isEmpty()) {
+                user.setNom(newName.trim());
+                try {
+                    userService.modifier(user);
+                    loadUsers();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+    }
 
+    private void editRole(User user) {
+        ChoiceDialog<String> roleDialog = new ChoiceDialog<>(
+            user.getRole().getName(),
+            "Admin", "User", "Organizer", "Manager"
+        );
+        roleDialog.setTitle("Change User Role");
+        roleDialog.setHeaderText("Select new role for: " + user.getNom());
+        roleDialog.setContentText("Role:");
 
+        roleDialog.showAndWait().ifPresent(newRole -> {
+            try {
+                Role role = new RoleService().getByName(newRole);
+                if (role != null) {
+                    user.setRole(role);
+                    userService.modifier(user);
+                    loadUsers();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        });
+    }
 
     private void toggleBookingStatus(Booking booking) {
         try {
@@ -266,7 +336,48 @@ public class AdminDashboardController {
         }
     }
 
+    private void approveBooking(Booking booking) {
+        try {
+            booking.setStatus("approved");
+            bookingService.modifier(booking);
+            loadBookings();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void denyBooking(Booking booking) {
+        try {
+            booking.setStatus("denied");
+            bookingService.modifier(booking);
+            loadBookings();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void approveRequest(CustomEventRequest request) {
+        try {
+            request.setStatus("approved");
+            customRequestService.modifier(request);
+            loadCustomRequests();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void denyRequest(CustomEventRequest request) {
+        try {
+            request.setStatus("denied");
+            customRequestService.modifier(request);
+            loadCustomRequests();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
     private void toggleRequestStatus(CustomEventRequest request) {
+        // Kept for backward compatibility, but recommend using approveRequest/denyRequest
         try {
             request.setStatus("approved".equals(request.getStatus()) ? "pending" : "approved");
             customRequestService.modifier(request);

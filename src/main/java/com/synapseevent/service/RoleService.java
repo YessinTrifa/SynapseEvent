@@ -75,4 +75,18 @@ public class RoleService {
             e.printStackTrace();
         }
     }
+
+    public Role getByName(String name) {
+        String sql = "SELECT * FROM Role WHERE name = ?";
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, name);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                return new Role(rs.getLong("id"), rs.getString("name"));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 }
