@@ -14,7 +14,7 @@ public class CustomEventRequestService implements IService<CustomEventRequest> {
 
     @Override
     public boolean ajouter(CustomEventRequest request) throws SQLException {
-        String sql = "INSERT INTO CustomEventRequest (user_id, event_type, event_date, description, status, created_date) VALUES (?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO CustomEventRequest (user_id, event_type, event_date, description, status, created_date, budget, capacity, location) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
         try (PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             stmt.setLong(1, request.getUser().getId());
             stmt.setString(2, request.getEventType());
@@ -22,6 +22,9 @@ public class CustomEventRequestService implements IService<CustomEventRequest> {
             stmt.setString(4, request.getDescription());
             stmt.setString(5, request.getStatus());
             stmt.setDate(6, Date.valueOf(request.getCreatedDate()));
+            stmt.setDouble(7, request.getBudget() != null ? request.getBudget() : 0.0);
+            stmt.setInt(8, request.getCapacity() != null ? request.getCapacity() : 0);
+            stmt.setString(9, request.getLocation());
             int res = stmt.executeUpdate();
             ResultSet rs = stmt.getGeneratedKeys();
             if (rs.next()) {
@@ -41,7 +44,18 @@ public class CustomEventRequestService implements IService<CustomEventRequest> {
         try (Statement stmt = conn.createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
             while (rs.next()) {
                 User user = userService.findbyId(rs.getLong("user_id"));
-                CustomEventRequest request = new CustomEventRequest(rs.getLong("id"), user, rs.getString("event_type"), rs.getDate("event_date").toLocalDate(), rs.getString("description"), rs.getString("status"), rs.getDate("created_date").toLocalDate());
+                CustomEventRequest request = new CustomEventRequest(
+                    rs.getLong("id"), 
+                    user, 
+                    rs.getString("event_type"), 
+                    rs.getDate("event_date").toLocalDate(), 
+                    rs.getString("description"), 
+                    rs.getString("status"), 
+                    rs.getDate("created_date").toLocalDate(),
+                    rs.getDouble("budget"),
+                    rs.getInt("capacity"),
+                    rs.getString("location")
+                );
                 requests.add(request);
             }
         } catch (SQLException e) {
@@ -59,7 +73,18 @@ public class CustomEventRequestService implements IService<CustomEventRequest> {
             ResultSet rs = stmt.executeQuery();
             if (rs.next()) {
                 User user = userService.findbyId(rs.getLong("user_id"));
-                return new CustomEventRequest(rs.getLong("id"), user, rs.getString("event_type"), rs.getDate("event_date").toLocalDate(), rs.getString("description"), rs.getString("status"), rs.getDate("created_date").toLocalDate());
+                return new CustomEventRequest(
+                    rs.getLong("id"), 
+                    user, 
+                    rs.getString("event_type"), 
+                    rs.getDate("event_date").toLocalDate(), 
+                    rs.getString("description"), 
+                    rs.getString("status"), 
+                    rs.getDate("created_date").toLocalDate(),
+                    rs.getDouble("budget"),
+                    rs.getInt("capacity"),
+                    rs.getString("location")
+                );
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -70,7 +95,7 @@ public class CustomEventRequestService implements IService<CustomEventRequest> {
 
     @Override
     public boolean modifier(CustomEventRequest request) throws SQLException {
-        String sql = "UPDATE CustomEventRequest SET user_id = ?, event_type = ?, event_date = ?, description = ?, status = ?, created_date = ? WHERE id = ?";
+        String sql = "UPDATE CustomEventRequest SET user_id = ?, event_type = ?, event_date = ?, description = ?, status = ?, created_date = ?, budget = ?, capacity = ?, location = ? WHERE id = ?";
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setLong(1, request.getUser().getId());
             stmt.setString(2, request.getEventType());
@@ -78,7 +103,10 @@ public class CustomEventRequestService implements IService<CustomEventRequest> {
             stmt.setString(4, request.getDescription());
             stmt.setString(5, request.getStatus());
             stmt.setDate(6, Date.valueOf(request.getCreatedDate()));
-            stmt.setLong(7, request.getId());
+            stmt.setDouble(7, request.getBudget() != null ? request.getBudget() : 0.0);
+            stmt.setInt(8, request.getCapacity() != null ? request.getCapacity() : 0);
+            stmt.setString(9, request.getLocation());
+            stmt.setLong(10, request.getId());
             int res = stmt.executeUpdate();
             return res > 0;
         } catch (SQLException e) {
@@ -110,7 +138,18 @@ public class CustomEventRequestService implements IService<CustomEventRequest> {
             stmt.setLong(1, user.getId());
             ResultSet rs = stmt.executeQuery();
             while (rs.next()) {
-                CustomEventRequest request = new CustomEventRequest(rs.getLong("id"), user, rs.getString("event_type"), rs.getDate("event_date").toLocalDate(), rs.getString("description"), rs.getString("status"), rs.getDate("created_date").toLocalDate());
+                CustomEventRequest request = new CustomEventRequest(
+                    rs.getLong("id"), 
+                    user, 
+                    rs.getString("event_type"), 
+                    rs.getDate("event_date").toLocalDate(), 
+                    rs.getString("description"), 
+                    rs.getString("status"), 
+                    rs.getDate("created_date").toLocalDate(),
+                    rs.getDouble("budget"),
+                    rs.getInt("capacity"),
+                    rs.getString("location")
+                );
                 requests.add(request);
             }
         } catch (SQLException e) {

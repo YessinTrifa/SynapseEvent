@@ -61,11 +61,18 @@
     </Tab>
     <Tab text="Custom Requests">
         <VBox>
+            <HBox>
+                <Button text="Create Request" onAction="#createCustomRequest"/>
+            </HBox>
             <TableView fx:id="customRequestsTable">
                 <columns>
                     <TableColumn fx:id="requestUserColumn" text="User" />
+                    <TableColumn fx:id="requestTypeColumn" text="Event Type" />
+                    <TableColumn fx:id="requestDateColumn" text="Event Date" />
+                    <TableColumn fx:id="requestBudgetColumn" text="Budget" />
+                    <TableColumn fx:id="requestCapacityColumn" text="Capacity" />
+                    <TableColumn fx:id="requestLocationColumn" text="Location" />
                     <TableColumn fx:id="requestDetailsColumn" text="Details" />
-                    <TableColumn fx:id="requestDateColumn" text="Request Date" />
                     <TableColumn fx:id="requestStatusColumn" text="Status" />
                     <TableColumn fx:id="requestActionColumn" text="Action" />
                 </columns>

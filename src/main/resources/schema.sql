@@ -137,7 +137,10 @@ CREATE TABLE IF NOT EXISTS CustomEventRequest (
     event_date DATE NOT NULL,
     description TEXT,
     status VARCHAR(20) DEFAULT 'pending',
-    created_date DATE NOT NULL
+    created_date DATE NOT NULL,
+    budget DECIMAL(10,2),
+    capacity INT,
+    location VARCHAR(255)
 );
 
 -- Insert sample data for Role
@@ -223,10 +226,10 @@ INSERT INTO Booking (user_id, event_type, event_id, booking_date, status) VALUES
 
 -- Insert sample data for CustomEventRequest
 TRUNCATE TABLE CustomEventRequest;
-INSERT INTO CustomEventRequest (user_id, event_type, event_date, description, status, created_date) VALUES
-(1, 'TeamBuilding', '2026-06-01', 'Request for a custom team building event with outdoor activities', 'pending', '2026-05-01'),
-(2, 'Anniversary', '2026-05-01', 'Need a special anniversary celebration with fireworks', 'approved', '2026-04-15'),
-(3, 'Formation', '2026-07-01', 'Custom formation on advanced AI topics', 'pending', '2026-05-10');
+INSERT INTO CustomEventRequest (user_id, event_type, event_date, description, status, created_date, budget, capacity, location) VALUES
+(1, 'TeamBuilding', '2026-06-01', 'Request for a custom team building event with outdoor activities', 'pending', '2026-05-01', 1500.00, 30, 'Paris'),
+(2, 'Anniversary', '2026-05-01', 'Need a special anniversary celebration with fireworks', 'approved', '2026-04-15', 3000.00, 100, 'Lyon'),
+(3, 'Formation', '2026-07-01', 'Custom formation on advanced AI topics', 'pending', '2026-05-10', 2000.00, 25, 'Marseille');
 
 -- Create Review table
 CREATE TABLE IF NOT EXISTS Review (
