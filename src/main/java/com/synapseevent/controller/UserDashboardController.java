@@ -26,12 +26,39 @@ public class UserDashboardController {
     @FXML private TabPane categoryTabPane;
     @FXML private TabPane eventsTabPane;
 
+    // Home Tab - Filters
+    @FXML private TextField locationSearchField;
+    @FXML private ComboBox<String> typeFilterCombo;
+    @FXML private DatePicker dateFromPicker;
+    @FXML private DatePicker dateToPicker;
+
+    // Home Tab - Featured Events Table
+    @FXML private TableView<EventInstance> featuredEventsTable;
+    @FXML private TableColumn<EventInstance, String> featuredNameColumn;
+    @FXML private TableColumn<EventInstance, String> featuredTypeColumn;
+    @FXML private TableColumn<EventInstance, LocalDate> featuredDateColumn;
+    @FXML private TableColumn<EventInstance, String> featuredLocationColumn;
+    @FXML private TableColumn<EventInstance, Double> featuredPriceColumn;
+    @FXML private TableColumn<EventInstance, Void> featuredActionColumn;
+
+    // Home Tab - All Events Table
+    @FXML private TableView<EventInstance> allEventsTable;
+    @FXML private TableColumn<EventInstance, String> allNameColumn;
+    @FXML private TableColumn<EventInstance, String> allTypeColumn;
+    @FXML private TableColumn<EventInstance, LocalDate> allDateColumn;
+    @FXML private TableColumn<EventInstance, String> allLocationColumn;
+    @FXML private TableColumn<EventInstance, Double> allPriceColumn;
+    @FXML private TableColumn<EventInstance, String> allStatusColumn;
+    @FXML private TableColumn<EventInstance, Void> allActionColumn;
+
+    // My Bookings Tab
     @FXML private TableView<Booking> bookingsTable;
     @FXML private TableColumn<Booking, String> bookingTypeColumn;
     @FXML private TableColumn<Booking, Long> bookingEventIdColumn;
     @FXML private TableColumn<Booking, LocalDate> bookingDateColumn;
     @FXML private TableColumn<Booking, String> bookingStatusColumn;
 
+    // Custom Request Tab
     @FXML private ComboBox<String> eventTypeCombo;
     @FXML private DatePicker eventDatePicker;
     @FXML private TextArea descriptionArea;
@@ -42,61 +69,193 @@ public class UserDashboardController {
     private CustomEventRequestService customRequestService = new CustomEventRequestService();
 
     private Map<String, List<EventInstance>> eventsByType;
+    private List<EventInstance> allPublishedEvents = new ArrayList<>();
 
     @FXML
     public void initialize() {
+        // Setup type filter combo
+        typeFilterCombo.getItems().addAll("All", "Anniversary", "Formation", "Paddle", "Partying", "TeamBuilding");
+        typeFilterCombo.setValue("All");
+
+        // Setup featured events table
+        setupFeaturedEventsTable();
+
+        // Setup all events table
+        setupAllEventsTable();
+
         // Setup bookings table
+        setupBookingsTable();
+
+        // Setup custom request combo
+        eventTypeCombo.getItems().addAll("Anniversary", "Formation", "Paddle", "Partying", "TeamBuilding");
+
+        // Load data
+        loadEvents();
+        loadBookings();
+    }
+
+    private void setupFeaturedEventsTable() {
+        featuredNameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
+        featuredTypeColumn.setCellValueFactory(new PropertyValueFactory<>("type"));
+        featuredDateColumn.setCellValueFactory(new PropertyValueFactory<>("date"));
+        featuredLocationColumn.setCellValueFactory(new PropertyValueFactory<>("location"));
+        featuredPriceColumn.setCellValueFactory(new PropertyValueFactory<>("price"));
+
+        featuredActionColumn.setCellFactory(param -> new TableCell<EventInstance, Void>() {
+            private final Button bookButton = new Button("Book");
+            {
+                bookButton.setOnAction(event -> {
+                    EventInstance ei = getTableView().getItems().get(getIndex());
+                    bookEvent(ei);
+                });
+            }
+            @Override
+            protected void updateItem(Void item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty) {
+                    setGraphic(null);
+                } else {
+                    setGraphic(bookButton);
+                }
+            }
+        });
+    }
+
+    private void setupAllEventsTable() {
+        allNameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
+        allTypeColumn.setCellValueFactory(new PropertyValueFactory<>("type"));
+        allDateColumn.setCellValueFactory(new PropertyValueFactory<>("date"));
+        allLocationColumn.setCellValueFactory(new PropertyValueFactory<>("location"));
+        allPriceColumn.setCellValueFactory(new PropertyValueFactory<>("price"));
+        allStatusColumn.setCellValueFactory(new PropertyValueFactory<>("status"));
+
+        allActionColumn.setCellFactory(param -> new TableCell<EventInstance, Void>() {
+            private final Button bookButton = new Button("Book");
+            {
+                bookButton.setOnAction(event -> {
+                    EventInstance ei = getTableView().getItems().get(getIndex());
+                    bookEvent(ei);
+                });
+            }
+            @Override
+            protected void updateItem(Void item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty) {
+                    setGraphic(null);
+                } else {
+                    setGraphic(bookButton);
+                }
+            }
+        });
+    }
+
+    private void setupBookingsTable() {
         bookingTypeColumn.setCellValueFactory(cellData -> {
             Booking booking = cellData.getValue();
             String displayName = "Unknown Event";
-            if ("instance".equals(booking.getEventType())) {
-                try {
-                    EventInstance instance = eventInstanceService.findbyId(booking.getEventId());
-                    if (instance != null) {
-                        displayName = instance.getName();
-                    }
-                } catch (SQLException e) {
-                    e.printStackTrace();
+            try {
+                EventInstance instance = eventInstanceService.findbyId(booking.getEventId());
+                if (instance != null) {
+                    String typeName = instance.getType() != null ? instance.getType() : "Event";
+                    String eventName = instance.getName() != null ? instance.getName() : "Unnamed";
+                    displayName = typeName + " - " + eventName;
                 }
+            } catch (SQLException e) {
+                e.printStackTrace();
             }
             return new SimpleStringProperty(displayName);
         });
         bookingEventIdColumn.setCellValueFactory(new PropertyValueFactory<>("eventId"));
         bookingDateColumn.setCellValueFactory(new PropertyValueFactory<>("bookingDate"));
         bookingStatusColumn.setCellValueFactory(new PropertyValueFactory<>("status"));
-
-        eventTypeCombo.getItems().addAll("Anniversary", "Formation", "Paddle", "Partying", "TeamBuilding");
-        loadEvents();
-        loadBookings();
     }
 
     private void loadEvents() {
         try {
-            List<EventInstance> instances = eventInstanceService.getPublishedEvents();
+            allPublishedEvents = eventInstanceService.getPublishedEvents();
 
-            eventsByType = instances.stream()
+            // Load featured events (upcoming events sorted by date)
+            List<EventInstance> featured = allPublishedEvents.stream()
+                .filter(e -> e.getDate() != null && !e.getDate().isBefore(LocalDate.now()))
+                .sorted((e1, e2) -> e1.getDate().compareTo(e2.getDate()))
+                .limit(5)
+                .collect(Collectors.toList());
+            featuredEventsTable.setItems(FXCollections.observableArrayList(featured));
+
+            // Load all events
+            allEventsTable.setItems(FXCollections.observableArrayList(allPublishedEvents));
+
+            // Load events by type for legacy tabs
+            eventsByType = allPublishedEvents.stream()
                 .collect(Collectors.groupingBy(EventInstance::getType));
 
             // Clear existing tabs
-            eventsTabPane.getTabs().clear();
-
-            // Create tabs for each type
-            for (Map.Entry<String, List<EventInstance>> entry : eventsByType.entrySet()) {
-                String typeName = entry.getKey();
-                List<EventInstance> typeEvents = entry.getValue();
-
-                Tab typeTab = new Tab(typeName);
-                TableView<EventInstance> table = createEventTable();
-                table.setItems(FXCollections.observableArrayList(typeEvents));
-
-                VBox vbox = new VBox(table);
-                typeTab.setContent(vbox);
-                eventsTabPane.getTabs().add(typeTab);
+            if (eventsTabPane != null) {
+                eventsTabPane.getTabs().clear();
+                for (Map.Entry<String, List<EventInstance>> entry : eventsByType.entrySet()) {
+                    String typeName = entry.getKey();
+                    List<EventInstance> typeEvents = entry.getValue();
+                    Tab typeTab = new Tab(typeName);
+                    TableView<EventInstance> table = createEventTable();
+                    table.setItems(FXCollections.observableArrayList(typeEvents));
+                    VBox vbox = new VBox(table);
+                    typeTab.setContent(vbox);
+                    eventsTabPane.getTabs().add(typeTab);
+                }
             }
 
         } catch (SQLException e) {
             e.printStackTrace();
         }
+    }
+
+    @FXML
+    private void applyFilters() {
+        String location = locationSearchField.getText().trim().toLowerCase();
+        String type = typeFilterCombo.getValue();
+        LocalDate fromDate = dateFromPicker.getValue();
+        LocalDate toDate = dateToPicker.getValue();
+
+        List<EventInstance> filtered = allPublishedEvents.stream()
+            .filter(e -> {
+                // Filter by location
+                if (!location.isEmpty()) {
+                    String eventLocation = e.getLocation() != null ? e.getLocation().toLowerCase() : "";
+                    if (!eventLocation.contains(location)) {
+                        return false;
+                    }
+                }
+                // Filter by type
+                if (type != null && !type.equals("All")) {
+                    if (!type.equals(e.getType())) {
+                        return false;
+                    }
+                }
+                // Filter by date range
+                if (fromDate != null && e.getDate() != null) {
+                    if (e.getDate().isBefore(fromDate)) {
+                        return false;
+                    }
+                }
+                if (toDate != null && e.getDate() != null) {
+                    if (e.getDate().isAfter(toDate)) {
+                        return false;
+                    }
+                }
+                return true;
+            })
+            .collect(Collectors.toList());
+
+        allEventsTable.setItems(FXCollections.observableArrayList(filtered));
+    }
+
+    @FXML
+    private void clearFilters() {
+        locationSearchField.clear();
+        typeFilterCombo.setValue("All");
+        dateFromPicker.setValue(null);
+        dateToPicker.setValue(null);
+        allEventsTable.setItems(FXCollections.observableArrayList(allPublishedEvents));
     }
 
     private TableView<EventInstance> createEventTable() {
@@ -147,13 +306,19 @@ public class UserDashboardController {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-    
     }
 
     private void bookEvent(EventInstance ei) {
         Booking booking = new Booking(CurrentUser.getCurrentUser(), "instance", ei.getId(), LocalDate.now(), "pending");
         try {
             bookingService.ajouter(booking);
+
+            // Update event instance status to "pending" when a user books it
+            ei.setStatus("pending");
+            eventInstanceService.modifier(ei);
+
+            // Refresh the tables to show updated status
+            loadEvents();
             loadBookings();
         } catch (SQLException e) {
             e.printStackTrace();

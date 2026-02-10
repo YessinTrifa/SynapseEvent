@@ -2,13 +2,64 @@
 
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
 
 <VBox xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.synapseevent.controller.UserDashboardController">
     <HBox>
         <Button text="Logout" onAction="#logout"/>
     </HBox>
     <TabPane fx:id="categoryTabPane">
-    <Tab text="Available Events">
+    <!-- Home Tab with Featured Events and Filters -->
+    <Tab text="Home">
+        <VBox spacing="10">
+            <!-- Filter Controls -->
+            <HBox spacing="10" alignment="CENTER_LEFT">
+                <Label text="Search Location:" />
+                <TextField fx:id="locationSearchField" promptText="Enter location..." />
+                
+                <Label text="Event Type:" />
+                <ComboBox fx:id="typeFilterCombo" />
+                
+                <Label text="From:" />
+                <DatePicker fx:id="dateFromPicker" />
+                
+                <Label text="To:" />
+                <DatePicker fx:id="dateToPicker" />
+                
+                <Button text="Apply Filters" onAction="#applyFilters" />
+                <Button text="Clear Filters" onAction="#clearFilters" />
+            </HBox>
+            
+            <!-- Featured Events Section -->
+            <Label text="Featured Events" style="-fx-font-size: 18; -fx-font-weight: bold;" />
+            <TableView fx:id="featuredEventsTable" VBox.vgrow="ALWAYS">
+                <columns>
+                    <TableColumn fx:id="featuredNameColumn" text="Name" />
+                    <TableColumn fx:id="featuredTypeColumn" text="Type" />
+                    <TableColumn fx:id="featuredDateColumn" text="Date" />
+                    <TableColumn fx:id="featuredLocationColumn" text="Location" />
+                    <TableColumn fx:id="featuredPriceColumn" text="Price" />
+                    <TableColumn fx:id="featuredActionColumn" text="Action" />
+                </columns>
+            </TableView>
+            
+            <!-- All Events Section -->
+            <Label text="All Available Events" style="-fx-font-size: 18; -fx-font-weight: bold;" />
+            <TableView fx:id="allEventsTable" VBox.vgrow="ALWAYS">
+                <columns>
+                    <TableColumn fx:id="allNameColumn" text="Name" />
+                    <TableColumn fx:id="allTypeColumn" text="Type" />
+                    <TableColumn fx:id="allDateColumn" text="Date" />
+                    <TableColumn fx:id="allLocationColumn" text="Location" />
+                    <TableColumn fx:id="allPriceColumn" text="Price" />
+                    <TableColumn fx:id="allStatusColumn" text="Status" />
+                    <TableColumn fx:id="allActionColumn" text="Action" />
+                </columns>
+            </TableView>
+        </VBox>
+    </Tab>
+    <!-- Available Events by Type (Legacy tabs) -->
+    <Tab text="Browse by Type">
         <TabPane fx:id="eventsTabPane">
             <!-- Dynamic tabs will be created here -->
         </TabPane>

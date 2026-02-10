@@ -293,6 +293,11 @@ INSERT INTO event_instance (name, date, start_time, end_time, location, capacity
 ('Formation Java Avancé', '2024-06-10', NULL, NULL, NULL, NULL, NULL, NULL, 'Cours intensif sur les concepts avancés de Java', 'published', 'Formation'),
 ('Atelier Management', '2024-08-15', NULL, NULL, NULL, NULL, NULL, NULL, 'Formation sur les techniques de management d\'équipe', 'published', 'Formation'),
 ('Tournoi Paddle Entreprise', '2024-07-05', NULL, NULL, NULL, NULL, NULL, NULL, 'Compétition amicale entre collègues', 'published', 'Paddle'),
-('Soirée d\'Entreprise TechCorp', '2024-06-25', NULL, NULL, NULL, NULL, NULL, NULL, 'Fête avec DJ et buffet', 'published', 'Partying'),
+('Soirée d\'Entreprise TechCorp', '2024-06-25', '20:00:00', '02:00:00', 'Club Inferno', 200, 50.00, 'Jean Dupont', 'Fête avec DJ et buffet', 'published', 'Partying'),
+('Gala Annuel Innovate', '2024-09-05', '19:00:00', '23:00:00', 'Grand Hotel Ballroom', 150, 100.00, 'Marie Martin', 'Événement formel avec cocktail', 'published', 'Partying'),
+('Fête de Noël Global', '2024-12-20', '18:00:00', '22:00:00', 'Grand Hotel Ballroom', 300, 75.00, 'Pierre Durand', 'Célébration de fin d\'année', 'published', 'Partying'),
+('Barbecue d\'Été', '2024-07-30', '12:00:00', '18:00:00', 'Sunset Beach Club', 100, 25.00, 'Alice Nouveau', 'Repas en extérieur avec musique', 'published', 'Partying'),
+('Soirée Casino', '2024-11-15', '21:00:00', '03:00:00', 'Club Inferno', 80, 30.00, 'Bob Ancien', 'Jeux et divertissement', 'published', 'Partying'),
+('Concert Privé', '2025-02-28', '20:00:00', '23:00:00', 'Rooftop Terrace', 120, 45.00, 'Charlie Music', 'Performance live pour les employés', 'published', 'Partying'),
 ('Escape Game Team', '2024-08-12', NULL, NULL, NULL, NULL, NULL, NULL, 'Aventure en équipe pour résoudre énigmes', 'published', 'TeamBuilding'),
 ('Anniversaire 10 ans TechCorp', '2024-05-15', '10:00:00', '18:00:00', 'Salle de fête TechCorp', 100, 0.00, 'Jean Dupont', 'Célébration des 10 ans de l\'entreprise avec gâteau et discours', 'published', 'Anniversary');

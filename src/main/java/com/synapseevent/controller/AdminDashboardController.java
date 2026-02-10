@@ -11,10 +11,13 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
+import javafx.geometry.Insets;
 import javafx.scene.control.TextInputDialog;
-import javafx.stage.Stage;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Dialog;
+import javafx.stage.Stage;
 
 import java.sql.SQLException;
 import java.time.LocalDate;
@@ -118,7 +121,25 @@ public class AdminDashboardController {
 
     private void setupBookingsTable() {
         bookingUserColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getUser().getNom()));
-        bookingTypeColumn.setCellValueFactory(new PropertyValueFactory<>("eventType"));
+        
+        // Show actual event name instead of eventType
+        bookingTypeColumn.setCellValueFactory(cellData -> {
+            Booking booking = cellData.getValue();
+            String displayName = "Unknown Event";
+            try {
+                EventInstance instance = eventService.findbyId(booking.getEventId());
+                if (instance != null) {
+                    // Show the actual event name and type (e.g., "Partying - Summer Party")
+                    String typeName = instance.getType() != null ? instance.getType() : "Event";
+                    String eventName = instance.getName() != null ? instance.getName() : "Unnamed";
+                    displayName = typeName + " - " + eventName;
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            return new SimpleStringProperty(displayName);
+        });
+        
         bookingEventIdColumn.setCellValueFactory(new PropertyValueFactory<>("eventId"));
         bookingDateColumn.setCellValueFactory(new PropertyValueFactory<>("bookingDate"));
         bookingStatusColumn.setCellValueFactory(new PropertyValueFactory<>("status"));
@@ -216,7 +237,37 @@ public class AdminDashboardController {
         eventStatusColumn.setCellValueFactory(new PropertyValueFactory<>("status"));
         eventTypeColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getType()));
 
-        // No action buttons for events - managed by specific controllers
+        // Add action buttons for events
+        eventActionColumn.setCellFactory(param -> new TableCell<EventInstance, Void>() {
+            private final Button editButton = new Button("Edit");
+            private final Button deleteButton = new Button("Delete");
+            private final HBox buttonBox = new HBox(5, editButton, deleteButton);
+
+            {
+                editButton.setStyle("-fx-background-color: #2196F3; -fx-text-fill: white;");
+                deleteButton.setStyle("-fx-background-color: #f44336; -fx-text-fill: white;");
+
+                editButton.setOnAction(actionEvent -> {
+                    EventInstance event = getTableView().getItems().get(getIndex());
+                    editEvent(event);
+                });
+
+                deleteButton.setOnAction(actionEvent -> {
+                    EventInstance event = getTableView().getItems().get(getIndex());
+                    deleteEvent(event);
+                });
+            }
+
+            @Override
+            protected void updateItem(Void item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty) {
+                    setGraphic(null);
+                } else {
+                    setGraphic(buttonBox);
+                }
+            }
+        });
     }
 
 
@@ -284,6 +335,112 @@ public class AdminDashboardController {
         }
     }
 
+    private void editEvent(EventInstance event) {
+        // Show a dialog to edit event details
+        Dialog<String[]> dialog = new Dialog<>();
+        dialog.setTitle("Edit Event");
+        dialog.setHeaderText("Edit event: " + event.getName());
+        
+        // Create form fields
+        TextField nameField = new TextField(event.getName());
+        nameField.setPromptText("Event Name");
+        
+        DatePicker datePicker = new DatePicker(event.getDate());
+        datePicker.setPromptText("Event Date");
+        
+        TextField locationField = new TextField(event.getLocation());
+        locationField.setPromptText("Location");
+        
+        Spinner<Integer> capacitySpinner = new Spinner<>(1, 1000, event.getCapacity() != null ? event.getCapacity() : 50);
+        capacitySpinner.setPromptText("Capacity");
+        
+        Spinner<Double> priceSpinner = new Spinner<>(0.0, 10000.0, event.getPrice() != null ? event.getPrice() : 0.0, 10.0);
+        priceSpinner.setPromptText("Price");
+        
+        ComboBox<String> statusCombo = new ComboBox<>();
+        statusCombo.getItems().addAll("draft", "published", "pending", "confirmed", "cancelled");
+        statusCombo.setValue(event.getStatus());
+        
+        TextArea descriptionArea = new TextArea(event.getDescription());
+        descriptionArea.setPromptText("Description");
+        descriptionArea.setPrefRowCount(3);
+        
+        GridPane grid = new GridPane();
+        grid.setHgap(10);
+        grid.setVgap(10);
+        grid.setPadding(new Insets(20));
+        
+        grid.add(new Label("Name:"), 0, 0);
+        grid.add(nameField, 1, 0);
+        grid.add(new Label("Date:"), 0, 1);
+        grid.add(datePicker, 1, 1);
+        grid.add(new Label("Location:"), 0, 2);
+        grid.add(locationField, 1, 2);
+        grid.add(new Label("Capacity:"), 0, 3);
+        grid.add(capacitySpinner, 1, 3);
+        grid.add(new Label("Price:"), 0, 4);
+        grid.add(priceSpinner, 1, 4);
+        grid.add(new Label("Status:"), 0, 5);
+        grid.add(statusCombo, 1, 5);
+        grid.add(new Label("Description:"), 0, 6);
+        grid.add(descriptionArea, 1, 6);
+        
+        dialog.getDialogPane().setContent(grid);
+        dialog.getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
+        
+        dialog.setResultConverter(button -> {
+            if (button == ButtonType.OK) {
+                return new String[]{
+                    nameField.getText(),
+                    datePicker.getValue() != null ? datePicker.getValue().toString() : "",
+                    locationField.getText(),
+                    String.valueOf(capacitySpinner.getValue()),
+                    String.valueOf(priceSpinner.getValue()),
+                    statusCombo.getValue(),
+                    descriptionArea.getText()
+                };
+            }
+            return null;
+        });
+        
+        dialog.showAndWait().ifPresent(result -> {
+            if (!result[0].trim().isEmpty()) {
+                event.setName(result[0]);
+                event.setDate(LocalDate.parse(result[1]));
+                event.setLocation(result[2]);
+                event.setCapacity(Integer.parseInt(result[3]));
+                event.setPrice(Double.parseDouble(result[4]));
+                event.setStatus(result[5]);
+                event.setDescription(result[6]);
+                
+                try {
+                    eventService.modifier(event);
+                    loadEvents();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+    }
+
+    private void deleteEvent(EventInstance event) {
+        Alert confirmDialog = new Alert(Alert.AlertType.CONFIRMATION);
+        confirmDialog.setTitle("Delete Event");
+        confirmDialog.setHeaderText("Are you sure you want to delete event: " + event.getName() + "?");
+        confirmDialog.setContentText("This action cannot be undone.");
+        
+        confirmDialog.showAndWait().ifPresent(result -> {
+            if (result == ButtonType.OK) {
+                try {
+                    eventService.supprimer(event);
+                    loadEvents();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+    }
+
     private void editUser(User user) {
         TextInputDialog nameDialog = new TextInputDialog(user.getNom());
         nameDialog.setTitle("Edit User");
@@ -340,7 +497,16 @@ public class AdminDashboardController {
         try {
             booking.setStatus("approved");
             bookingService.modifier(booking);
+            
+            // Also update the event instance status to "confirmed"
+            EventInstance event = eventService.findbyId(booking.getEventId());
+            if (event != null) {
+                event.setStatus("confirmed");
+                eventService.modifier(event);
+            }
+            
             loadBookings();
+            loadEvents();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -350,7 +516,25 @@ public class AdminDashboardController {
         try {
             booking.setStatus("denied");
             bookingService.modifier(booking);
+            
+            // Also update the event instance status back to "published" (no pending bookings)
+            EventInstance event = eventService.findbyId(booking.getEventId());
+            if (event != null) {
+                // Check if there are other pending bookings for this event
+                List<Booking> eventBookings = bookingService.getBookingsByEvent("instance", booking.getEventId());
+                boolean hasPending = eventBookings.stream()
+                    .anyMatch(b -> "pending".equals(b.getStatus()) && !b.getId().equals(booking.getId()));
+                
+                if (hasPending) {
+                    event.setStatus("pending");
+                } else {
+                    event.setStatus("published");
+                }
+                eventService.modifier(event);
+            }
+            
             loadBookings();
+            loadEvents();
         } catch (SQLException e) {
             e.printStackTrace();
         }

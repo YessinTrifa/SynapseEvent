@@ -2,14 +2,17 @@ package com.synapseevent.controller;
 
 import com.synapseevent.entities.PartyingEvent;
 import com.synapseevent.entities.Venue;
+import com.synapseevent.entities.EventInstance;
 import com.synapseevent.service.PartyingEventService;
 import com.synapseevent.service.VenueService;
+import com.synapseevent.service.EventInstanceService;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.util.converter.DoubleStringConverter;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -39,6 +42,7 @@ public class PartyingController {
 
     private PartyingEventService partyingEventService = new PartyingEventService();
     private VenueService venueService = new VenueService();
+    private EventInstanceService eventInstanceService = new EventInstanceService();
 
     @FXML
     public void initialize() {
@@ -64,6 +68,9 @@ public class PartyingController {
         ObservableList<String> venueTypes = FXCollections.observableArrayList("All", "CLUB", "BEACH", "HOTEL");
         venueTypeFilterComboBox.setItems(venueTypes);
         venueTypeFilterComboBox.setValue("All");
+
+        priceSpinner.setValueFactory(new SpinnerValueFactory.DoubleSpinnerValueFactory(0, 10000, 0, 10));
+        priceSpinner.getValueFactory().setConverter(new DoubleStringConverter());
 
         loadVenues();
         loadData();
@@ -139,7 +146,15 @@ public class PartyingController {
             PartyingEvent event = new PartyingEvent(name, date, startTime, endTime,
                 venueId, capacity, price, "admin@synapse.com", description, status);
             try {
+                // Save to PartyingEvent table
                 partyingEventService.ajouter(event);
+                
+                // Also save to event_instance table for admin dashboard
+                EventInstance eventInstance = new EventInstance(
+                    name, date, startTime, endTime,
+                    selectedVenue != null ? selectedVenue.getName() : "",
+                    capacity, price, "admin@synapse.com", description, status, "Partying");
+                eventInstanceService.ajouter(eventInstance);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -166,7 +181,17 @@ public class PartyingController {
             }
 
             try {
+                // Update PartyingEvent table
                 partyingEventService.modifier(selected);
+                
+                // Also update event_instance table for admin dashboard
+                EventInstance eventInstance = new EventInstance(
+                    selected.getName(), selected.getDate(), selected.getStartTime(), selected.getEndTime(),
+                    selectedVenue != null ? selectedVenue.getName() : "",
+                    selected.getCapacity(), selected.getPrice(), selected.getOrganizer(), 
+                    selected.getDescription(), selected.getStatus(), "Partying");
+                eventInstance.setId(selected.getId());
+                eventInstanceService.modifier(eventInstance);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -179,6 +204,12 @@ public class PartyingController {
         PartyingEvent selected = partyingTable.getSelectionModel().getSelectedItem();
         if (selected != null) {
             try {
+                // Delete from event_instance table first (has FK)
+                EventInstance eventInstance = new EventInstance();
+                eventInstance.setId(selected.getId());
+                eventInstanceService.supprimer(eventInstance);
+                
+                // Delete from PartyingEvent table
                 partyingEventService.supprimer(selected);
             } catch (Exception e) {
                 e.printStackTrace();
@@ -193,7 +224,18 @@ public class PartyingController {
         if (selected != null) {
             selected.setStatus("published");
             try {
+                // Update PartyingEvent
                 partyingEventService.modifier(selected);
+                
+                // Also update event_instance
+                EventInstance eventInstance = new EventInstance(
+                    selected.getName(), selected.getDate(), selected.getStartTime(), selected.getEndTime(),
+                    selected.getVenue() != null ? selected.getVenue().getName() : "",
+                    selected.getCapacity(), selected.getPrice(), selected.getOrganizer(), 
+                    selected.getDescription(), selected.getStatus(), "Partying");
+                eventInstance.setId(selected.getId());
+                eventInstanceService.modifier(eventInstance);
+                
                 loadData();
             } catch (Exception e) {
                 e.printStackTrace();
@@ -208,6 +250,15 @@ public class PartyingController {
             selected.setStatus("draft");
             try {
                 partyingEventService.modifier(selected);
+                
+                EventInstance eventInstance = new EventInstance(
+                    selected.getName(), selected.getDate(), selected.getStartTime(), selected.getEndTime(),
+                    selected.getVenue() != null ? selected.getVenue().getName() : "",
+                    selected.getCapacity(), selected.getPrice(), selected.getOrganizer(), 
+                    selected.getDescription(), selected.getStatus(), "Partying");
+                eventInstance.setId(selected.getId());
+                eventInstanceService.modifier(eventInstance);
+                
                 loadData();
             } catch (Exception e) {
                 e.printStackTrace();
@@ -236,7 +287,7 @@ public class PartyingController {
                 capacitySpinner.getValueFactory().setValue(selected.getCapacity());
             }
             if (selected.getPrice() != null) {
-                priceSpinner.getValueFactory().setValue(selected.getPrice());
+                priceSpinner.getValueFactory().setValue(selected.getPrice().doubleValue());
             }
             statusComboBox.setValue(selected.getStatus());
             descriptionField.setText(selected.getDescription());
