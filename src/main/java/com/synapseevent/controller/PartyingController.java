@@ -1,7 +1,9 @@
 package com.synapseevent.controller;
 
 import com.synapseevent.entities.PartyingEvent;
+import com.synapseevent.entities.Venue;
 import com.synapseevent.service.PartyingEventService;
+import com.synapseevent.service.VenueService;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -18,22 +20,25 @@ public class PartyingController {
     @FXML private TableColumn<PartyingEvent, String> nameColumn;
     @FXML private TableColumn<PartyingEvent, String> dateColumn;
     @FXML private TableColumn<PartyingEvent, String> descriptionColumn;
-    @FXML private TableColumn<PartyingEvent, String> locationColumn;
+    @FXML private TableColumn<PartyingEvent, String> venueColumn;
     @FXML private TableColumn<PartyingEvent, String> capacityColumn;
     @FXML private TableColumn<PartyingEvent, String> priceColumn;
     @FXML private TableColumn<PartyingEvent, String> statusColumn;
 
     @FXML private TextField nameField;
     @FXML private DatePicker datePicker;
+    @FXML private DatePicker filterDatePicker;
     @FXML private Spinner<Integer> startTimeHourSpinner;
     @FXML private Spinner<Integer> endTimeHourSpinner;
-    @FXML private TextField locationField;
+    @FXML private ComboBox<Venue> venueComboBox;
+    @FXML private ComboBox<String> venueTypeFilterComboBox;
     @FXML private Spinner<Integer> capacitySpinner;
     @FXML private Spinner<Double> priceSpinner;
     @FXML private ComboBox<String> statusComboBox;
     @FXML private TextArea descriptionField;
 
     private PartyingEventService partyingEventService = new PartyingEventService();
+    private VenueService venueService = new VenueService();
 
     @FXML
     public void initialize() {
@@ -42,20 +47,34 @@ public class PartyingController {
         dateColumn.setCellValueFactory(cellData -> new SimpleStringProperty(
             cellData.getValue().getDate() != null ? cellData.getValue().getDate().toString() : ""));
         descriptionColumn.setCellValueFactory(new PropertyValueFactory<>("description"));
-        locationColumn.setCellValueFactory(cellData -> new SimpleStringProperty(
-            cellData.getValue().getLocation() != null ? cellData.getValue().getLocation() : ""));
+        venueColumn.setCellValueFactory(cellData -> new SimpleStringProperty(
+            cellData.getValue().getVenue() != null ? cellData.getValue().getVenue().toString() : ""));
         capacityColumn.setCellValueFactory(cellData -> new SimpleStringProperty(
             cellData.getValue().getCapacity() != null ? cellData.getValue().getCapacity().toString() : ""));
         priceColumn.setCellValueFactory(cellData -> new SimpleStringProperty(
-            cellData.getValue().getPrice() != null ? cellData.getValue().getPrice().toString() + "€" : ""));
+            cellData.getValue().getPrice() != null ? cellData.getValue().getPrice().toString() + " TND" : ""));
         statusColumn.setCellValueFactory(new PropertyValueFactory<>("status"));
 
-        // Set status ComboBox items programmatically
+        // Set status ComboBox items
         ObservableList<String> statuses = FXCollections.observableArrayList("draft", "published", "cancelled");
         statusComboBox.setItems(statuses);
         statusComboBox.setValue("draft");
 
+        // Set venue type filter items
+        ObservableList<String> venueTypes = FXCollections.observableArrayList("All", "CLUB", "BEACH", "HOTEL");
+        venueTypeFilterComboBox.setItems(venueTypes);
+        venueTypeFilterComboBox.setValue("All");
+
+        loadVenues();
         loadData();
+    }
+
+    private void loadVenues() {
+        try {
+            venueComboBox.setItems(FXCollections.observableArrayList(venueService.readAll()));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private void loadData() {
@@ -67,12 +86,50 @@ public class PartyingController {
     }
 
     @FXML
+    private void filterByDate() {
+        LocalDate filterDate = filterDatePicker.getValue();
+        try {
+            if (filterDate != null) {
+                partyingTable.setItems(FXCollections.observableArrayList(
+                    partyingEventService.getEventsByDate(filterDate)));
+            } else {
+                loadData();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @FXML
+    private void filterByVenueType() {
+        String type = venueTypeFilterComboBox.getValue();
+        try {
+            ObservableList<PartyingEvent> events = FXCollections.observableArrayList();
+            
+            if ("All".equals(type)) {
+                events.addAll(partyingEventService.readAll());
+            } else {
+                // Filter events by venue type
+                for (PartyingEvent event : partyingEventService.readAll()) {
+                    if (event.getVenue() != null && event.getVenue().getType().equals(type)) {
+                        events.add(event);
+                    }
+                }
+            }
+            partyingTable.setItems(events);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @FXML
     private void addPartyingEvent() {
         String name = nameField.getText();
         LocalDate date = datePicker.getValue();
         LocalTime startTime = LocalTime.of(startTimeHourSpinner.getValue(), 0);
         LocalTime endTime = LocalTime.of(endTimeHourSpinner.getValue(), 0);
-        String location = locationField.getText();
+        Venue selectedVenue = venueComboBox.getValue();
+        Long venueId = selectedVenue != null ? selectedVenue.getId() : null;
         Integer capacity = capacitySpinner.getValue();
         Double price = priceSpinner.getValue();
         String description = descriptionField.getText();
@@ -80,7 +137,7 @@ public class PartyingController {
 
         if (name != null && !name.isEmpty() && date != null) {
             PartyingEvent event = new PartyingEvent(name, date, startTime, endTime,
-                location, capacity, price, "admin@synapse.com", description, status);
+                venueId, capacity, price, "admin@synapse.com", description, status);
             try {
                 partyingEventService.ajouter(event);
             } catch (Exception e) {
@@ -99,7 +156,8 @@ public class PartyingController {
             selected.setDate(datePicker.getValue());
             selected.setStartTime(LocalTime.of(startTimeHourSpinner.getValue(), 0));
             selected.setEndTime(LocalTime.of(endTimeHourSpinner.getValue(), 0));
-            selected.setLocation(locationField.getText());
+            Venue selectedVenue = venueComboBox.getValue();
+            selected.setVenueId(selectedVenue != null ? selectedVenue.getId() : null);
             selected.setCapacity(capacitySpinner.getValue());
             selected.setPrice(priceSpinner.getValue());
             selected.setDescription(descriptionField.getText());
@@ -171,7 +229,9 @@ public class PartyingController {
                 endTimeHourSpinner.getValueFactory().setValue(selected.getEndTime().getHour());
             }
 
-            locationField.setText(selected.getLocation());
+            if (selected.getVenue() != null) {
+                venueComboBox.setValue(selected.getVenue());
+            }
             if (selected.getCapacity() != null) {
                 capacitySpinner.getValueFactory().setValue(selected.getCapacity());
             }
@@ -188,7 +248,7 @@ public class PartyingController {
         datePicker.setValue(null);
         startTimeHourSpinner.getValueFactory().setValue(18);
         endTimeHourSpinner.getValueFactory().setValue(23);
-        locationField.clear();
+        venueComboBox.setValue(null);
         capacitySpinner.getValueFactory().setValue(50);
         priceSpinner.getValueFactory().setValue(0.0);
         statusComboBox.setValue("draft");

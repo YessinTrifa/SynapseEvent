@@ -7,10 +7,11 @@ DROP TABLE IF EXISTS UserPreferences;
 DROP TABLE IF EXISTS Booking;
 DROP TABLE IF EXISTS CustomEventRequest;
 DROP TABLE IF EXISTS EventTemplate;
+DROP TABLE IF EXISTS PartyingEvent;
 DROP TABLE IF EXISTS AnniversaryEvent;
 DROP TABLE IF EXISTS FormationEvent;
 DROP TABLE IF EXISTS PaddleEvent;
-DROP TABLE IF EXISTS PartyingEvent;
+DROP TABLE IF EXISTS Venue;
 DROP TABLE IF EXISTS TeamBuildingEvent;
 DROP TABLE IF EXISTS event_instance;
 DROP TABLE IF EXISTS Utilisateur;
@@ -44,6 +45,19 @@ CREATE TABLE IF NOT EXISTS Utilisateur (
     enterprise_id BIGINT NOT NULL,
     FOREIGN KEY (role_id) REFERENCES Role(id) ON DELETE CASCADE,
     FOREIGN KEY (enterprise_id) REFERENCES Enterprise(id) ON DELETE CASCADE
+);
+
+-- Create Venue table (for party locations: clubs, beaches, hotels)
+CREATE TABLE IF NOT EXISTS Venue (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    type VARCHAR(50) NOT NULL COMMENT 'CLUB, BEACH, or HOTEL',
+    address VARCHAR(500),
+    contact_info VARCHAR(255),
+    price_range VARCHAR(10) COMMENT '€, €€, €€€',
+    rating DECIMAL(2,1) DEFAULT 0,
+    description TEXT,
+    amenities TEXT
 );
 
 -- Create AnniversaryEvent table
@@ -85,8 +99,15 @@ CREATE TABLE IF NOT EXISTS PartyingEvent (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
     date DATE NOT NULL,
+    start_time TIME,
+    end_time TIME,
+    venue_id BIGINT,
+    capacity INT,
+    price DECIMAL(10,2),
+    organizer VARCHAR(255),
     description TEXT,
-    status VARCHAR(20) DEFAULT 'draft'
+    status VARCHAR(20) DEFAULT 'draft',
+    FOREIGN KEY (venue_id) REFERENCES Venue(id) ON DELETE SET NULL
 );
 
 -- Create TeamBuildingEvent table
@@ -161,14 +182,23 @@ INSERT INTO PaddleEvent (name, date, description) VALUES
 ('Match Paddle Inter-Entreprises', '2024-11-19', 'Rencontre avec une autre société'),
 ('Soirée Paddle', '2025-01-10', 'Session nocturne pour les amateurs');
 
+-- Insert sample data for Venue
+INSERT INTO Venue (name, type, address, contact_info, price_range, rating, description, amenities) VALUES
+('Club Inferno', 'CLUB', '123 Party Street, Paris', 'contact@inferno.fr', '€€', 4.5, 'Premium nightclub with DJ booths and VIP areas', 'Dance floor, VIP lounge, Bar, Sound system'),
+('Sunset Beach Club', 'BEACH', '45 Ocean Drive, Nice', 'info@sunsetbeach.com', '€€€', 4.8, 'Beachfront venue with sunset views', 'Beach access, Bar, Live music, Sun loungers'),
+('Grand Hotel Ballroom', 'HOTEL', '789 Luxury Avenue, Lyon', 'events@grandhotel.com', '€€€', 4.9, 'Elegant ballroom in 5-star hotel', 'Catering, Parking, Valet, Conference rooms'),
+('Rooftop Terrace', 'CLUB', '321 Skyline Tower, Marseille', 'party@rooftop.fr', '€€', 4.2, 'Open-air rooftop venue with city views', 'Bar, Lounge area, City view, DJ booth'),
+('Tropical Paradise Beach', 'BEACH', '100 Beach Road, Biarritz', 'hello@tropicalparadise.fr', '€€', 4.6, 'Tropical beach venue for daytime parties', 'Beach chairs, Umbrellas, Beach bar, Volleyball'),
+('Luxury Resort Spa', 'HOTEL', '500 Resort Way, Cannes', 'weddings@luxuryresort.com', '€€€', 4.7, 'Full-service hotel with spa and event spaces', 'Spa, Pool, Restaurant, Ballroom, Gardens');
+
 -- Insert sample data for PartyingEvent
-INSERT INTO PartyingEvent (name, date, description) VALUES
-('Soirée d\'Entreprise TechCorp', '2024-06-25', 'Fête avec DJ et buffet'),
-('Gala Annuel Innovate', '2024-09-05', 'Événement formel avec cocktail'),
-('Fête de Noël Global', '2024-12-20', 'Célébration de fin d\'année'),
-('Barbecue d\'Été', '2024-07-30', 'Repas en extérieur avec musique'),
-('Soirée Casino', '2024-11-15', 'Jeux et divertissement'),
-('Concert Privé', '2025-02-28', 'Performance live pour les employés');
+INSERT INTO PartyingEvent (name, date, start_time, end_time, venue_id, capacity, price, organizer, description, status) VALUES
+('Soirée d\'Entreprise TechCorp', '2024-06-25', '20:00:00', '02:00:00', 1, 200, 50.00, 'Jean Dupont', 'Fête avec DJ et buffet', 'published'),
+('Gala Annuel Innovate', '2024-09-05', '19:00:00', '23:00:00', 3, 150, 100.00, 'Marie Martin', 'Événement formel avec cocktail', 'published'),
+('Fête de Noël Global', '2024-12-20', '18:00:00', '22:00:00', 3, 300, 75.00, 'Pierre Durand', 'Célébration de fin d\'année', 'published'),
+('Barbecue d\'Été', '2024-07-30', '12:00:00', '18:00:00', 2, 100, 25.00, 'Alice Nouveau', 'Repas en extérieur avec musique', 'published'),
+('Soirée Casino', '2024-11-15', '21:00:00', '03:00:00', 1, 80, 30.00, 'Bob Ancien', 'Jeux et divertissement', 'published'),
+('Concert Privé', '2025-02-28', '20:00:00', '23:00:00', 4, 120, 45.00, 'Charlie Music', 'Performance live pour les employés', 'published');
 
 -- Insert sample data for TeamBuildingEvent
 INSERT INTO TeamBuildingEvent (name, date, description) VALUES

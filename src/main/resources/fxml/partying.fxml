@@ -4,13 +4,24 @@
 <?import javafx.scene.layout.*?>
 
 <VBox xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.synapseevent.controller.PartyingController">
+    <!-- Filter Section -->
+    <HBox spacing="10" style="-fx-padding: 10;">
+        <Label text="Filter by Date:" />
+        <DatePicker fx:id="filterDatePicker" promptText="Select Date" />
+        <Button text="Apply Date Filter" onAction="#filterByDate" />
+        
+        <Label text="Filter by Venue Type:" />
+        <ComboBox fx:id="venueTypeFilterComboBox" />
+        <Button text="Apply Type Filter" onAction="#filterByVenueType" />
+    </HBox>
+
     <TableView fx:id="partyingTable" onMouseClicked="#selectPartyingEvent">
         <columns>
             <TableColumn fx:id="idColumn" text="ID" />
             <TableColumn fx:id="nameColumn" text="Name" />
             <TableColumn fx:id="dateColumn" text="Date" />
             <TableColumn fx:id="descriptionColumn" text="Description" />
-            <TableColumn fx:id="locationColumn" text="Location" />
+            <TableColumn fx:id="venueColumn" text="Venue" />
             <TableColumn fx:id="capacityColumn" text="Capacity" />
             <TableColumn fx:id="priceColumn" text="Price" />
             <TableColumn fx:id="statusColumn" text="Status" />
@@ -30,13 +41,13 @@
         <Label text="End Time:" GridPane.columnIndex="2" GridPane.rowIndex="1"/>
         <Spinner fx:id="endTimeHourSpinner" promptText="HH" GridPane.columnIndex="3" GridPane.rowIndex="1" min="0" max="23" initialValue="23"/>
 
-        <Label text="Location:" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
-        <TextField fx:id="locationField" promptText="Location" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+        <Label text="Venue:" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
+        <ComboBox fx:id="venueComboBox" promptText="Select Venue" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
 
         <Label text="Capacity:" GridPane.columnIndex="2" GridPane.rowIndex="2"/>
         <Spinner fx:id="capacitySpinner" promptText="Capacity" GridPane.columnIndex="3" GridPane.rowIndex="2" min="1" max="1000" initialValue="50"/>
 
-        <Label text="Price (€):" GridPane.columnIndex="0" GridPane.rowIndex="3"/>
+        <Label text="Price (TND):" GridPane.columnIndex="0" GridPane.rowIndex="3"/>
         <Spinner fx:id="priceSpinner" promptText="Price" GridPane.columnIndex="1" GridPane.rowIndex="3" min="0" max="10000" initialValue="0" amountToStepBy="10"/>
 
         <Label text="Status:" GridPane.columnIndex="2" GridPane.rowIndex="3"/>

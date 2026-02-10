@@ -9,7 +9,8 @@ public class PartyingEvent {
     private LocalDate date;
     private LocalTime startTime;
     private LocalTime endTime;
-    private String location;
+    private Long venueId;
+    private Venue venue;
     private Integer capacity;
     private Double price;
     private String organizer;
@@ -35,13 +36,13 @@ public class PartyingEvent {
     }
 
     public PartyingEvent(String name, LocalDate date, LocalTime startTime, LocalTime endTime,
-                         String location, Integer capacity, Double price, String organizer,
+                         Long venueId, Integer capacity, Double price, String organizer,
                          String description, String status) {
         this.name = name;
         this.date = date;
         this.startTime = startTime;
         this.endTime = endTime;
-        this.location = location;
+        this.venueId = venueId;
         this.capacity = capacity;
         this.price = price;
         this.organizer = organizer;
@@ -61,11 +62,16 @@ public class PartyingEvent {
     public LocalTime getStartTime() { return startTime; }
     public void setStartTime(LocalTime startTime) { this.startTime = startTime; }
 
+    public Long getVenueId() { return venueId; }
+    public void setVenueId(Long venueId) { this.venueId = venueId; }
+
+    public Venue getVenue() { return venue; }
+    public void setVenue(Venue venue) { this.venue = venue; }
+
     public LocalTime getEndTime() { return endTime; }
     public void setEndTime(LocalTime endTime) { this.endTime = endTime; }
 
-    public String getLocation() { return location; }
-    public void setLocation(String location) { this.location = location; }
+    public String getLocation() { return venue != null ? venue.getName() : ""; }
 
     public Integer getCapacity() { return capacity; }
     public void setCapacity(Integer capacity) { this.capacity = capacity; }
