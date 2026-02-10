@@ -13,6 +13,7 @@ public class CustomEventRequest {
     private Double budget;
     private Integer capacity;
     private String location;
+    private String reason; // For denial reason
 
     // Constructors
     public CustomEventRequest() {}
@@ -95,6 +96,9 @@ public class CustomEventRequest {
     public String getLocation() { return location; }
     public void setLocation(String location) { this.location = location; }
 
+    public String getReason() { return reason; }
+    public void setReason(String reason) { this.reason = reason; }
+
     @Override
     public String toString() {
         return "CustomEventRequest{" +
@@ -108,6 +112,7 @@ public class CustomEventRequest {
                 ", budget=" + budget +
                 ", capacity=" + capacity +
                 ", location='" + location + '\'' +
+                ", reason='" + reason + '\'' +
                 '}';
     }
 }

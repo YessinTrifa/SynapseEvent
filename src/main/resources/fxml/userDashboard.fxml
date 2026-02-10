@@ -77,11 +77,17 @@
         </VBox>
     </Tab>
     <Tab text="Custom Request">
-        <VBox>
+        <VBox spacing="10">
             <Label text="Event Type:" />
             <ComboBox fx:id="eventTypeCombo" />
             <Label text="Event Date:" />
             <DatePicker fx:id="eventDatePicker" />
+            <Label text="Budget (€):" />
+            <TextField fx:id="budgetField" promptText="Enter budget" />
+            <Label text="Capacity:" />
+            <Spinner fx:id="capacitySpinner" min="1" max="10000" initialValue="50" />
+            <Label text="Location:" />
+            <TextField fx:id="locationField" promptText="Enter preferred location" />
             <Label text="Description:" />
             <TextArea fx:id="descriptionArea" promptText="Enter event description" />
             <Button fx:id="submitRequestButton" text="Submit Request" onAction="#submitCustomRequest" />

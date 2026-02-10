@@ -14,7 +14,7 @@ public class CustomEventRequestService implements IService<CustomEventRequest> {
 
     @Override
     public boolean ajouter(CustomEventRequest request) throws SQLException {
-        String sql = "INSERT INTO CustomEventRequest (user_id, event_type, event_date, description, status, created_date, budget, capacity, location) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO CustomEventRequest (user_id, event_type, event_date, description, status, created_date, budget, capacity, location, reason) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         try (PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             stmt.setLong(1, request.getUser().getId());
             stmt.setString(2, request.getEventType());
@@ -25,6 +25,7 @@ public class CustomEventRequestService implements IService<CustomEventRequest> {
             stmt.setDouble(7, request.getBudget() != null ? request.getBudget() : 0.0);
             stmt.setInt(8, request.getCapacity() != null ? request.getCapacity() : 0);
             stmt.setString(9, request.getLocation());
+            stmt.setString(10, request.getReason());
             int res = stmt.executeUpdate();
             ResultSet rs = stmt.getGeneratedKeys();
             if (rs.next()) {
@@ -56,6 +57,7 @@ public class CustomEventRequestService implements IService<CustomEventRequest> {
                     rs.getInt("capacity"),
                     rs.getString("location")
                 );
+                request.setReason(rs.getString("reason"));
                 requests.add(request);
             }
         } catch (SQLException e) {
@@ -73,7 +75,7 @@ public class CustomEventRequestService implements IService<CustomEventRequest> {
             ResultSet rs = stmt.executeQuery();
             if (rs.next()) {
                 User user = userService.findbyId(rs.getLong("user_id"));
-                return new CustomEventRequest(
+                CustomEventRequest request = new CustomEventRequest(
                     rs.getLong("id"), 
                     user, 
                     rs.getString("event_type"), 
@@ -85,6 +87,8 @@ public class CustomEventRequestService implements IService<CustomEventRequest> {
                     rs.getInt("capacity"),
                     rs.getString("location")
                 );
+                request.setReason(rs.getString("reason"));
+                return request;
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -95,7 +99,7 @@ public class CustomEventRequestService implements IService<CustomEventRequest> {
 
     @Override
     public boolean modifier(CustomEventRequest request) throws SQLException {
-        String sql = "UPDATE CustomEventRequest SET user_id = ?, event_type = ?, event_date = ?, description = ?, status = ?, created_date = ?, budget = ?, capacity = ?, location = ? WHERE id = ?";
+        String sql = "UPDATE CustomEventRequest SET user_id = ?, event_type = ?, event_date = ?, description = ?, status = ?, created_date = ?, budget = ?, capacity = ?, location = ?, reason = ? WHERE id = ?";
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setLong(1, request.getUser().getId());
             stmt.setString(2, request.getEventType());
@@ -106,7 +110,8 @@ public class CustomEventRequestService implements IService<CustomEventRequest> {
             stmt.setDouble(7, request.getBudget() != null ? request.getBudget() : 0.0);
             stmt.setInt(8, request.getCapacity() != null ? request.getCapacity() : 0);
             stmt.setString(9, request.getLocation());
-            stmt.setLong(10, request.getId());
+            stmt.setString(10, request.getReason());
+            stmt.setLong(11, request.getId());
             int res = stmt.executeUpdate();
             return res > 0;
         } catch (SQLException e) {
@@ -150,6 +155,7 @@ public class CustomEventRequestService implements IService<CustomEventRequest> {
                     rs.getInt("capacity"),
                     rs.getString("location")
                 );
+                request.setReason(rs.getString("reason"));
                 requests.add(request);
             }
         } catch (SQLException e) {
@@ -159,11 +165,12 @@ public class CustomEventRequestService implements IService<CustomEventRequest> {
         return requests;
     }
 
-    public boolean updateStatus(Long id, String status) throws SQLException {
-        String sql = "UPDATE CustomEventRequest SET status = ? WHERE id = ?";
+    public boolean updateStatus(Long id, String status, String reason) throws SQLException {
+        String sql = "UPDATE CustomEventRequest SET status = ?, reason = ? WHERE id = ?";
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, status);
-            stmt.setLong(2, id);
+            stmt.setString(2, reason);
+            stmt.setLong(3, id);
             int res = stmt.executeUpdate();
             return res > 0;
         } catch (SQLException e) {

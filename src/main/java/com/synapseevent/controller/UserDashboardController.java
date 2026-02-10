@@ -61,6 +61,9 @@ public class UserDashboardController {
     // Custom Request Tab
     @FXML private ComboBox<String> eventTypeCombo;
     @FXML private DatePicker eventDatePicker;
+    @FXML private TextField budgetField;
+    @FXML private Spinner<Integer> capacitySpinner;
+    @FXML private TextField locationField;
     @FXML private TextArea descriptionArea;
     @FXML private Button submitRequestButton;
 
@@ -330,17 +333,57 @@ public class UserDashboardController {
         String eventType = eventTypeCombo.getValue();
         LocalDate eventDate = eventDatePicker.getValue();
         String description = descriptionArea.getText();
+        
+        // Get new fields
+        Double budget = null;
+        if (budgetField.getText() != null && !budgetField.getText().trim().isEmpty()) {
+            try {
+                budget = Double.parseDouble(budgetField.getText().trim());
+            } catch (NumberFormatException e) {
+                showAlert("Error", "Invalid budget format. Please enter a valid number.");
+                return;
+            }
+        }
+        
+        Integer capacity = capacitySpinner.getValue();
+        String location = locationField.getText();
+        
         if (eventType != null && eventDate != null && description != null && !description.isEmpty()) {
-            CustomEventRequest request = new CustomEventRequest(CurrentUser.getCurrentUser(), eventType, eventDate, description, "pending", LocalDate.now());
+            CustomEventRequest request = new CustomEventRequest();
+            request.setUser(CurrentUser.getCurrentUser());
+            request.setEventType(eventType);
+            request.setEventDate(eventDate);
+            request.setBudget(budget);
+            request.setCapacity(capacity);
+            request.setLocation(location);
+            request.setDescription(description);
+            request.setStatus("pending");
+            request.setCreatedDate(LocalDate.now());
+            
             try {
                 customRequestService.ajouter(request);
                 eventTypeCombo.setValue(null);
                 eventDatePicker.setValue(null);
+                budgetField.clear();
+                capacitySpinner.getValueFactory().setValue(50);
+                locationField.clear();
                 descriptionArea.clear();
+                showAlert("Success", "Your custom event request has been submitted successfully!");
             } catch (SQLException e) {
                 e.printStackTrace();
+                showAlert("Error", "Error submitting request: " + e.getMessage());
             }
+        } else {
+            showAlert("Error", "Please fill in all required fields (Event Type, Date, and Description)");
         }
+    }
+
+    private void showAlert(String title, String message) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
     }
 
     @FXML

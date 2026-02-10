@@ -59,6 +59,7 @@ public class AdminDashboardController {
     @FXML private TableColumn<CustomEventRequest, Integer> requestCapacityColumn;
     @FXML private TableColumn<CustomEventRequest, String> requestLocationColumn;
     @FXML private TableColumn<CustomEventRequest, String> requestDetailsColumn;
+    @FXML private TableColumn<CustomEventRequest, String> requestReasonColumn;
     @FXML private TableColumn<CustomEventRequest, String> requestStatusColumn;
     @FXML private TableColumn<CustomEventRequest, Void> requestActionColumn;
 
@@ -203,6 +204,7 @@ public class AdminDashboardController {
         requestCapacityColumn.setCellValueFactory(new PropertyValueFactory<>("capacity"));
         requestLocationColumn.setCellValueFactory(new PropertyValueFactory<>("location"));
         requestDetailsColumn.setCellValueFactory(new PropertyValueFactory<>("description"));
+        requestReasonColumn.setCellValueFactory(new PropertyValueFactory<>("reason"));
         requestStatusColumn.setCellValueFactory(new PropertyValueFactory<>("status"));
 
         requestActionColumn.setCellFactory(param -> new TableCell<CustomEventRequest, Void>() {
@@ -894,7 +896,7 @@ public class AdminDashboardController {
     private void approveRequest(CustomEventRequest request) {
         try {
             request.setStatus("approved");
-            customRequestService.modifier(request);
+            customRequestService.updateStatus(request.getId(), "approved", null);
             loadCustomRequests();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -902,126 +904,32 @@ public class AdminDashboardController {
     }
 
     private void denyRequest(CustomEventRequest request) {
-        try {
-            request.setStatus("denied");
-            customRequestService.modifier(request);
-            loadCustomRequests();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
+        // Show a dialog to enter the reason for denial
+        Dialog<String> dialog = new Dialog<>();
+        dialog.setTitle("Deny Request");
+        dialog.setHeaderText("Please provide a reason for denying this request");
+        dialog.setContentText("Reason:");
 
-    @FXML
-    private void createCustomRequest() {
-        Dialog<CustomEventRequest> dialog = new Dialog<>();
-        dialog.setTitle("Create Custom Event Request");
-        dialog.setHeaderText("Create a new custom event request");
+        TextArea reasonArea = new TextArea();
+        reasonArea.setPromptText("Enter the reason for denial...");
+        reasonArea.setPrefRowCount(3);
 
-        // Create form fields
-        ComboBox<User> userCombo = new ComboBox<>();
-        try {
-            userCombo.setItems(FXCollections.observableArrayList(userService.readAll()));
-        } catch (SQLException e) {
-            e.printStackTrace();
-            showAlert("Error", "Error loading users: " + e.getMessage());
-            return;
-        }
-        userCombo.setPromptText("Select User");
-        if (!userCombo.getItems().isEmpty()) {
-            userCombo.setValue(userCombo.getItems().get(0));
-        }
-
-        ComboBox<String> eventTypeCombo = new ComboBox<>();
-        eventTypeCombo.getItems().addAll("Formation", "Paddle", "Partying", "TeamBuilding", "Anniversary", "Other");
-        eventTypeCombo.setValue("TeamBuilding");
-        eventTypeCombo.setPromptText("Event Type");
-
-        DatePicker eventDatePicker = new DatePicker();
-        eventDatePicker.setPromptText("Event Date");
-
-        TextField budgetField = new TextField();
-        budgetField.setPromptText("Budget (€)");
-
-        Spinner<Integer> capacitySpinner = new Spinner<>(1, 10000, 50);
-        capacitySpinner.setPromptText("Capacity");
-
-        TextField locationField = new TextField();
-        locationField.setPromptText("Location");
-
-        TextArea descriptionArea = new TextArea();
-        descriptionArea.setPromptText("Description");
-        descriptionArea.setPrefRowCount(3);
-
-        GridPane grid = new GridPane();
-        grid.setHgap(10);
-        grid.setVgap(10);
-        grid.setPadding(new Insets(20));
-
-        grid.add(new Label("User:"), 0, 0);
-        grid.add(userCombo, 1, 0);
-        grid.add(new Label("Event Type:"), 2, 0);
-        grid.add(eventTypeCombo, 3, 0);
-        grid.add(new Label("Event Date:"), 0, 1);
-        grid.add(eventDatePicker, 1, 1);
-        grid.add(new Label("Budget (€):"), 2, 1);
-        grid.add(budgetField, 3, 1);
-        grid.add(new Label("Capacity:"), 0, 2);
-        grid.add(capacitySpinner, 1, 2);
-        grid.add(new Label("Location:"), 2, 2);
-        grid.add(locationField, 3, 2);
-        grid.add(new Label("Description:"), 0, 3);
-        grid.add(descriptionArea, 1, 3, 3, 1);
-
-        dialog.getDialogPane().setContent(grid);
+        dialog.getDialogPane().setContent(reasonArea);
         dialog.getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
 
         dialog.setResultConverter(button -> {
             if (button == ButtonType.OK) {
-                if (userCombo.getValue() == null || eventDatePicker.getValue() == null) {
-                    showAlert("Error", "Please fill in all required fields (User and Event Date)");
-                    return null;
-                }
-
-                try {
-                    Double budget = null;
-                    if (!budgetField.getText().trim().isEmpty()) {
-                        try {
-                            budget = Double.parseDouble(budgetField.getText().trim());
-                        } catch (NumberFormatException e) {
-                            showAlert("Error", "Invalid budget format. Please enter a valid number.");
-                            return null;
-                        }
-                    }
-
-                    CustomEventRequest request = new CustomEventRequest();
-                    request.setUser(userCombo.getValue());
-                    request.setEventType(eventTypeCombo.getValue());
-                    request.setEventDate(eventDatePicker.getValue());
-                    request.setBudget(budget);
-                    request.setCapacity(capacitySpinner.getValue());
-                    request.setLocation(locationField.getText().trim());
-                    request.setDescription(descriptionArea.getText().trim());
-                    request.setStatus("pending");
-                    request.setCreatedDate(LocalDate.now());
-
-                    return request;
-                } catch (Exception e) {
-                    showAlert("Error", "Error creating request: " + e.getMessage());
-                    return null;
-                }
+                return reasonArea.getText().trim();
             }
             return null;
         });
 
-        dialog.showAndWait().ifPresent(request -> {
-            if (request != null) {
-                try {
-                    customRequestService.ajouter(request);
-                    loadCustomRequests();
-                    showAlert("Success", "Custom event request created successfully");
-                } catch (SQLException e) {
-                    showAlert("Error", "Error saving request: " + e.getMessage());
-                }
+        dialog.showAndWait().ifPresent(reason -> {
+            try {
+                customRequestService.updateStatus(request.getId(), "denied", reason);
+                loadCustomRequests();
+            } catch (SQLException e) {
+                e.printStackTrace();
             }
         });
     }

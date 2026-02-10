@@ -61,9 +61,6 @@
     </Tab>
     <Tab text="Custom Requests">
         <VBox>
-            <HBox>
-                <Button text="Create Request" onAction="#createCustomRequest"/>
-            </HBox>
             <TableView fx:id="customRequestsTable">
                 <columns>
                     <TableColumn fx:id="requestUserColumn" text="User" />
@@ -73,6 +70,7 @@
                     <TableColumn fx:id="requestCapacityColumn" text="Capacity" />
                     <TableColumn fx:id="requestLocationColumn" text="Location" />
                     <TableColumn fx:id="requestDetailsColumn" text="Details" />
+                    <TableColumn fx:id="requestReasonColumn" text="Denial Reason" />
                     <TableColumn fx:id="requestStatusColumn" text="Status" />
                     <TableColumn fx:id="requestActionColumn" text="Action" />
                 </columns>
