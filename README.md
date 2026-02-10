@@ -16,7 +16,7 @@ SynapseEvent is built using modern Java technologies and follows best practices 
   - Partying Events
   - Team Building Events
 - **Event Browsing by Type**: Users can browse available events organized by type in separate tabs, preventing information overload
-- **Consolidated Admin Dashboard**: Admins can view and manage all events in a single consolidated interface with dynamic filtering by event type and the ability to create new event categories on-the-fly
+- **Consolidated Admin Dashboard**: Admins can view and manage all events in a single consolidated interface with dynamic filtering by event type, category, subcategory, and variant with the ability to create new event categories on-the-fly
 - **Event Booking**: Users can view published events and make bookings with a streamlined booking system
 - **Booking Management**: Admins can view and manage user bookings
 - **Custom Event Requests**: Users can submit requests for custom events; admins can approve or manage them
@@ -41,6 +41,7 @@ The application implements a clean, layered architecture that promotes separatio
     - `CustomEventRequest.java` - Custom event request details
     - `EventSummary.java` - Event summary for display purposes
     - `EventInstanceSummary.java` - Enhanced event summary with full details
+    - `Venue.java` - Venue information for events
     - `Review.java` - Review details for events and bookings
     - `UserPreferences.java` - User preference settings
     - `EventTemplate.java` - Event template information
@@ -48,6 +49,10 @@ The application implements a clean, layered architecture that promotes separatio
 
 2. **Service Layer** (`service/`): Business logic and data access encapsulation
     - `EventInstanceService.java` - Unified service for all event operations with type-based filtering
+    - `EventTypeService.java` - Service for managing event types
+    - `EventCategoryService.java` - Service for managing event categories
+    - `EventSubcategoryService.java` - Service for managing event subcategories
+    - `EventVariantService.java` - Service for managing event variants
     - Service classes for each entity (e.g., `UserService.java`, `BookingService.java`, `CustomEventRequestService.java`, `ReviewService.java`, `UserPreferencesService.java`, `EventTemplateService.java`)
     - Legacy event services (`AnniversaryEventService.java`, `FormationEventService.java`, etc.) maintained for compatibility
     - Implements CRUD operations using JDBC directly
