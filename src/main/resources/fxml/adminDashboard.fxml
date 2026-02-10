@@ -9,7 +9,11 @@
     </HBox>
     <TabPane>
     <Tab text="Users">
-        <VBox>
+        <VBox spacing="10">
+            <HBox>
+                <Button text="Add User" onAction="#addUser"/>
+                <Button text="Create Enterprise" onAction="#createEnterprise"/>
+            </HBox>
             <TableView fx:id="usersTable">
                 <columns>
                     <TableColumn fx:id="userNameColumn" text="Name" />
@@ -64,6 +68,20 @@
                     <TableColumn fx:id="requestDateColumn" text="Request Date" />
                     <TableColumn fx:id="requestStatusColumn" text="Status" />
                     <TableColumn fx:id="requestActionColumn" text="Action" />
+                </columns>
+            </TableView>
+        </VBox>
+    </Tab>
+    <Tab text="Enterprises">
+        <VBox spacing="10">
+            <HBox>
+                <Button text="Add Enterprise" onAction="#addEnterprise"/>
+            </HBox>
+            <TableView fx:id="entreprisesTable">
+                <columns>
+                    <TableColumn fx:id="entrepriseNameColumn" text="Name" />
+                    <TableColumn fx:id="entrepriseSiretColumn" text="SIRET" />
+                    <TableColumn fx:id="entrepriseActionColumn" text="Action" />
                 </columns>
             </TableView>
         </VBox>

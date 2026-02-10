@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.synapseevent.controller.RegisterController" spacing="10" alignment="CENTER">
+    <Label text="Create New Account" style="-fx-font-size: 20; -fx-font-weight: bold;"/>
+    
+    <TextField fx:id="nomField" promptText="Last Name"/>
+    <TextField fx:id="prenomField" promptText="First Name"/>
+    <TextField fx:id="emailField" promptText="Email"/>
+    <PasswordField fx:id="passwordField" promptText="Password"/>
+    <PasswordField fx:id="confirmPasswordField" promptText="Confirm Password"/>
+    <TextField fx:id="phoneField" promptText="Phone (optional)"/>
+    <TextField fx:id="addressField" promptText="Address (optional)"/>
+    
+    <Button text="Register" onAction="#registerUser" defaultButton="true"/>
+    <Button text="Back to Login" onAction="#goToLogin"/>
+    
+    <Label fx:id="messageLabel"/>
+</VBox>

@@ -34,6 +34,12 @@ public class AdminDashboardController {
     @FXML private TableColumn<User, String> userRoleColumn;
     @FXML private TableColumn<User, Void> userActionColumn;
 
+    // Enterprises Tab
+    @FXML private TableView<Entreprise> entreprisesTable;
+    @FXML private TableColumn<Entreprise, String> entrepriseNameColumn;
+    @FXML private TableColumn<Entreprise, String> entrepriseSiretColumn;
+    @FXML private TableColumn<Entreprise, Void> entrepriseActionColumn;
+
 
     // Bookings Tab
     @FXML private TableView<Booking> bookingsTable;
@@ -69,16 +75,20 @@ public class AdminDashboardController {
     private BookingService bookingService = new BookingService();
     private CustomEventRequestService customRequestService = new CustomEventRequestService();
     private EventInstanceService eventService = new EventInstanceService();
+    private EntrepriseService entrepriseService = new EntrepriseService();
+    private RoleService roleService = new RoleService();
     private List<EventInstance> allEvents = new ArrayList<>();
 
     @FXML
     public void initialize() {
         setupUsersTable();
+        setupEnterprisesTable();
         setupBookingsTable();
         setupCustomRequestsTable();
         setupEventsTable();
 
         loadUsers();
+        loadEnterprises();
         loadBookings();
         loadCustomRequests();
         loadEvents();
@@ -270,6 +280,50 @@ public class AdminDashboardController {
         });
     }
 
+    private void setupEnterprisesTable() {
+        entrepriseNameColumn.setCellValueFactory(new PropertyValueFactory<>("nom"));
+        entrepriseSiretColumn.setCellValueFactory(new PropertyValueFactory<>("siret"));
+
+        entrepriseActionColumn.setCellFactory(param -> new TableCell<Entreprise, Void>() {
+            private final Button editButton = new Button("Edit");
+            private final Button deleteButton = new Button("Delete");
+            private final HBox buttonBox = new HBox(5, editButton, deleteButton);
+
+            {
+                editButton.setOnAction(event -> {
+                    Entreprise entreprise = getTableView().getItems().get(getIndex());
+                    editEntreprise(entreprise);
+                });
+                deleteButton.setOnAction(event -> {
+                    Entreprise entreprise = getTableView().getItems().get(getIndex());
+                    deleteEntreprise(entreprise);
+                });
+            }
+
+            @Override
+            protected void updateItem(Void item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty) {
+                    setGraphic(null);
+                } else {
+                    setGraphic(buttonBox);
+                }
+            }
+        });
+    }
+
+    private void loadEnterprises() {
+        entreprisesTable.setItems(FXCollections.observableArrayList(entrepriseService.getAll()));
+    }
+
+    private void showAlert(String title, String message) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
+    }
+
 
     private void loadUsers() {
         try {
@@ -279,6 +333,111 @@ public class AdminDashboardController {
         }
     }
 
+    @FXML
+    private void addUser() {
+        Dialog<User> dialog = new Dialog<>();
+        dialog.setTitle("Add New User");
+        dialog.setHeaderText("Create a new user account");
+
+        // Create form fields
+        TextField nomField = new TextField();
+        nomField.setPromptText("Last Name");
+
+        TextField prenomField = new TextField();
+        prenomField.setPromptText("First Name");
+
+        TextField emailField = new TextField();
+        emailField.setPromptText("Email");
+
+        PasswordField passwordField = new PasswordField();
+        passwordField.setPromptText("Password");
+
+        TextField phoneField = new TextField();
+        phoneField.setPromptText("Phone (optional)");
+
+        TextField addressField = new TextField();
+        addressField.setPromptText("Address (optional)");
+
+        ComboBox<String> roleCombo = new ComboBox<>();
+        roleCombo.getItems().addAll("Admin", "User", "Manager");
+        roleCombo.setValue("User");
+        roleCombo.setPromptText("Role");
+
+        ComboBox<Entreprise> enterpriseCombo = new ComboBox<>();
+        enterpriseCombo.setItems(FXCollections.observableArrayList(entrepriseService.getAll()));
+        enterpriseCombo.setPromptText("Enterprise");
+        if (!enterpriseCombo.getItems().isEmpty()) {
+            enterpriseCombo.setValue(enterpriseCombo.getItems().get(0));
+        }
+
+        GridPane grid = new GridPane();
+        grid.setHgap(10);
+        grid.setVgap(10);
+        grid.setPadding(new Insets(20));
+
+        grid.add(new Label("Last Name:"), 0, 0);
+        grid.add(nomField, 1, 0);
+        grid.add(new Label("First Name:"), 0, 1);
+        grid.add(prenomField, 1, 1);
+        grid.add(new Label("Email:"), 0, 2);
+        grid.add(emailField, 1, 2);
+        grid.add(new Label("Password:"), 0, 3);
+        grid.add(passwordField, 1, 3);
+        grid.add(new Label("Phone:"), 0, 4);
+        grid.add(phoneField, 1, 4);
+        grid.add(new Label("Address:"), 0, 5);
+        grid.add(addressField, 1, 5);
+        grid.add(new Label("Role:"), 0, 6);
+        grid.add(roleCombo, 1, 6);
+        grid.add(new Label("Enterprise:"), 0, 7);
+        grid.add(enterpriseCombo, 1, 7);
+
+        dialog.getDialogPane().setContent(grid);
+        dialog.getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
+
+        dialog.setResultConverter(button -> {
+            if (button == ButtonType.OK) {
+                if (nomField.getText().trim().isEmpty() || prenomField.getText().trim().isEmpty() ||
+                    emailField.getText().trim().isEmpty() || passwordField.getText().isEmpty() ||
+                    roleCombo.getValue() == null || enterpriseCombo.getValue() == null) {
+                    showAlert("Error", "Please fill in all required fields");
+                    return null;
+                }
+
+                try {
+                    Role role = roleService.getByName(roleCombo.getValue());
+                    Entreprise enterprise = enterpriseCombo.getValue();
+
+                    if (userService.findByEmail(emailField.getText().trim()) != null) {
+                        showAlert("Error", "Email already exists");
+                        return null;
+                    }
+
+                    User newUser = new User(emailField.getText().trim(), passwordField.getText(),
+                        nomField.getText().trim(), prenomField.getText().trim(),
+                        phoneField.getText().trim(), addressField.getText().trim(),
+                        null, role, enterprise);
+                    return newUser;
+                } catch (Exception e) {
+                    showAlert("Error", "Error creating user: " + e.getMessage());
+                    return null;
+                }
+            }
+            return null;
+        });
+
+        dialog.showAndWait().ifPresent(user -> {
+            if (user != null) {
+                try {
+                    userService.ajouter(user);
+                    loadUsers();
+                    showAlert("Success", "User created successfully");
+                } catch (SQLException e) {
+                    showAlert("Error", "Error saving user: " + e.getMessage());
+                }
+            }
+        });
+    }
 
     private void loadBookings() {
         try {
@@ -333,6 +492,209 @@ public class AdminDashboardController {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+    }
+
+    private void editUser(User user) {
+        Dialog<User> dialog = new Dialog<>();
+        dialog.setTitle("Edit User");
+        dialog.setHeaderText("Edit user: " + user.getEmail());
+
+        // Create form fields
+        TextField nomField = new TextField(user.getNom());
+        nomField.setPromptText("Last Name");
+
+        TextField prenomField = new TextField(user.getPrenom());
+        prenomField.setPromptText("First Name");
+
+        TextField emailField = new TextField(user.getEmail());
+        emailField.setPromptText("Email");
+
+        TextField phoneField = new TextField(user.getPhone());
+        phoneField.setPromptText("Phone (optional)");
+
+        TextField addressField = new TextField(user.getAddress());
+        addressField.setPromptText("Address (optional)");
+
+        ComboBox<String> roleCombo = new ComboBox<>();
+        roleCombo.getItems().addAll("Admin", "User", "Manager");
+        roleCombo.setValue(user.getRole().getName());
+        roleCombo.setPromptText("Role");
+
+        ComboBox<Entreprise> enterpriseCombo = new ComboBox<>();
+        enterpriseCombo.setItems(FXCollections.observableArrayList(entrepriseService.getAll()));
+        enterpriseCombo.setValue(user.getEnterprise());
+        enterpriseCombo.setPromptText("Enterprise");
+
+        GridPane grid = new GridPane();
+        grid.setHgap(10);
+        grid.setVgap(10);
+        grid.setPadding(new Insets(20));
+
+        grid.add(new Label("Last Name:"), 0, 0);
+        grid.add(nomField, 1, 0);
+        grid.add(new Label("First Name:"), 0, 1);
+        grid.add(prenomField, 1, 1);
+        grid.add(new Label("Email:"), 0, 2);
+        grid.add(emailField, 1, 2);
+        grid.add(new Label("Phone:"), 0, 3);
+        grid.add(phoneField, 1, 3);
+        grid.add(new Label("Address:"), 0, 4);
+        grid.add(addressField, 1, 4);
+        grid.add(new Label("Role:"), 0, 5);
+        grid.add(roleCombo, 1, 5);
+        grid.add(new Label("Enterprise:"), 0, 6);
+        grid.add(enterpriseCombo, 1, 6);
+
+        dialog.getDialogPane().setContent(grid);
+        dialog.getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
+
+        dialog.setResultConverter(button -> {
+            if (button == ButtonType.OK) {
+                if (nomField.getText().trim().isEmpty() || prenomField.getText().trim().isEmpty() ||
+                    emailField.getText().trim().isEmpty() || roleCombo.getValue() == null ||
+                    enterpriseCombo.getValue() == null) {
+                    showAlert("Error", "Please fill in all required fields");
+                    return null;
+                }
+
+                user.setNom(nomField.getText().trim());
+                user.setPrenom(prenomField.getText().trim());
+                user.setEmail(emailField.getText().trim());
+                user.setPhone(phoneField.getText().trim());
+                user.setAddress(addressField.getText().trim());
+
+                Role role = roleService.getByName(roleCombo.getValue());
+                if (role != null) {
+                    user.setRole(role);
+                }
+                user.setEnterprise(enterpriseCombo.getValue());
+
+                return user;
+            }
+            return null;
+        });
+
+        dialog.showAndWait().ifPresent(editedUser -> {
+            try {
+                userService.modifier(editedUser);
+                loadUsers();
+                showAlert("Success", "User updated successfully");
+            } catch (SQLException e) {
+                showAlert("Error", "Error updating user: " + e.getMessage());
+            }
+        });
+    }
+
+    @FXML
+    private void createEnterprise() {
+        addEnterprise();
+    }
+
+    @FXML
+    private void addEnterprise() {
+        Dialog<Entreprise> dialog = new Dialog<>();
+        dialog.setTitle("Add New Enterprise");
+        dialog.setHeaderText("Create a new enterprise/company");
+
+        TextField nameField = new TextField();
+        nameField.setPromptText("Enterprise Name");
+
+        TextField siretField = new TextField();
+        siretField.setPromptText("SIRET Number");
+
+        GridPane grid = new GridPane();
+        grid.setHgap(10);
+        grid.setVgap(10);
+        grid.setPadding(new Insets(20));
+
+        grid.add(new Label("Name:"), 0, 0);
+        grid.add(nameField, 1, 0);
+        grid.add(new Label("SIRET:"), 0, 1);
+        grid.add(siretField, 1, 1);
+
+        dialog.getDialogPane().setContent(grid);
+        dialog.getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
+
+        dialog.setResultConverter(button -> {
+            if (button == ButtonType.OK) {
+                if (nameField.getText().trim().isEmpty() || siretField.getText().trim().isEmpty()) {
+                    showAlert("Error", "Please fill in all required fields");
+                    return null;
+                }
+                Entreprise entreprise = new Entreprise();
+                entreprise.setNom(nameField.getText().trim());
+                entreprise.setSiret(siretField.getText().trim());
+                return entreprise;
+            }
+            return null;
+        });
+
+        dialog.showAndWait().ifPresent(entreprise -> {
+            if (entreprise != null) {
+                entrepriseService.add(entreprise);
+                loadEnterprises();
+                showAlert("Success", "Enterprise created successfully");
+            }
+        });
+    }
+
+    private void editEntreprise(Entreprise entreprise) {
+        Dialog<Entreprise> dialog = new Dialog<>();
+        dialog.setTitle("Edit Enterprise");
+        dialog.setHeaderText("Edit enterprise: " + entreprise.getNom());
+
+        TextField nameField = new TextField(entreprise.getNom());
+        nameField.setPromptText("Enterprise Name");
+
+        TextField siretField = new TextField(entreprise.getSiret());
+        siretField.setPromptText("SIRET Number");
+
+        GridPane grid = new GridPane();
+        grid.setHgap(10);
+        grid.setVgap(10);
+        grid.setPadding(new Insets(20));
+
+        grid.add(new Label("Name:"), 0, 0);
+        grid.add(nameField, 1, 0);
+        grid.add(new Label("SIRET:"), 0, 1);
+        grid.add(siretField, 1, 1);
+
+        dialog.getDialogPane().setContent(grid);
+        dialog.getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
+
+        dialog.setResultConverter(button -> {
+            if (button == ButtonType.OK) {
+                if (nameField.getText().trim().isEmpty() || siretField.getText().trim().isEmpty()) {
+                    showAlert("Error", "Please fill in all required fields");
+                    return null;
+                }
+                entreprise.setNom(nameField.getText().trim());
+                entreprise.setSiret(siretField.getText().trim());
+                return entreprise;
+            }
+            return null;
+        });
+
+        dialog.showAndWait().ifPresent(editedEntreprise -> {
+            entrepriseService.update(editedEntreprise);
+            loadEnterprises();
+            showAlert("Success", "Enterprise updated successfully");
+        });
+    }
+
+    private void deleteEntreprise(Entreprise entreprise) {
+        Alert confirmDialog = new Alert(Alert.AlertType.CONFIRMATION);
+        confirmDialog.setTitle("Delete Enterprise");
+        confirmDialog.setHeaderText("Are you sure you want to delete enterprise: " + entreprise.getNom() + "?");
+        confirmDialog.setContentText("This action cannot be undone. Users associated with this enterprise may be affected.");
+
+        confirmDialog.showAndWait().ifPresent(result -> {
+            if (result == ButtonType.OK) {
+                entrepriseService.delete(entreprise.getId());
+                loadEnterprises();
+                showAlert("Success", "Enterprise deleted successfully");
+            }
+        });
     }
 
     private void editEvent(EventInstance event) {
@@ -434,25 +796,6 @@ public class AdminDashboardController {
                 try {
                     eventService.supprimer(event);
                     loadEvents();
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
-            }
-        });
-    }
-
-    private void editUser(User user) {
-        TextInputDialog nameDialog = new TextInputDialog(user.getNom());
-        nameDialog.setTitle("Edit User");
-        nameDialog.setHeaderText("Edit name for user: " + user.getEmail());
-        nameDialog.setContentText("New Name:");
-
-        nameDialog.showAndWait().ifPresent(newName -> {
-            if (!newName.trim().isEmpty()) {
-                user.setNom(newName.trim());
-                try {
-                    userService.modifier(user);
-                    loadUsers();
                 } catch (SQLException e) {
                     e.printStackTrace();
                 }

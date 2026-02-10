@@ -46,6 +46,11 @@ public class LoginController {
         }
     }
 
+    @FXML
+    private void goToRegister() {
+        loadFXML("/fxml/register.fxml");
+    }
+
     private void loadFXML(String fxmlPath) {
         try {
             Stage stage = (Stage) emailField.getScene().getWindow();

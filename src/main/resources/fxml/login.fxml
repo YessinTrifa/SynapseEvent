@@ -3,12 +3,13 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<VBox xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.synapseevent.controller.LoginController">
-    <Label text="Login"/>
+<VBox xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.synapseevent.controller.LoginController" spacing="10" alignment="CENTER">
+    <Label text="Login" style="-fx-font-size: 20; -fx-font-weight: bold;"/>
     <TextField fx:id="emailField" promptText="Enter email"/>
     <PasswordField fx:id="passwordField" promptText="Enter password"/>
-    <HBox>
+    <HBox spacing="10">
         <Button text="Login as Admin" onAction="#loginAsAdmin"/>
         <Button text="Login as User" onAction="#loginAsUser"/>
     </HBox>
+    <Button text="Create New Account" onAction="#goToRegister"/>
 </VBox>
