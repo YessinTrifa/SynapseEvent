@@ -3,7 +3,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<VBox xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.synapseevent.controller.RegisterController" spacing="10" alignment="CENTER">
+<VBox xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.synapseevent.controller.RegisterController" spacing="10" alignment="CENTER" style="-fx-padding: 20;">
     <Label text="Create New Account" style="-fx-font-size: 20; -fx-font-weight: bold;"/>
     
     <TextField fx:id="nomField" promptText="Last Name"/>
@@ -13,6 +13,22 @@
     <PasswordField fx:id="confirmPasswordField" promptText="Confirm Password"/>
     <TextField fx:id="phoneField" promptText="Phone (optional)"/>
     <TextField fx:id="addressField" promptText="Address (optional)"/>
+    
+    <!-- Enterprise Section -->
+    <Label text="Enterprise Information" style="-fx-font-size: 14; -fx-font-weight: bold;"/>
+    
+    <RadioButton fx:id="existingEnterpriseRadio" text="Select Existing Enterprise" selected="true" onAction="#onExistingEnterpriseSelected">
+        <toggleGroup>
+            <ToggleGroup fx:id="enterpriseToggle"/>
+        </toggleGroup>
+    </RadioButton>
+    
+    <ComboBox fx:id="entrepriseCombo" promptText="Select Enterprise"/>
+    
+    <RadioButton fx:id="newEnterpriseRadio" text="Create New Enterprise" toggleGroup="$enterpriseToggle" onAction="#onNewEnterpriseSelected"/>
+    
+    <TextField fx:id="entrepriseNameField" promptText="Enterprise Name" visible="false"/>
+    <TextField fx:id="entrepriseSiretField" promptText="SIRET Number" visible="false"/>
     
     <Button text="Register" onAction="#registerUser" defaultButton="true"/>
     <Button text="Back to Login" onAction="#goToLogin"/>

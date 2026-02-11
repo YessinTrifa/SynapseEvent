@@ -103,7 +103,13 @@ public class AdminDashboardController {
     private void setupUsersTable() {
         userNameColumn.setCellValueFactory(new PropertyValueFactory<>("nom"));
         userEmailColumn.setCellValueFactory(new PropertyValueFactory<>("email"));
-        userRoleColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getRole().getName()));
+        userRoleColumn.setCellValueFactory(cellData -> {
+            User user = cellData.getValue();
+            if (user != null && user.getRole() != null) {
+                return new SimpleStringProperty(user.getRole().getName());
+            }
+            return new SimpleStringProperty("Unknown");
+        });
 
         userActionColumn.setCellFactory(param -> new TableCell<User, Void>() {
             private final Button editButton = new Button("Edit");
@@ -135,7 +141,13 @@ public class AdminDashboardController {
 
 
     private void setupBookingsTable() {
-        bookingUserColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getUser().getNom()));
+        bookingUserColumn.setCellValueFactory(cellData -> {
+            Booking booking = cellData.getValue();
+            if (booking != null && booking.getUser() != null && booking.getUser().getNom() != null) {
+                return new SimpleStringProperty(booking.getUser().getNom());
+            }
+            return new SimpleStringProperty("Unknown User");
+        });
         
         // Show actual event name instead of eventType
         bookingTypeColumn.setCellValueFactory(cellData -> {
@@ -197,7 +209,13 @@ public class AdminDashboardController {
     }
 
     private void setupCustomRequestsTable() {
-        requestUserColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getUser().getNom()));
+        requestUserColumn.setCellValueFactory(cellData -> {
+            CustomEventRequest request = cellData.getValue();
+            if (request != null && request.getUser() != null && request.getUser().getNom() != null) {
+                return new SimpleStringProperty(request.getUser().getNom());
+            }
+            return new SimpleStringProperty("Unknown User");
+        });
         requestTypeColumn.setCellValueFactory(new PropertyValueFactory<>("eventType"));
         requestDateColumn.setCellValueFactory(new PropertyValueFactory<>("eventDate"));
         requestBudgetColumn.setCellValueFactory(new PropertyValueFactory<>("budget"));

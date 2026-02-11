@@ -7,13 +7,12 @@ import com.synapseevent.service.EntrepriseService;
 import com.synapseevent.service.RoleService;
 import com.synapseevent.service.UserService;
 import com.synapseevent.utils.PasswordUtil;
+import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Label;
-import javafx.scene.control.PasswordField;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.stage.Stage;
 
 import java.sql.Connection;
@@ -39,10 +38,98 @@ public class RegisterController {
     private TextField addressField;
     @FXML
     private Label messageLabel;
+    
+    // Enterprise fields
+    @FXML
+    private RadioButton existingEnterpriseRadio;
+    @FXML
+    private RadioButton newEnterpriseRadio;
+    @FXML
+    private ComboBox<Entreprise> entrepriseCombo;
+    @FXML
+    private TextField entrepriseNameField;
+    @FXML
+    private TextField entrepriseSiretField;
 
     private UserService userService = new UserService();
     private RoleService roleService = new RoleService();
     private EntrepriseService entrepriseService = new EntrepriseService();
+
+    public RegisterController() {
+        // Initialize default data if not exists
+        initializeDefaultData();
+    }
+    
+    private void initializeDefaultData() {
+        // Create default roles if not exist (use INSERT IGNORE to avoid duplicates)
+        Connection conn = null;
+        try {
+            conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/synapse_event", "root", "");
+            
+            // Insert roles only if they don't exist
+            String[] roleNames = {"Admin", "User", "Manager"};
+            for (String roleName : roleNames) {
+                String checkSql = "SELECT id FROM Role WHERE name = ?";
+                try (PreparedStatement checkStmt = conn.prepareStatement(checkSql)) {
+                    checkStmt.setString(1, roleName);
+                    ResultSet rs = checkStmt.executeQuery();
+                    if (!rs.next()) {
+                        String insertSql = "INSERT INTO Role (name) VALUES (?)";
+                        try (PreparedStatement insertStmt = conn.prepareStatement(insertSql)) {
+                            insertStmt.setString(1, roleName);
+                            insertStmt.executeUpdate();
+                        }
+                    }
+                }
+            }
+            
+            // Insert default enterprise only if not exists
+            String checkEnterpriseSql = "SELECT id FROM Enterprise WHERE nom = ?";
+            try (PreparedStatement checkStmt = conn.prepareStatement(checkEnterpriseSql)) {
+                checkStmt.setString(1, "DefaultCorp");
+                ResultSet rs = checkStmt.executeQuery();
+                if (!rs.next()) {
+                    String insertSql = "INSERT INTO Enterprise (nom, siret) VALUES (?, ?)";
+                    try (PreparedStatement insertStmt = conn.prepareStatement(insertSql)) {
+                        insertStmt.setString(1, "DefaultCorp");
+                        insertStmt.setString(2, "12345678901234");
+                        insertStmt.executeUpdate();
+                    }
+                }
+            }
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (conn != null) {
+                try { conn.close(); } catch (Exception e) {}
+            }
+        }
+    }
+    
+    @FXML
+    public void initialize() {
+        // Load existing enterprises into combo box
+        try {
+            entrepriseCombo.setItems(FXCollections.observableArrayList(entrepriseService.getAll()));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    
+    @FXML
+    private void onExistingEnterpriseSelected() {
+        entrepriseCombo.setVisible(true);
+        entrepriseNameField.setVisible(false);
+        entrepriseSiretField.setVisible(false);
+    }
+    
+    @FXML
+    private void onNewEnterpriseSelected() {
+        entrepriseCombo.setVisible(false);
+        entrepriseNameField.setVisible(true);
+        entrepriseSiretField.setVisible(true);
+    }
 
     @FXML
     private void registerUser() {
@@ -86,18 +173,40 @@ public class RegisterController {
                 return;
             }
 
-            // Get default enterprise (use first enterprise as default)
-            Entreprise defaultEnterprise = entrepriseService.findbyId(1L);
-            if (defaultEnterprise == null) {
-                messageLabel.setText("Error: Default enterprise not found");
-                return;
+            // Handle enterprise selection/creation
+            Entreprise enterprise;
+            if (newEnterpriseRadio.isSelected()) {
+                // Create new enterprise
+                String entrepriseName = entrepriseNameField.getText().trim();
+                String entrepriseSiret = entrepriseSiretField.getText().trim();
+                
+                if (entrepriseName.isEmpty() || entrepriseSiret.isEmpty()) {
+                    messageLabel.setText("Please fill in enterprise name and SIRET");
+                    return;
+                }
+                
+                enterprise = new Entreprise();
+                enterprise.setNom(entrepriseName);
+                enterprise.setSiret(entrepriseSiret);
+                entrepriseService.add(enterprise);
+            } else {
+                // Use selected or default enterprise
+                enterprise = entrepriseCombo.getValue();
+                if (enterprise == null) {
+                    // Try to get default enterprise
+                    enterprise = entrepriseService.findbyId(1L);
+                }
+                if (enterprise == null) {
+                    messageLabel.setText("Error: No enterprise selected");
+                    return;
+                }
             }
 
-            // Hash the password
-            String hashedPassword = PasswordUtil.hashPassword(password);
+            // Store password as plain text (for your use case)
+            String storedPassword = password;
 
-            // Create new user
-            User newUser = new User(email, hashedPassword, nom, prenom, phone, address, null, userRole, defaultEnterprise);
+            // Create new user with plain text password
+            User newUser = new User(email, storedPassword, nom, prenom, phone, address, null, userRole, enterprise);
 
             // Save user to database
             boolean success = userService.ajouter(newUser);
