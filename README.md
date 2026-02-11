@@ -1,106 +1,73 @@
 # SynapseEvent
 
-A comprehensive JavaFX-based event management system designed to streamline the organization and management of corporate events, bookings, and custom requests. This application provides a user-friendly interface for managing various aspects of event planning and execution within enterprises.
+A comprehensive event management platform designed to streamline the organization and management of corporate events, from intimate celebrations to large-scale team building activities.
 
-## Overview
+## Project Description
 
-SynapseEvent is built using modern Java technologies and follows best practices in software architecture. It serves as a complete solution for event organizers to handle everything from user management to event booking, reviews, and custom requests.
+SynapseEvent is an all-in-one event management solution that helps organizations plan, organize, and execute various types of corporate events. The platform provides tools for managing user accounts, creating and browsing events, making bookings, submitting custom requests, and gathering feedback through reviews.
 
-## Features
+## Modules and Features
 
-- **User Management**: Create and manage users with different roles (Admin, User, Manager) and associated enterprises
-- **Unified Event Management**: All events are managed through a unified EventInstance system with type classification:
-  - Anniversary Events
-  - Formation Events
-  - Paddle Events
-  - Partying Events
-  - Team Building Events
-- **Event Browsing by Type**: Users can browse available events organized by type in separate tabs, preventing information overload
-- **Consolidated Admin Dashboard**: Admins can view and manage all events in a single consolidated interface with dynamic filtering by event type, category, subcategory, and variant with the ability to create new event categories on-the-fly
-- **Event Booking**: Users can view published events and make bookings with a streamlined booking system
-- **Booking Management**: Admins can view and manage user bookings
-- **Custom Event Requests**: Users can submit requests for custom events; admins can approve or manage them
-- **Review System**: Users can submit reviews for events and bookings to provide feedback
-- **User Preferences**: Users can set preferences for event types, notifications, and personalization
-- **Event Templates**: Admins can create and manage event templates for quick and consistent event creation
-- **Role-Based Dashboards**: Separate dashboards for admins (full management) and users (booking, requests, reviews, and preferences)
-- **Data Migration**: Utility to migrate existing data to the unified event structure
+### 1. User Management Module
+- **User Registration**: Create new user accounts with personal and company information
+- **User Login**: Secure authentication to access the platform
+- **User Profiles**: Manage user profiles with preferences and settings
+- **Role-Based Access**: Different access levels for regular users and administrators
 
-## Architecture
+### 2. Event Management Module
+Organize and manage five distinct types of corporate events:
 
-The application implements a clean, layered architecture that promotes separation of concerns and maintainability:
+- **Anniversary Events**: Plan and manage company anniversary celebrations and milestone events
+- **Formation Events**: Organize training sessions, workshops, and professional development programs
+- **Paddle Events**: Manage paddle sports activities and team building sessions
+- **Partying Events**: Coordinate social gatherings, parties, and celebration events
+- **Team Building Events**: Plan and execute team building activities to strengthen workplace relationships
 
-### Layers
+### 3. Booking Management Module
+- **Event Browsing**: Browse available events organized by type
+- **Make Bookings**: Reserve spots for events with a streamlined booking process
+- **Booking History**: View all past and current bookings
+- **Admin Booking Oversight**: Administrators can view and manage all user bookings
 
-1. **Entity Layer** (`entities/`): Data model classes representing business entities
-    - `User.java` - User information with role and entreprise associations
-    - `Role.java` - User roles
-    - `Entreprise.java` - Company/organization information
-    - `EventInstance.java` - Unified event entity with type classification (Anniversary, Formation, Paddle, Partying, TeamBuilding)
-    - `Booking.java` - Booking information linking users to events
-    - `CustomEventRequest.java` - Custom event request details
-    - `EventSummary.java` - Event summary for display purposes
-    - `EventInstanceSummary.java` - Enhanced event summary with full details
-    - `Venue.java` - Venue information for events
-    - `Review.java` - Review details for events and bookings
-    - `UserPreferences.java` - User preference settings
-    - `EventTemplate.java` - Event template information
-    - Legacy entities (`AnniversaryEvent.java`, `FormationEvent.java`, etc.) - Maintained for compatibility
+### 4. Custom Event Request Module
+- **Submit Custom Requests**: Request custom-tailored events outside the standard offerings
+- **Request Tracking**: Track the status of custom event requests
+- **Admin Review**: Administrators can review, approve, and manage custom requests
 
-2. **Service Layer** (`service/`): Business logic and data access encapsulation
-    - `EventInstanceService.java` - Unified service for all event operations with type-based filtering
-    - `EventTypeService.java` - Service for managing event types
-    - `EventCategoryService.java` - Service for managing event categories
-    - `EventSubcategoryService.java` - Service for managing event subcategories
-    - `EventVariantService.java` - Service for managing event variants
-    - Service classes for each entity (e.g., `UserService.java`, `BookingService.java`, `CustomEventRequestService.java`, `ReviewService.java`, `UserPreferencesService.java`, `EventTemplateService.java`)
-    - Legacy event services (`AnniversaryEventService.java`, `FormationEventService.java`, etc.) maintained for compatibility
-    - Implements CRUD operations using JDBC directly
-    - Uses prepared statements for security
-    - Provides a clean API for controllers
+### 5. Review System Module
+- **Submit Reviews**: Share feedback and ratings for attended events
+- **Event Quality Improvement**: Help improve future events based on user feedback
+- **Booking-Based Reviews**: Reviews linked to specific bookings for authenticity
 
-3. **Presentation Layer** (`controller/`): JavaFX UI controllers
-    - FXML-based controllers for login, admin dashboard, user dashboard, and individual event management views
-    - Handle user interactions and update the UI
-    - Coordinate between services and views
+### 6. Admin Dashboard Module
+A comprehensive management interface for administrators:
+- **Unified Event View**: View and manage all events in one centralized dashboard
+- **Event Filtering**: Filter events by type for easy navigation
+- **Dynamic Categories**: Create new event categories on-the-fly
+- **Booking Management**: Oversee and manage all user bookings
+- **Custom Request Management**: Review and process custom event requests
+- **Event Templates**: Create and manage reusable event templates
 
-4. **Utility Layer** (`utils/`): Helper classes
-    - `MaConnection.java` - Database connection singleton
-    - `AlertsUtil.java` - UI alert utilities
-    - `DateUtil.java` - Date manipulation utilities
-    - `CurrentUser.java` - Current user session management
-    - `DatabaseInitializer.java` - Database initialization from schema.sql
-    - `PasswordUtil.java` - Password hashing and verification utilities
-    - `DataMigration.java` - Utility for migrating existing event data to unified structure
+### 7. User Dashboard Module
+Personalized space for regular users:
+- **Event Browsing**: Browse available events organized by category
+- **My Bookings**: View and manage personal bookings
+- **Custom Requests**: Submit and track custom event requests
+- **My Reviews**: Manage reviews submitted for attended events
+- **Preferences**: Set personal preferences for event types and notifications
 
-### Design Patterns Used
+## Setup
 
-- **Service Layer Pattern**: Encapsulates business logic and data access
-- **Singleton Pattern**: For database connection management
-- **MVC Pattern**: Model-View-Controller for UI separation
-
-## Technologies Used
-
-- **Java 17**: Core programming language
-- **JavaFX 17**: UI framework for desktop applications
-- **MySQL**: Relational database management system
-- **Maven**: Build automation and dependency management
-- **JDBC**: Database connectivity
-
-## Prerequisites
-
-Before running the application, ensure you have the following installed:
-
+### Prerequisites
 - Java Development Kit (JDK) 17 or higher
 - MySQL Server 8.0 or higher
 - Maven 3.6 or higher
-- An IDE like IntelliJ IDEA or Eclipse with JavaFX support
 
-## Installation and Setup
+### Installation
 
 1. **Clone the Repository**
    ```bash
-   git clone <repository-url>
+   git clone git@github.com:YessinTrifa/SynapseEvent.git
    cd SynapseEvent
    ```
 
@@ -109,128 +76,20 @@ Before running the application, ensure you have the following installed:
    mvn clean install
    ```
 
-## Database Setup
+3. **Database Setup**
+   - Create a new MySQL database named `synapse_event`
+   - Update database connection settings in `src/main/java/com/synapseevent/utils/MaConnection.java`
+   - Run the initialization script to create tables and sample data
 
-1. **Create Database**
-    ```sql
-    CREATE DATABASE synapse_event;
-    ```
+4. **Run the Application**
+   ```bash
+   mvn javafx:run
+   ```
 
-2. **Update Connection Configuration**
-    - Open `src/main/java/com/synapseevent/utils/MaConnection.java`
-    - Modify the connection parameters if needed:
-      ```java
-      String url = "jdbc:mysql://localhost:3306/synapse_event";
-      String user = "root"; // Change as needed
-      String password = ""; // Change as needed
-      ```
+## GitHub Repository
 
-3. **Initialize Database**
-    Run the InitDatabase class to create tables and insert sample data:
-    ```bash
-    java -cp target/classes com.synapseevent.InitDatabase
-    ```
-    This will execute the `schema.sql` file automatically, creating all necessary tables and inserting sample data.
+[SynapseEvent GitHub Repository](git@github.com:YessinTrifa/SynapseEvent.git)
 
-4. **Migrate Existing Data (if upgrading)**
-    If you have existing event data from previous versions, run the data migration utility:
-    ```bash
-    java -cp target/classes com.synapseevent.utils.DataMigration
-    ```
-    This will consolidate events from separate tables (AnniversaryEvent, FormationEvent, etc.) into the unified `event_instance` table with proper type classification.
+## Support
 
-## Running the Application
-
-### From IDE
-- Open the project in your IDE
-- Run `Main.java` as a JavaFX application
-
-### From Command Line
-```bash
-mvn javafx:run
-```
-
-### Testing CRUD Operations
-Run the console-based test:
-```bash
-java -cp target/classes com.synapseevent.TestCRUD
-```
-
-This will perform basic CRUD operations on Role, Entreprise, and User entities.
-
-## Project Structure
-
-```
-src/
-├── main/
-│   ├── java/com/synapseevent/
-│   │   ├── InitDatabase.java         # Database initialization
-│   │   ├── Main.java                 # Application entry point
-│   │   ├── TestCRUD.java             # Console CRUD test
-│   │   ├── controller/               # JavaFX controllers
-│   │   ├── entities/                 # Entity classes
-│   │   ├── service/                  # Business logic and data access services
-│   │   └── utils/                    # Utility classes
-│   └── resources/
-│       ├── schema.sql                # Database schema and sample data
-│       └── fxml/                     # FXML UI files
-└── test/
-    └── java/                         # Unit tests
-```
-
-## How It Works
-
-### Data Flow
-1. **User Interaction**: User interacts with JavaFX UI defined in FXML files
-2. **Controller Action**: Controllers handle events and call appropriate services
-3. **Business Logic & Data Access**: Services implement business rules and execute SQL queries directly via JDBC connection
-4. **Database**: MySQL stores and retrieves data
-
-### Key Workflows
-- **User Authentication**: Users log in based on their roles (Admin, User, Manager)
-- **Admin Event Management**: Admins create and manage events through a consolidated dashboard with unified EventInstance system; view all events in one table with dynamic filtering by type (Formation, Paddle, Partying, TeamBuilding, Anniversary, and custom types); create new event categories on-the-fly; manage bookings and custom requests; create and manage event templates
-- **User Event Browsing**: Users browse published events organized by type in separate tabs, preventing information overload and improving discoverability
-- **User Event Booking**: Users view published events by type and make bookings with a streamlined process
-- **Custom Event Requests**: Users submit custom event requests; admins review and update statuses
-- **Review Submission**: Users can submit reviews for events and bookings to provide feedback
-- **User Preferences Management**: Users can set and update their preferences for event types and notifications
-- **Dashboard Management**: Role-based dashboards provide appropriate functionalities including reviews and preferences
-- **Data Migration**: One-time migration utility to consolidate existing event data into the unified structure
-
-## Development Guidelines
-
-- Follow the layered architecture strictly
-- Services handle both business logic and data access directly
-- Use prepared statements for all database queries
-- Implement proper error handling and logging
-- Write unit tests for services and utilities
-- Maintain consistent naming conventions (French for entities, English for code)
-
-## Contributing
-
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Add tests if applicable
-5. Submit a pull request
-
-## License
-
-This project is licensed under the MIT License - see the LICENSE file for details.
-
-## Recent Updates
-
-### v1.1.0 - Admin Dashboard UI Consolidation
-- **Consolidated Event Management**: Unified all event type tabs (Formation, Paddle, Partying, TeamBuilding, Anniversary) into a single "Events" tab for improved admin user experience
-- **Dynamic Event Filtering**: Added ComboBox filter to view events by type or see all events at once
-- **Dynamic Event Type Creation**: Admins can now create new event categories directly from the UI without code changes
-- **Streamlined Interface**: Reduced tab clutter and improved navigation efficiency in the admin dashboard
-
-## Future Enhancements
-
-- REST API for mobile app integration
-- Advanced reporting and analytics for events
-- Email notifications for event updates
-- Multi-language support
-- Cloud deployment options
-- Integration between different event types
+For questions or support, please contact the development team through the GitHub repository.
