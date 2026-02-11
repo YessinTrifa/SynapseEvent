@@ -86,8 +86,16 @@
             <TextField fx:id="budgetField" promptText="Enter budget" />
             <Label text="Capacity:" />
             <Spinner fx:id="capacitySpinner" min="1" max="10000" initialValue="50" />
-            <Label text="Location:" />
-            <TextField fx:id="locationField" promptText="Enter preferred location" />
+            
+            <Label text="Venue Type:" />
+            <ComboBox fx:id="venueTypeFilterComboBox" />
+            
+            <Label text="City:" />
+            <ComboBox fx:id="cityFilterComboBox" />
+            
+            <Label text="Venue:" />
+            <ComboBox fx:id="venueComboBox" />
+            
             <Label text="Description:" />
             <TextArea fx:id="descriptionArea" promptText="Enter event description" />
             <Button fx:id="submitRequestButton" text="Submit Request" onAction="#submitCustomRequest" />

@@ -63,13 +63,16 @@ public class UserDashboardController {
     @FXML private DatePicker eventDatePicker;
     @FXML private TextField budgetField;
     @FXML private Spinner<Integer> capacitySpinner;
-    @FXML private TextField locationField;
+    @FXML private ComboBox<String> venueTypeFilterComboBox;
+    @FXML private ComboBox<String> cityFilterComboBox;
+    @FXML private ComboBox<Venue> venueComboBox;
     @FXML private TextArea descriptionArea;
     @FXML private Button submitRequestButton;
 
     private EventInstanceService eventInstanceService = new EventInstanceService();
     private BookingService bookingService = new BookingService();
     private CustomEventRequestService customRequestService = new CustomEventRequestService();
+    private VenueService venueService = new VenueService();
 
     private Map<String, List<EventInstance>> eventsByType;
     private List<EventInstance> allPublishedEvents = new ArrayList<>();
@@ -91,6 +94,10 @@ public class UserDashboardController {
 
         // Setup custom request combo
         eventTypeCombo.getItems().addAll("Anniversary", "Formation", "Paddle", "Partying", "TeamBuilding");
+        eventTypeCombo.setOnAction(e -> onEventTypeSelected());
+
+        // Setup venue filter combos
+        setupVenueFilters();
 
         // Load data
         loadEvents();
@@ -310,6 +317,72 @@ public class UserDashboardController {
             e.printStackTrace();
         }
     }
+    
+    private void setupVenueFilters() {
+        // Set up venue type filter
+        venueTypeFilterComboBox.getItems().addAll("All Types", "CLUB", "BEACH", "HOTEL", "RESTAURANT");
+        venueTypeFilterComboBox.setValue("All Types");
+        
+        // Set up city filter
+        cityFilterComboBox.getItems().add("All Cities");
+        try {
+            cityFilterComboBox.getItems().addAll(venueService.getAllCities());
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        cityFilterComboBox.setValue("All Cities");
+        
+        // Set up venue combo box and load all venues
+        loadVenues();
+        
+        // Add listeners for filtering
+        venueTypeFilterComboBox.setOnAction(e -> filterVenues());
+        cityFilterComboBox.setOnAction(e -> filterVenues());
+    }
+    
+    private void loadVenues() {
+        try {
+            venueComboBox.setItems(FXCollections.observableArrayList(venueService.readAll()));
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+    
+    private void filterVenues() {
+        String type = venueTypeFilterComboBox.getValue();
+        String city = cityFilterComboBox.getValue();
+        try {
+            venueComboBox.setItems(FXCollections.observableArrayList(venueService.findByTypeAndCity(type, city)));
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+    
+    private void onEventTypeSelected() {
+        String eventType = eventTypeCombo.getValue();
+        if (eventType != null) {
+            // Map event type to suggested venue types
+            switch (eventType) {
+                case "Anniversary":
+                case "Partying":
+                    venueTypeFilterComboBox.getItems().setAll("All Types", "CLUB", "HOTEL", "RESTAURANT", "BEACH");
+                    break;
+                case "Formation":
+                    venueTypeFilterComboBox.getItems().setAll("All Types", "HOTEL", "RESTAURANT", "CLUB");
+                    break;
+                case "TeamBuilding":
+                    venueTypeFilterComboBox.getItems().setAll("All Types", "BEACH", "HOTEL", "RESTAURANT");
+                    break;
+                case "Paddle":
+                    venueTypeFilterComboBox.getItems().setAll("All Types", "BEACH", "CLUB");
+                    break;
+                default:
+                    venueTypeFilterComboBox.getItems().setAll("All Types", "CLUB", "BEACH", "HOTEL", "RESTAURANT");
+            }
+            venueTypeFilterComboBox.setValue("All Types");
+            filterVenues();
+        }
+    }
 
     private void bookEvent(EventInstance ei) {
         Booking booking = new Booking(CurrentUser.getCurrentUser(), "instance", ei.getId(), LocalDate.now(), "pending");
@@ -346,7 +419,8 @@ public class UserDashboardController {
         }
         
         Integer capacity = capacitySpinner.getValue();
-        String location = locationField.getText();
+        Venue selectedVenue = venueComboBox.getValue();
+        String location = selectedVenue != null ? selectedVenue.getName() + " (" + selectedVenue.getAddress() + ")" : "";
         
         if (eventType != null && eventDate != null && description != null && !description.isEmpty()) {
             CustomEventRequest request = new CustomEventRequest();
@@ -366,7 +440,10 @@ public class UserDashboardController {
                 eventDatePicker.setValue(null);
                 budgetField.clear();
                 capacitySpinner.getValueFactory().setValue(50);
-                locationField.clear();
+                venueComboBox.setValue(null);
+                venueTypeFilterComboBox.setValue("All Types");
+                cityFilterComboBox.setValue("All Cities");
+                filterVenues();
                 descriptionArea.clear();
                 showAlert("Success", "Your custom event request has been submitted successfully!");
             } catch (SQLException e) {

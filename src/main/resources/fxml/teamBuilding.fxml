@@ -30,20 +30,23 @@
         <Label text="End Time:" GridPane.columnIndex="2" GridPane.rowIndex="1"/>
         <Spinner fx:id="endTimeHourSpinner" promptText="HH" GridPane.columnIndex="3" GridPane.rowIndex="1" min="0" max="23" initialValue="17"/>
 
-        <Label text="Location:" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
-        <TextField fx:id="locationField" promptText="Location" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+        <Label text="Venue Type:" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
+        <ComboBox fx:id="venueTypeFilterComboBox" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
 
-        <Label text="Capacity:" GridPane.columnIndex="2" GridPane.rowIndex="2"/>
-        <Spinner fx:id="capacitySpinner" promptText="Capacity" GridPane.columnIndex="3" GridPane.rowIndex="2" min="1" max="1000" initialValue="30"/>
+        <Label text="Venue:" GridPane.columnIndex="2" GridPane.rowIndex="2"/>
+        <ComboBox fx:id="venueComboBox" GridPane.columnIndex="3" GridPane.rowIndex="2"/>
 
-        <Label text="Price (€):" GridPane.columnIndex="0" GridPane.rowIndex="3"/>
-        <Spinner fx:id="priceSpinner" promptText="Price" GridPane.columnIndex="1" GridPane.rowIndex="3" min="0" max="10000" initialValue="0" amountToStepBy="10"/>
+        <Label text="Capacity:" GridPane.columnIndex="0" GridPane.rowIndex="3"/>
+        <Spinner fx:id="capacitySpinner" promptText="Capacity" GridPane.columnIndex="1" GridPane.rowIndex="3" min="1" max="1000" initialValue="30"/>
 
-        <Label text="Status:" GridPane.columnIndex="2" GridPane.rowIndex="3"/>
-        <ComboBox fx:id="statusComboBox" GridPane.columnIndex="3" GridPane.rowIndex="3"/>
+        <Label text="Price (€):" GridPane.columnIndex="2" GridPane.rowIndex="3"/>
+        <Spinner fx:id="priceSpinner" promptText="Price" GridPane.columnIndex="3" GridPane.rowIndex="3" min="0" max="10000" initialValue="0" amountToStepBy="10"/>
 
-        <Label text="Description:" GridPane.columnIndex="0" GridPane.rowIndex="4"/>
-        <TextArea fx:id="descriptionField" promptText="Description" wrapText="true" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="4"/>
+        <Label text="Status:" GridPane.columnIndex="0" GridPane.rowIndex="4"/>
+        <ComboBox fx:id="statusComboBox" GridPane.columnIndex="1" GridPane.rowIndex="4"/>
+
+        <Label text="Description:" GridPane.columnIndex="2" GridPane.rowIndex="4"/>
+        <TextArea fx:id="descriptionField" promptText="Description" wrapText="true" GridPane.columnIndex="3" GridPane.columnSpan="1" GridPane.rowIndex="5"/>
     </GridPane>
 
     <HBox spacing="10">

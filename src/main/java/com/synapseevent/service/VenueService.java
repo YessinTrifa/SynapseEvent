@@ -146,4 +146,87 @@ public class VenueService implements IService<Venue> {
         }
         return venues;
     }
+
+    public List<String> getAllTypes() throws SQLException {
+        List<String> types = new ArrayList<>();
+        String sql = "SELECT DISTINCT type FROM Venue ORDER BY type";
+        try (Statement stmt = conn.createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
+            while (rs.next()) {
+                types.add(rs.getString("type"));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw e;
+        }
+        return types;
+    }
+
+    public List<String> getAllCities() throws SQLException {
+        List<String> cities = new ArrayList<>();
+        String sql = "SELECT DISTINCT address FROM Venue WHERE address IS NOT NULL ORDER BY address";
+        try (Statement stmt = conn.createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
+            while (rs.next()) {
+                String address = rs.getString("address");
+                // Extract city from address (assume last part is city)
+                if (address != null && !address.isEmpty()) {
+                    String[] parts = address.split(",");
+                    String city = parts[parts.length - 1].trim();
+                    if (!city.isEmpty() && !cities.contains(city)) {
+                        cities.add(city);
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw e;
+        }
+        return cities;
+    }
+
+    public List<Venue> findByTypeAndCity(String type, String city) throws SQLException {
+        List<Venue> venues = new ArrayList<>();
+        String sql;
+        if (city != null && !city.isEmpty() && !"All Cities".equals(city)) {
+            if (type != null && !type.isEmpty() && !"All Types".equals(type)) {
+                sql = "SELECT * FROM Venue WHERE type = ? AND address LIKE ?";
+            } else {
+                sql = "SELECT * FROM Venue WHERE address LIKE ?";
+            }
+        } else {
+            if (type != null && !type.isEmpty() && !"All Types".equals(type)) {
+                sql = "SELECT * FROM Venue WHERE type = ?";
+            } else {
+                sql = "SELECT * FROM Venue";
+            }
+        }
+        
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            int paramIndex = 1;
+            if (type != null && !type.isEmpty() && !"All Types".equals(type)) {
+                stmt.setString(paramIndex++, type);
+            }
+            if (city != null && !city.isEmpty() && !"All Cities".equals(city)) {
+                stmt.setString(paramIndex, "%" + city + "%");
+            }
+            
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                Venue venue = new Venue();
+                venue.setId(rs.getLong("id"));
+                venue.setName(rs.getString("name"));
+                venue.setType(rs.getString("type"));
+                venue.setAddress(rs.getString("address"));
+                venue.setContactInfo(rs.getString("contact_info"));
+                venue.setPriceRange(rs.getString("price_range"));
+                venue.setRating(rs.getDouble("rating"));
+                venue.setDescription(rs.getString("description"));
+                venue.setAmenities(rs.getString("amenities"));
+                venues.add(venue);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw e;
+        }
+        return venues;
+    }
 }

@@ -1,7 +1,9 @@
 package com.synapseevent.controller;
 
 import com.synapseevent.entities.PaddleEvent;
+import com.synapseevent.entities.Venue;
 import com.synapseevent.service.PaddleEventService;
+import com.synapseevent.service.VenueService;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -27,13 +29,15 @@ public class PaddleController {
     @FXML private DatePicker datePicker;
     @FXML private Spinner<Integer> startTimeHourSpinner;
     @FXML private Spinner<Integer> endTimeHourSpinner;
-    @FXML private TextField locationField;
+    @FXML private ComboBox<String> venueTypeFilterComboBox;
+    @FXML private ComboBox<Venue> venueComboBox;
     @FXML private Spinner<Integer> capacitySpinner;
     @FXML private Spinner<Double> priceSpinner;
     @FXML private ComboBox<String> statusComboBox;
     @FXML private TextArea descriptionField;
 
     private PaddleEventService paddleEventService = new PaddleEventService();
+    private VenueService venueService = new VenueService();
 
     @FXML
     public void initialize() {
@@ -55,7 +59,37 @@ public class PaddleController {
         statusComboBox.setItems(statuses);
         statusComboBox.setValue("draft");
 
+        // Set venue type filter items
+        ObservableList<String> venueTypes = FXCollections.observableArrayList("All", "CLUB", "BEACH", "HOTEL", "RESTAURANT");
+        venueTypeFilterComboBox.setItems(venueTypes);
+        venueTypeFilterComboBox.setValue("All");
+
+        // Load venues and set up filter listener
+        loadVenues();
+        venueTypeFilterComboBox.setOnAction(e -> filterVenuesByType());
+
         loadData();
+    }
+
+    private void loadVenues() {
+        try {
+            venueComboBox.setItems(FXCollections.observableArrayList(venueService.readAll()));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void filterVenuesByType() {
+        String selectedType = venueTypeFilterComboBox.getValue();
+        try {
+            if ("All".equals(selectedType)) {
+                venueComboBox.setItems(FXCollections.observableArrayList(venueService.readAll()));
+            } else {
+                venueComboBox.setItems(FXCollections.observableArrayList(venueService.findByType(selectedType)));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private void loadData() {
@@ -72,7 +106,8 @@ public class PaddleController {
         LocalDate date = datePicker.getValue();
         LocalTime startTime = LocalTime.of(startTimeHourSpinner.getValue(), 0);
         LocalTime endTime = LocalTime.of(endTimeHourSpinner.getValue(), 0);
-        String location = locationField.getText();
+        Venue selectedVenue = venueComboBox.getValue();
+        String location = selectedVenue != null ? selectedVenue.getName() : "";
         Integer capacity = capacitySpinner.getValue();
         Double price = priceSpinner.getValue();
         String description = descriptionField.getText();
@@ -99,7 +134,8 @@ public class PaddleController {
             selected.setDate(datePicker.getValue());
             selected.setStartTime(LocalTime.of(startTimeHourSpinner.getValue(), 0));
             selected.setEndTime(LocalTime.of(endTimeHourSpinner.getValue(), 0));
-            selected.setLocation(locationField.getText());
+            Venue selectedVenue = venueComboBox.getValue();
+            selected.setLocation(selectedVenue != null ? selectedVenue.getName() : "");
             selected.setCapacity(capacitySpinner.getValue());
             selected.setPrice(priceSpinner.getValue());
             selected.setDescription(descriptionField.getText());
@@ -171,7 +207,15 @@ public class PaddleController {
                 endTimeHourSpinner.getValueFactory().setValue(selected.getEndTime().getHour());
             }
 
-            locationField.setText(selected.getLocation());
+            // Try to find and select the venue in the combo box
+            if (selected.getLocation() != null) {
+                for (Venue venue : venueComboBox.getItems()) {
+                    if (venue.getName().equals(selected.getLocation())) {
+                        venueComboBox.setValue(venue);
+                        break;
+                    }
+                }
+            }
             if (selected.getCapacity() != null) {
                 capacitySpinner.getValueFactory().setValue(selected.getCapacity());
             }
@@ -188,7 +232,8 @@ public class PaddleController {
         datePicker.setValue(null);
         startTimeHourSpinner.getValueFactory().setValue(9);
         endTimeHourSpinner.getValueFactory().setValue(17);
-        locationField.clear();
+        venueComboBox.setValue(null);
+        venueTypeFilterComboBox.setValue("All");
         capacitySpinner.getValueFactory().setValue(20);
         priceSpinner.getValueFactory().setValue(0.0);
         statusComboBox.setValue("draft");
