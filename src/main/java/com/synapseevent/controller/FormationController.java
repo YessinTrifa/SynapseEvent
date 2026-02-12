@@ -16,7 +16,15 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 
 public class FormationController {
-
+    @FXML private TableView<FormationEvent> formationTable;
+    @FXML private TableColumn<FormationEvent, Long> idColumn;
+    @FXML private TableColumn<FormationEvent, String> nameColumn;
+    @FXML private TableColumn<FormationEvent, String> dateColumn;
+    @FXML private TableColumn<FormationEvent, String> descriptionColumn;
+    @FXML private TableColumn<FormationEvent, String> locationColumn;
+    @FXML private TableColumn<FormationEvent, String> capacityColumn;
+    @FXML private TableColumn<FormationEvent, String> priceColumn;
+    @FXML private TableColumn<FormationEvent, String> statusColumn;
 
     @FXML private TextField nameField;
     @FXML private DatePicker datePicker;
