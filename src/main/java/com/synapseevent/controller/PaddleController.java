@@ -238,6 +238,6 @@ public class PaddleController {
         priceSpinner.getValueFactory().setValue(0.0);
         statusComboBox.setValue("draft");
         descriptionField.clear();
-        descriptionField.clear();
+
     }
 }
