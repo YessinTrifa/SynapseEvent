@@ -15,7 +15,7 @@
 <?import javafx.scene.paint.Stop?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane style="-fx-background-color: linear-gradient(to bottom right, #0f172a, #1e293b);;" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.synapseevent.controller.LoginController">
+<AnchorPane style="-fx-background-color: linear-gradient(to bottom right, #0f172a, #1e293b);;" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.synapseevent.controller.LoginController">
    <children>
       <VBox alignment="TOP_CENTER" maxWidth="420.0" prefWidth="420.0" spacing="14.0" style="-fx-background-size: 14; -fx-background-color: linear-gradient(to bottom, #0f172a, #111827); -fx-background-radius: 18; -fx-border-color: rgba(255,255,255,0.08); -fx-border-radius: 18;" AnchorPane.bottomAnchor="22.0" AnchorPane.leftAnchor="28.0" AnchorPane.rightAnchor="28.0" AnchorPane.topAnchor="26.0">
          <ImageView fitHeight="90.0" fitWidth="90.0" pickOnBounds="true" preserveRatio="true" VBox.vgrow="NEVER">
