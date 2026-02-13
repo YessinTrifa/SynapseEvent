@@ -10,6 +10,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.control.Label;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
@@ -26,6 +27,12 @@ import java.util.List;
 import java.util.ArrayList;
 
 public class AdminDashboardController {
+
+    // Statistics Labels
+    @FXML private Label totalUsersLabel;
+    @FXML private Label totalEventsLabel;
+    @FXML private Label pendingBookingsLabel;
+    @FXML private Label openRequestsLabel;
 
     // Users Tab
     @FXML private TableView<User> usersTable;
@@ -98,6 +105,36 @@ public class AdminDashboardController {
         loadCustomRequests();
         loadEvents();
         setupEventTypeFilter();
+        updateStatistics();
+    }
+
+    private void updateStatistics() {
+        try {
+            // Total Users
+            List<User> users = userService.readAll();
+            totalUsersLabel.setText(String.valueOf(users.size()));
+            
+            // Total Events
+            List<EventInstance> events = eventService.readAll();
+            totalEventsLabel.setText(String.valueOf(events.size()));
+            
+            // Pending Bookings
+            List<Booking> bookings = bookingService.readAll();
+            long pendingCount = bookings.stream()
+                .filter(b -> "pending".equalsIgnoreCase(b.getStatus()))
+                .count();
+            pendingBookingsLabel.setText(String.valueOf(pendingCount));
+            
+            // Open Custom Requests
+            List<CustomEventRequest> requests = customRequestService.readAll();
+            long openRequests = requests.stream()
+                .filter(r -> "pending".equalsIgnoreCase(r.getStatus()))
+                .count();
+            openRequestsLabel.setText(String.valueOf(openRequests));
+            
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     private void setupUsersTable() {

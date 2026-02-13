@@ -1,105 +1,196 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<?import javafx.geometry.Insets?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.paint.Color?>
+<?import javafx.scene.paint.RadialGradient?>
+<?import javafx.scene.paint.Stop?>
 
-<VBox xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.synapseevent.controller.UserDashboardController">
-    <HBox>
-        <Button text="Logout" onAction="#logout"/>
+<VBox xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" 
+      fx:controller="com.synapseevent.controller.UserDashboardController" 
+      style="-fx-background-color: linear-gradient(to bottom, #0f172a, #111827);">
+
+    <!-- Header -->
+    <HBox alignment="CENTER_LEFT" style="-fx-background-color: rgba(30, 41, 59, 0.8); -fx-padding: 15 20; -fx-border-color: rgba(255,255,255,0.1); -fx-border-width: 0 0 1 0;">
+        <Label text="SynapseEvent" textFill="white" style="-fx-font-size: 20; -fx-font-weight: bold;">
+            <textFill>
+                <RadialGradient centerX="0.5" centerY="0.5" radius="0.5">
+                    <stops>
+                        <Stop>
+                            <color>
+                                <Color red="0.8954386115074158" green="0.9134151935577393" blue="0.9157894849777222" />
+                            </color>
+                        </Stop>
+                        <Stop offset="1.0">
+                            <color>
+                                <Color red="0.16830000281333923" green="0.3146097660064697" blue="0.33000001311302185" />
+                            </color>
+                        </Stop>
+                    </stops>
+                </RadialGradient>
+            </textFill>
+        </Label>
+        <Region HBox.hgrow="ALWAYS" />
+        <Label text="User Dashboard" textFill="#94a3b8" style="-fx-font-size: 14;" />
+        <Region prefWidth="20" />
+        <Button text="Logout" onAction="#logout" 
+                style="-fx-background-color: rgba(239, 68, 68, 0.2); -fx-text-fill: #f87171; -fx-border-color: #f87171; -fx-border-radius: 6; -fx-background-radius: 6; -fx-padding: 8 16;" />
     </HBox>
-    <TabPane fx:id="categoryTabPane">
-    <!-- Home Tab with Featured Events and Filters -->
-    <Tab text="Home">
-        <VBox spacing="10">
-            <!-- Filter Controls -->
-            <HBox spacing="10" alignment="CENTER_LEFT">
-                <Label text="Search Location:" />
-                <TextField fx:id="locationSearchField" promptText="Enter location..." />
-                
-                <Label text="Event Type:" />
-                <ComboBox fx:id="typeFilterCombo" />
-                
-                <Label text="From:" />
-                <DatePicker fx:id="dateFromPicker" />
-                
-                <Label text="To:" />
-                <DatePicker fx:id="dateToPicker" />
-                
-                <Button text="Apply Filters" onAction="#applyFilters" />
-                <Button text="Clear Filters" onAction="#clearFilters" />
-            </HBox>
-            
-            <!-- Featured Events Section -->
-            <Label text="Featured Events" style="-fx-font-size: 18; -fx-font-weight: bold;" />
-            <TableView fx:id="featuredEventsTable" VBox.vgrow="ALWAYS">
-                <columns>
-                    <TableColumn fx:id="featuredNameColumn" text="Name" />
-                    <TableColumn fx:id="featuredTypeColumn" text="Type" />
-                    <TableColumn fx:id="featuredDateColumn" text="Date" />
-                    <TableColumn fx:id="featuredLocationColumn" text="Location" />
-                    <TableColumn fx:id="featuredPriceColumn" text="Price" />
-                    <TableColumn fx:id="featuredActionColumn" text="Action" />
-                </columns>
-            </TableView>
-            
-            <!-- All Events Section -->
-            <Label text="All Available Events" style="-fx-font-size: 18; -fx-font-weight: bold;" />
-            <TableView fx:id="allEventsTable" VBox.vgrow="ALWAYS">
-                <columns>
-                    <TableColumn fx:id="allNameColumn" text="Name" />
-                    <TableColumn fx:id="allTypeColumn" text="Type" />
-                    <TableColumn fx:id="allDateColumn" text="Date" />
-                    <TableColumn fx:id="allLocationColumn" text="Location" />
-                    <TableColumn fx:id="allPriceColumn" text="Price" />
-                    <TableColumn fx:id="allStatusColumn" text="Status" />
-                    <TableColumn fx:id="allActionColumn" text="Action" />
-                </columns>
-            </TableView>
-        </VBox>
-    </Tab>
-    <!-- Available Events by Type (Legacy tabs) -->
-    <Tab text="Browse by Type">
-        <TabPane fx:id="eventsTabPane">
-            <!-- Dynamic tabs will be created here -->
-        </TabPane>
-    </Tab>
-    <Tab text="My Bookings">
-        <VBox>
-            <TableView fx:id="bookingsTable">
-                <columns>
-                    <TableColumn fx:id="bookingTypeColumn" text="Event Name" />
-                    <TableColumn fx:id="bookingEventIdColumn" text="Event ID" />
-                    <TableColumn fx:id="bookingDateColumn" text="Booking Date" />
-                    <TableColumn fx:id="bookingStatusColumn" text="Status" />
-                </columns>
-            </TableView>
-        </VBox>
-    </Tab>
-    <Tab text="Custom Request">
-        <VBox spacing="10">
-            <Label text="Event Type:" />
-            <ComboBox fx:id="eventTypeCombo" />
-            <Label text="Event Date:" />
-            <DatePicker fx:id="eventDatePicker" />
-            <Label text="Budget (€):" />
-            <TextField fx:id="budgetField" promptText="Enter budget" />
-            <Label text="Capacity:" />
-            <Spinner fx:id="capacitySpinner" min="1" max="10000" initialValue="50" />
-            
-            <Label text="Venue Type:" />
-            <ComboBox fx:id="venueTypeFilterComboBox" />
-            
-            <Label text="City:" />
-            <ComboBox fx:id="cityFilterComboBox" />
-            
-            <Label text="Venue:" />
-            <ComboBox fx:id="venueComboBox" />
-            
-            <Label text="Description:" />
-            <TextArea fx:id="descriptionArea" promptText="Enter event description" />
-            <Button fx:id="submitRequestButton" text="Submit Request" onAction="#submitCustomRequest" />
-        </VBox>
-    </Tab>
+
+    <!-- Main TabPane with improved spacing -->
+    <TabPane fx:id="categoryTabPane" tabClosingPolicy="UNAVAILABLE" style="-fx-background-color: transparent; -fx-padding: 15 20 20 20;" VBox.vgrow="ALWAYS">
+        
+        <!-- Home Tab -->
+        <Tab text="Home" style="-fx-background-color: #1e293b; -fx-text-fill: #94a3b8; -fx-font-size: 13;">
+            <content>
+                <VBox spacing="20" style="-fx-background-color: rgba(15, 23, 42, 0.5); -fx-background-radius: 12; -fx-padding: 20;">
+                    <!-- Filter Controls -->
+                    <HBox spacing="10" alignment="CENTER_LEFT" style="-fx-background-color: rgba(30, 41, 59, 0.4); -fx-padding: 15; -fx-background-radius: 8;">
+                        <Label text="📍 Location:" textFill="white" style="-fx-font-weight: 600;" />
+                        <TextField fx:id="locationSearchField" promptText="Enter location..." 
+                                   style="-fx-background-color: rgba(30, 41, 59, 0.8); -fx-text-fill: white; -fx-prompt-text-fill: #64748b; -fx-background-radius: 6;" prefWidth="150" />
+                        
+                        <Label text="🎭 Type:" textFill="white" style="-fx-font-weight: 600;" />
+                        <ComboBox fx:id="typeFilterCombo" 
+                                  style="-fx-background-color: rgba(30, 41, 59, 0.8); -fx-text-fill: white; -fx-border-color: rgba(255,255,255,0.2); -fx-background-radius: 6;" />
+                        
+                        <Label text="📅 From:" textFill="white" style="-fx-font-weight: 600;" />
+                        <DatePicker fx:id="dateFromPicker" 
+                                    style="-fx-background-color: rgba(30, 41, 59, 0.8); -fx-text-fill: white; -fx-background-radius: 6;" />
+                        
+                        <Label text="To:" textFill="white" style="-fx-font-weight: 600;" />
+                        <DatePicker fx:id="dateToPicker" 
+                                    style="-fx-background-color: rgba(30, 41, 59, 0.8); -fx-text-fill: white; -fx-background-radius: 6;" />
+                        
+                        <Region HBox.hgrow="ALWAYS" />
+                        <Button text="Apply Filters" onAction="#applyFilters" 
+                                style="-fx-background-color: #3b82f6; -fx-text-fill: white; -fx-background-radius: 6; -fx-padding: 8 16; -fx-font-weight: 600;" />
+                        <Button text="Clear" onAction="#clearFilters" 
+                                style="-fx-background-color: rgba(107, 114, 128, 0.2); -fx-text-fill: #9ca3af; -fx-border-color: #6b7280; -fx-border-radius: 6; -fx-background-radius: 6; -fx-padding: 8 16;" />
+                    </HBox>
+                    
+                    <!-- Featured Events Section -->
+                    <VBox spacing="10">
+                        <Label text="⭐ Featured Events" textFill="white" style="-fx-font-size: 18; -fx-font-weight: bold;" />
+                        <TableView fx:id="featuredEventsTable" style="-fx-background-color: rgba(30, 41, 59, 0.4); -fx-background-radius: 8; -fx-border-color: rgba(255,255,255,0.1); -fx-border-radius: 8; -fx-text-fill: white;" VBox.vgrow="ALWAYS">
+                            <columns>
+                                <TableColumn fx:id="featuredNameColumn" text="Name" style="-fx-text-fill: white; -fx-background-color: #1e293b;" />
+                                <TableColumn fx:id="featuredTypeColumn" text="Type" style="-fx-text-fill: white; -fx-background-color: #1e293b;" />
+                                <TableColumn fx:id="featuredDateColumn" text="Date" style="-fx-text-fill: white; -fx-background-color: #1e293b;" />
+                                <TableColumn fx:id="featuredLocationColumn" text="Location" style="-fx-text-fill: white; -fx-background-color: #1e293b;" />
+                                <TableColumn fx:id="featuredPriceColumn" text="Price" style="-fx-text-fill: white; -fx-background-color: #1e293b;" />
+                                <TableColumn fx:id="featuredActionColumn" text="Book" style="-fx-text-fill: white; -fx-background-color: #1e293b;" />
+                            </columns>
+                            <columnResizePolicy>
+                                <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                            </columnResizePolicy>
+                        </TableView>
+                    </VBox>
+                    
+                    <!-- All Events Section -->
+                    <VBox spacing="10">
+                        <Label text="🎉 All Available Events" textFill="white" style="-fx-font-size: 18; -fx-font-weight: bold;" />
+                        <TableView fx:id="allEventsTable" style="-fx-background-color: rgba(30, 41, 59, 0.4); -fx-background-radius: 8; -fx-border-color: rgba(255,255,255,0.1); -fx-border-radius: 8; -fx-text-fill: white;" VBox.vgrow="ALWAYS">
+                            <columns>
+                                <TableColumn fx:id="allNameColumn" text="Name" style="-fx-text-fill: white; -fx-background-color: #1e293b;" />
+                                <TableColumn fx:id="allTypeColumn" text="Type" style="-fx-text-fill: white; -fx-background-color: #1e293b;" />
+                                <TableColumn fx:id="allDateColumn" text="Date" style="-fx-text-fill: white; -fx-background-color: #1e293b;" />
+                                <TableColumn fx:id="allLocationColumn" text="Location" style="-fx-text-fill: white; -fx-background-color: #1e293b;" />
+                                <TableColumn fx:id="allPriceColumn" text="Price" style="-fx-text-fill: white; -fx-background-color: #1e293b;" />
+                                <TableColumn fx:id="allStatusColumn" text="Status" style="-fx-text-fill: white; -fx-background-color: #1e293b;" />
+                                <TableColumn fx:id="allActionColumn" text="Book" style="-fx-text-fill: white; -fx-background-color: #1e293b;" />
+                            </columns>
+                            <columnResizePolicy>
+                                <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                            </columnResizePolicy>
+                        </TableView>
+                    </VBox>
+                </VBox>
+            </content>
+        </Tab>
+        
+        <!-- Browse by Type Tab -->
+        <Tab text="Browse by Type" style="-fx-background-color: #1e293b; -fx-text-fill: #94a3b8; -fx-font-size: 13;">
+            <content>
+                <TabPane fx:id="eventsTabPane" style="-fx-background-color: transparent;">
+                    <!-- Dynamic tabs will be created here -->
+                </TabPane>
+            </content>
+        </Tab>
+        
+        <!-- My Bookings Tab -->
+        <Tab text="My Bookings" style="-fx-background-color: #1e293b; -fx-text-fill: #94a3b8; -fx-font-size: 13;">
+            <content>
+                <VBox spacing="15" style="-fx-background-color: rgba(15, 23, 42, 0.5); -fx-background-radius: 12; -fx-padding: 20;">
+                    <Label text="📋 My Booking History" textFill="white" style="-fx-font-size: 18; -fx-font-weight: bold;" />
+                    <TableView fx:id="bookingsTable" style="-fx-background-color: rgba(30, 41, 59, 0.4); -fx-background-radius: 8; -fx-border-color: rgba(255,255,255,0.1); -fx-border-radius: 8; -fx-text-fill: white;" VBox.vgrow="ALWAYS">
+                        <columns>
+                            <TableColumn fx:id="bookingTypeColumn" text="Event Name" style="-fx-text-fill: white; -fx-background-color: #1e293b;" />
+                            <TableColumn fx:id="bookingEventIdColumn" text="Event ID" style="-fx-text-fill: white; -fx-background-color: #1e293b;" />
+                            <TableColumn fx:id="bookingDateColumn" text="Booking Date" style="-fx-text-fill: white; -fx-background-color: #1e293b;" />
+                            <TableColumn fx:id="bookingStatusColumn" text="Status" style="-fx-text-fill: white; -fx-background-color: #1e293b;" />
+                        </columns>
+                        <columnResizePolicy>
+                            <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                        </columnResizePolicy>
+                    </TableView>
+                </VBox>
+            </content>
+        </Tab>
+        
+        <!-- Custom Request Tab -->
+        <Tab text="Custom Request" style="-fx-background-color: #1e293b; -fx-text-fill: #94a3b8; -fx-font-size: 13;">
+            <content>
+                <VBox spacing="15" style="-fx-background-color: rgba(15, 23, 42, 0.5); -fx-background-radius: 12; -fx-padding: 20;">
+                    <Label text="✨ Create Custom Event Request" textFill="white" style="-fx-font-size: 18; -fx-font-weight: bold;" />
+                    
+                    <HBox spacing="15">
+                        <VBox spacing="5" HBox.hgrow="ALWAYS">
+                            <Label text="🎭 Event Type:" textFill="#94a3b8" />
+                            <ComboBox fx:id="eventTypeCombo" style="-fx-background-color: rgba(30, 41, 59, 0.8); -fx-text-fill: white; -fx-border-color: rgba(255,255,255,0.2); -fx-background-radius: 6;" />
+                        </VBox>
+                        <VBox spacing="5" HBox.hgrow="ALWAYS">
+                            <Label text="📅 Event Date:" textFill="#94a3b8" />
+                            <DatePicker fx:id="eventDatePicker" style="-fx-background-color: rgba(30, 41, 59, 0.8); -fx-text-fill: white; -fx-background-radius: 6;" />
+                        </VBox>
+                        <VBox spacing="5" HBox.hgrow="ALWAYS">
+                            <Label text="💰 Budget (€):" textFill="#94a3b8" />
+                            <TextField fx:id="budgetField" promptText="Enter budget" style="-fx-background-color: rgba(30, 41, 59, 0.8); -fx-text-fill: white; -fx-prompt-text-fill: #64748b; -fx-background-radius: 6;" />
+                        </VBox>
+                    </HBox>
+                    
+                    <HBox spacing="15">
+                        <VBox spacing="5" HBox.hgrow="ALWAYS">
+                            <Label text="👥 Capacity:" textFill="#94a3b8" />
+                            <Spinner fx:id="capacitySpinner" min="1" max="10000" initialValue="50" style="-fx-background-color: rgba(30, 41, 59, 0.8); -fx-text-fill: white;" />
+                        </VBox>
+                        <VBox spacing="5" HBox.hgrow="ALWAYS">
+                            <Label text="🏢 Venue Type:" textFill="#94a3b8" />
+                            <ComboBox fx:id="venueTypeFilterComboBox" style="-fx-background-color: rgba(30, 41, 59, 0.8); -fx-text-fill: white; -fx-border-color: rgba(255,255,255,0.2); -fx-background-radius: 6;" />
+                        </VBox>
+                        <VBox spacing="5" HBox.hgrow="ALWAYS">
+                            <Label text="📍 City:" textFill="#94a3b8" />
+                            <ComboBox fx:id="cityFilterComboBox" style="-fx-background-color: rgba(30, 41, 59, 0.8); -fx-text-fill: white; -fx-border-color: rgba(255,255,255,0.2); -fx-background-radius: 6;" />
+                        </VBox>
+                    </HBox>
+                    
+                    <VBox spacing="5">
+                        <Label text="🏟️ Venue:" textFill="#94a3b8" />
+                        <ComboBox fx:id="venueComboBox" style="-fx-background-color: rgba(30, 41, 59, 0.8); -fx-text-fill: white; -fx-border-color: rgba(255,255,255,0.2); -fx-background-radius: 6;" />
+                    </VBox>
+                    
+                    <VBox spacing="5" VBox.vgrow="ALWAYS">
+                        <Label text="📝 Description:" textFill="#94a3b8" />
+                        <TextArea fx:id="descriptionArea" promptText="Enter event description" prefRowCount="4" 
+                                  style="-fx-background-color: rgba(30, 41, 59, 0.8); -fx-text-fill: white; -fx-prompt-text-fill: #64748b; -fx-background-radius: 6;" />
+                    </VBox>
+                    
+                    <Button fx:id="submitRequestButton" text="Submit Request" onAction="#submitCustomRequest" 
+                            style="-fx-background-color: #10b981; -fx-text-fill: white; -fx-background-radius: 8; -fx-padding: 12 24; -fx-font-size: 14; -fx-font-weight: 600;" />
+                </VBox>
+            </content>
+        </Tab>
     </TabPane>
 </VBox>
