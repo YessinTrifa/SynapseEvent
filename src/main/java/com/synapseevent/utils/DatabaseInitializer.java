@@ -3,6 +3,7 @@ package com.synapseevent.utils;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.sql.Connection;
+import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
@@ -13,6 +14,9 @@ public class DatabaseInitializer {
     public static void initializeDatabase() {
         Connection conn = MaConnection.getInstance().getConnection();
         try {
+            // First, run migrations to add missing columns to existing tables
+            runMigrations(conn);
+            
             // Disable foreign key checks before dropping tables
             Statement stmt = conn.createStatement();
             System.out.println("Disabling foreign key checks...");
@@ -84,6 +88,50 @@ public class DatabaseInitializer {
             System.out.println("Database initialized successfully.");
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+    
+    /**
+     * Run migrations to add missing columns to existing tables.
+     * This ensures that new schema changes are applied to existing databases.
+     */
+    private static void runMigrations(Connection conn) {
+        System.out.println("Running migrations...");
+        try {
+            Statement stmt = conn.createStatement();
+            
+            // Migration: Add columns to CustomEventRequest table if they don't exist
+            addColumnIfNotExists(conn, "CustomEventRequest", "budget", "DECIMAL(10,2)");
+            addColumnIfNotExists(conn, "CustomEventRequest", "capacity", "INT");
+            addColumnIfNotExists(conn, "CustomEventRequest", "location", "VARCHAR(255)");
+            addColumnIfNotExists(conn, "CustomEventRequest", "reason", "TEXT");
+            
+            stmt.close();
+            System.out.println("Migrations completed.");
+        } catch (Exception e) {
+            System.err.println("Error running migrations: " + e.getMessage());
+        }
+    }
+    
+    /**
+     * Helper method to add a column to a table if it doesn't exist.
+     */
+    private static void addColumnIfNotExists(Connection conn, String tableName, String columnName, String columnType) {
+        try {
+            // Check if column exists
+            ResultSet rs = conn.getMetaData().getColumns(null, null, tableName.toUpperCase(), columnName.toUpperCase());
+            if (rs.next()) {
+                System.out.println("Column " + tableName + "." + columnName + " already exists, skipping.");
+            } else {
+                // Add the column
+                Statement stmt = conn.createStatement();
+                stmt.execute("ALTER TABLE " + tableName + " ADD COLUMN " + columnName + " " + columnType);
+                stmt.close();
+                System.out.println("Added column " + tableName + "." + columnName);
+            }
+            rs.close();
+        } catch (Exception e) {
+            System.err.println("Error checking/adding column " + tableName + "." + columnName + ": " + e.getMessage());
         }
     }
 }

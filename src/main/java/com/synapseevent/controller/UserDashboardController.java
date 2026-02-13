@@ -422,7 +422,7 @@ public class UserDashboardController {
         Venue selectedVenue = venueComboBox.getValue();
         String location = selectedVenue != null ? selectedVenue.getName() + " (" + selectedVenue.getAddress() + ")" : "";
         
-        if (eventType != null && eventDate != null && description != null && !description.isEmpty()) {
+        if (eventType != null && eventDate != null) {
             CustomEventRequest request = new CustomEventRequest();
             request.setUser(CurrentUser.getCurrentUser());
             request.setEventType(eventType);
@@ -451,7 +451,7 @@ public class UserDashboardController {
                 showAlert("Error", "Error submitting request: " + e.getMessage());
             }
         } else {
-            showAlert("Error", "Please fill in all required fields (Event Type, Date, and Description)");
+            showAlert("Error", "Please fill in all required fields (Event Type and Date)");
         }
     }
 
