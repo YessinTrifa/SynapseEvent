@@ -54,7 +54,7 @@ CREATE TABLE IF NOT EXISTS Venue (
     type VARCHAR(50) NOT NULL COMMENT 'CLUB, BEACH, or HOTEL',
     address VARCHAR(500),
     contact_info VARCHAR(255),
-    price_range VARCHAR(10) COMMENT '€, €€, €€€',
+    price_range VARCHAR(10) COMMENT 'TND',
     rating DECIMAL(2,1) DEFAULT 0,
     description TEXT,
     amenities TEXT

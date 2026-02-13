@@ -28,7 +28,7 @@ public class UserDashboardController {
     @FXML private TabPane eventsTabPane;
 
     // Home Tab - Filters
-    @FXML private TextField locationSearchField;
+    @FXML private ComboBox<Venue> locationFilterCombo;
     @FXML private ComboBox<String> typeFilterCombo;
     @FXML private DatePicker dateFromPicker;
     @FXML private DatePicker dateToPicker;
@@ -80,6 +80,9 @@ public class UserDashboardController {
 
     @FXML
     public void initialize() {
+        // Setup location filter combo with venues
+        setupLocationFilter();
+
         // Setup type filter combo
         typeFilterCombo.getItems().addAll("All", "Anniversary", "Formation", "Paddle", "Partying", "TeamBuilding");
         typeFilterCombo.setValue("All");
@@ -181,6 +184,18 @@ public class UserDashboardController {
         bookingStatusColumn.setCellValueFactory(new PropertyValueFactory<>("status"));
     }
 
+    private void setupLocationFilter() {
+        try {
+            locationFilterCombo.getItems().clear();
+            locationFilterCombo.getItems().add(null); // Allow "no selection" / All venues
+            locationFilterCombo.getItems().addAll(venueService.readAll());
+            locationFilterCombo.setValue(null);
+            locationFilterCombo.setPromptText("Select venue...");
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+    
     private void loadEvents() {
         try {
             allPublishedEvents = eventInstanceService.getPublishedEvents();
@@ -222,17 +237,19 @@ public class UserDashboardController {
 
     @FXML
     private void applyFilters() {
-        String location = locationSearchField.getText().trim().toLowerCase();
+        Venue selectedVenue = locationFilterCombo.getValue();
         String type = typeFilterCombo.getValue();
         LocalDate fromDate = dateFromPicker.getValue();
         LocalDate toDate = dateToPicker.getValue();
 
         List<EventInstance> filtered = allPublishedEvents.stream()
             .filter(e -> {
-                // Filter by location
-                if (!location.isEmpty()) {
+                // Filter by venue
+                if (selectedVenue != null) {
                     String eventLocation = e.getLocation() != null ? e.getLocation().toLowerCase() : "";
-                    if (!eventLocation.contains(location)) {
+                    String venueName = selectedVenue.getName() != null ? selectedVenue.getName().toLowerCase() : "";
+                    String venueAddress = selectedVenue.getAddress() != null ? selectedVenue.getAddress().toLowerCase() : "";
+                    if (!eventLocation.contains(venueName) && !eventLocation.contains(venueAddress)) {
                         return false;
                     }
                 }
@@ -262,7 +279,9 @@ public class UserDashboardController {
 
     @FXML
     private void clearFilters() {
-        locationSearchField.clear();
+        if (locationFilterCombo != null) {
+            locationFilterCombo.setValue(null);
+        }
         typeFilterCombo.setValue("All");
         dateFromPicker.setValue(null);
         dateToPicker.setValue(null);

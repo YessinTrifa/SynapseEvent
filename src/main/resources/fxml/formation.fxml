@@ -39,7 +39,7 @@
         <Label text="Capacity:" GridPane.columnIndex="0" GridPane.rowIndex="3"/>
         <Spinner fx:id="capacitySpinner" promptText="Capacity" GridPane.columnIndex="1" GridPane.rowIndex="3" min="1" max="1000" initialValue="20"/>
 
-        <Label text="Price (€):" GridPane.columnIndex="2" GridPane.rowIndex="3"/>
+        <Label text="Price (TND):" GridPane.columnIndex="2" GridPane.rowIndex="3"/>
         <Spinner fx:id="priceSpinner" promptText="Price" GridPane.columnIndex="3" GridPane.rowIndex="3" min="0" max="10000" initialValue="0" amountToStepBy="10"/>
 
         <Label text="Status:" GridPane.columnIndex="0" GridPane.rowIndex="4"/>

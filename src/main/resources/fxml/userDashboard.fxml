@@ -48,9 +48,10 @@
                 <VBox spacing="20" style="-fx-background-color: rgba(15, 23, 42, 0.5); -fx-background-radius: 12; -fx-padding: 20;">
                     <!-- Filter Controls -->
                     <HBox spacing="10" alignment="CENTER_LEFT" style="-fx-background-color: rgba(30, 41, 59, 0.4); -fx-padding: 15; -fx-background-radius: 8;">
-                        <Label text="📍 Location:" textFill="white" style="-fx-font-weight: 600;" />
-                        <TextField fx:id="locationSearchField" promptText="Enter location..." 
-                                   style="-fx-background-color: rgba(30, 41, 59, 0.8); -fx-text-fill: white; -fx-prompt-text-fill: #64748b; -fx-background-radius: 6;" prefWidth="150" />
+                        <Label text="📍 Venue:" textFill="white" style="-fx-font-weight: 600;" />
+                        <ComboBox fx:id="locationFilterCombo" 
+                                  style="-fx-background-color: rgba(30, 41, 59, 0.8); -fx-text-fill: white; -fx-border-color: rgba(255,255,255,0.2); -fx-background-radius: 6;" 
+                                  prefWidth="180" />
                         
                         <Label text="🎭 Type:" textFill="white" style="-fx-font-weight: 600;" />
                         <ComboBox fx:id="typeFilterCombo" 
@@ -156,7 +157,7 @@
                             <DatePicker fx:id="eventDatePicker" style="-fx-background-color: rgba(30, 41, 59, 0.8); -fx-text-fill: white; -fx-background-radius: 6;" />
                         </VBox>
                         <VBox spacing="5" HBox.hgrow="ALWAYS">
-                            <Label text="💰 Budget (€):" textFill="#94a3b8" />
+                            <Label text="💰 Budget (TND):" textFill="#94a3b8" />
                             <TextField fx:id="budgetField" promptText="Enter budget" style="-fx-background-color: rgba(30, 41, 59, 0.8); -fx-text-fill: white; -fx-prompt-text-fill: #64748b; -fx-background-radius: 6;" />
                         </VBox>
                     </HBox>

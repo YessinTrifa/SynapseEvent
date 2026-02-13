@@ -51,7 +51,7 @@ public class AnniversaryController {
         capacityColumn.setCellValueFactory(cellData -> new SimpleStringProperty(
             cellData.getValue().getCapacity() != null ? cellData.getValue().getCapacity().toString() : ""));
         priceColumn.setCellValueFactory(cellData -> new SimpleStringProperty(
-            cellData.getValue().getPrice() != null ? cellData.getValue().getPrice().toString() + "€" : ""));
+            cellData.getValue().getPrice() != null ? cellData.getValue().getPrice().toString() + " TND" : ""));
         statusColumn.setCellValueFactory(new PropertyValueFactory<>("status"));
 
         // Set status ComboBox items programmatically
