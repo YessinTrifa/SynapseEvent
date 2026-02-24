@@ -1005,7 +1005,8 @@ public class AdminDashboardController {
         try {
             Stage stage = new Stage();
             Parent root = FXMLLoader.load(getClass().getResource("/fxml/formation.fxml"));
-            stage.setScene(new Scene(root));
+            stage.setScene(new Scene(root, 1200, 800));
+            stage.setTitle("Create/Edit Formation Event");
             stage.show();
         } catch (Exception e) {
             e.printStackTrace();
@@ -1017,7 +1018,8 @@ public class AdminDashboardController {
         try {
             Stage stage = new Stage();
             Parent root = FXMLLoader.load(getClass().getResource("/fxml/paddle.fxml"));
-            stage.setScene(new Scene(root));
+            stage.setScene(new Scene(root, 1200, 800));
+            stage.setTitle("Create/Edit Paddle Event");
             stage.show();
         } catch (Exception e) {
             e.printStackTrace();
@@ -1029,7 +1031,8 @@ public class AdminDashboardController {
         try {
             Stage stage = new Stage();
             Parent root = FXMLLoader.load(getClass().getResource("/fxml/partying.fxml"));
-            stage.setScene(new Scene(root));
+            stage.setScene(new Scene(root, 1200, 800));
+            stage.setTitle("Create/Edit Partying Event");
             stage.show();
         } catch (Exception e) {
             e.printStackTrace();
@@ -1041,7 +1044,8 @@ public class AdminDashboardController {
         try {
             Stage stage = new Stage();
             Parent root = FXMLLoader.load(getClass().getResource("/fxml/teamBuilding.fxml"));
-            stage.setScene(new Scene(root));
+            stage.setScene(new Scene(root, 1200, 800));
+            stage.setTitle("Create/Edit Team Building Event");
             stage.show();
         } catch (Exception e) {
             e.printStackTrace();
@@ -1053,7 +1057,8 @@ public class AdminDashboardController {
         try {
             Stage stage = new Stage();
             Parent root = FXMLLoader.load(getClass().getResource("/fxml/anniversary.fxml"));
-            stage.setScene(new Scene(root));
+            stage.setScene(new Scene(root, 1200, 800));
+            stage.setTitle("Create/Edit Anniversary Event");
             stage.show();
         } catch (Exception e) {
             e.printStackTrace();

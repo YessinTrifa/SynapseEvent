@@ -12,26 +12,28 @@
     </top>
     
     <center>
-        <SplitPane dividerPositions="0.5">
-            <!-- Left Side: Event List -->
-            <VBox spacing="10" style="-fx-padding: 10;">
-                <Label text="All Paddle Events" style="-fx-font-size: 14; -fx-font-weight: bold;" />
-                <TableView fx:id="paddleTable" style="-fx-font-size: 11;">
-                    <columns>
-                        <TableColumn fx:id="idColumn" text="ID" prefWidth="40" />
-                        <TableColumn fx:id="nameColumn" text="Name" prefWidth="80" />
-                        <TableColumn fx:id="dateColumn" text="Date" prefWidth="80" />
-                        <TableColumn fx:id="locationColumn" text="Location" prefWidth="100" />
-                        <TableColumn fx:id="capacityColumn" text="Capacity" prefWidth="60" />
-                        <TableColumn fx:id="priceColumn" text="Price" prefWidth="60" />
-                        <TableColumn fx:id="statusColumn" text="Status" prefWidth="70" />
-                        <TableColumn fx:id="descriptionColumn" text="Description" prefWidth="100" />
-                    </columns>
-                </TableView>
-            </VBox>
+        <SplitPane dividerPositions="0.4" style="-fx-padding: 0;">
+            <!-- Left Side: Event List with Scroll -->
+            <ScrollPane fitToHeight="true" fitToWidth="true" style="-fx-padding: 0;">
+                <VBox spacing="10" style="-fx-padding: 10;">
+                    <Label text="All Paddle Events" style="-fx-font-size: 14; -fx-font-weight: bold;" />
+                    <TableView fx:id="paddleTable" style="-fx-font-size: 11; -fx-padding: 5;" prefHeight="600">
+                        <columns>
+                            <TableColumn fx:id="idColumn" text="ID" prefWidth="40" />
+                            <TableColumn fx:id="nameColumn" text="Name" prefWidth="80" />
+                            <TableColumn fx:id="dateColumn" text="Date" prefWidth="80" />
+                            <TableColumn fx:id="locationColumn" text="Location" prefWidth="100" />
+                            <TableColumn fx:id="capacityColumn" text="Capacity" prefWidth="60" />
+                            <TableColumn fx:id="priceColumn" text="Price" prefWidth="60" />
+                            <TableColumn fx:id="statusColumn" text="Status" prefWidth="70" />
+                            <TableColumn fx:id="descriptionColumn" text="Description" prefWidth="100" />
+                        </columns>
+                    </TableView>
+                </VBox>
+            </ScrollPane>
             
-            <!-- Right Side: Form -->
-            <ScrollPane fitToHeight="true" fitToWidth="true">
+            <!-- Right Side: Form with Scroll -->
+            <ScrollPane fitToHeight="true" fitToWidth="true" style="-fx-padding: 0;">
                 <VBox spacing="12" style="-fx-padding: 15;">
                     <Label text="Create/Edit Paddle Event" style="-fx-font-size: 14; -fx-font-weight: bold;" />
                     
@@ -39,7 +41,7 @@
                     
                     <!-- Basic Information Section -->
                     <Label text="Basic Information" style="-fx-font-size: 12; -fx-font-weight: bold; -fx-text-fill: #1e3a8a;" />
-                    <GridPane hgap="10" vgap="10" style="-fx-padding: 10; -fx-border-color: #e5e7eb; -fx-border-radius: 5;">
+                    <GridPane hgap="10" vgap="10" style="-fx-padding: 10; -fx-border-color: #e5e7eb; -fx-border-radius: 5; -fx-border-width: 1;">
                         <columnConstraints>
                             <ColumnConstraints percentWidth="40" />
                             <ColumnConstraints percentWidth="60" />
@@ -59,7 +61,7 @@
                     
                     <!-- Schedule (Horaire) Section -->
                     <Label text="Schedule (Horaire)" style="-fx-font-size: 12; -fx-font-weight: bold; -fx-text-fill: #1e3a8a;" />
-                    <GridPane hgap="10" vgap="10" style="-fx-padding: 10; -fx-border-color: #e5e7eb; -fx-border-radius: 5;">
+                    <GridPane hgap="10" vgap="10" style="-fx-padding: 10; -fx-border-color: #e5e7eb; -fx-border-radius: 5; -fx-border-width: 1;">
                         <columnConstraints>
                             <ColumnConstraints percentWidth="40" />
                             <ColumnConstraints percentWidth="60" />
@@ -77,9 +79,9 @@
                     
                     <Separator />
                     
-                    <!-- Location & Map Section -->
+                    <!-- Location &amp; Map Section -->
                     <Label text="Location &amp; Map" style="-fx-font-size: 12; -fx-font-weight: bold; -fx-text-fill: #1e3a8a;" />
-                    <GridPane hgap="10" vgap="10" style="-fx-padding: 10; -fx-border-color: #e5e7eb; -fx-border-radius: 5;">
+                    <GridPane hgap="10" vgap="10" style="-fx-padding: 10; -fx-border-color: #e5e7eb; -fx-border-radius: 5; -fx-border-width: 1;">
                         <columnConstraints>
                             <ColumnConstraints percentWidth="40" />
                             <ColumnConstraints percentWidth="60" />
@@ -99,7 +101,7 @@
                     
                     <!-- Capacity &amp; Booking Section -->
                     <Label text="Capacity &amp; Reservations" style="-fx-font-size: 12; -fx-font-weight: bold; -fx-text-fill: #1e3a8a;" />
-                    <GridPane hgap="10" vgap="10" style="-fx-padding: 10; -fx-border-color: #e5e7eb; -fx-border-radius: 5;">
+                    <GridPane hgap="10" vgap="10" style="-fx-padding: 10; -fx-border-color: #e5e7eb; -fx-border-radius: 5; -fx-border-width: 1;">
                         <columnConstraints>
                             <ColumnConstraints percentWidth="40" />
                             <ColumnConstraints percentWidth="60" />
@@ -119,7 +121,7 @@
                     
                     <!-- Pricing (Coût) Section -->
                     <Label text="Pricing (Coût)" style="-fx-font-size: 12; -fx-font-weight: bold; -fx-text-fill: #1e3a8a;" />
-                    <GridPane hgap="10" vgap="10" style="-fx-padding: 10; -fx-border-color: #e5e7eb; -fx-border-radius: 5;">
+                    <GridPane hgap="10" vgap="10" style="-fx-padding: 10; -fx-border-color: #e5e7eb; -fx-border-radius: 5; -fx-border-width: 1;">
                         <columnConstraints>
                             <ColumnConstraints percentWidth="40" />
                             <ColumnConstraints percentWidth="60" />
@@ -138,6 +140,8 @@
                         <Button text="Delete" style="-fx-padding: 8 20; -fx-font-weight: bold;" onAction="#deletePaddleEvent" />
                         <Button text="Clear" style="-fx-padding: 8 20; -fx-font-weight: bold;" onAction="#clearFields" />
                     </HBox>
+                    
+                    <Region VBox.vgrow="ALWAYS" />
                 </VBox>
             </ScrollPane>
         </SplitPane>
