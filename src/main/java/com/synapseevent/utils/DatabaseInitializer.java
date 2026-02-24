@@ -12,8 +12,19 @@ import java.util.regex.Pattern;
 
 public class DatabaseInitializer {
     public static void initializeDatabase() {
-        Connection conn = MaConnection.getInstance().getConnection();
+        MaConnection maConn = MaConnection.getInstance();
+        Connection conn = maConn.getConnection();
+        
+        // Check if database connection is available
+        if (!maConn.isConnected()) {
+            System.err.println("⚠️  Database connection unavailable. Database initialization skipped.");
+            System.err.println("   Application will continue, but database features will not work.");
+            System.err.println("   Please ensure MySQL is running and configured correctly.");
+            return;
+        }
+        
         try {
+            System.out.println("📦 Initializing database...");
             // First, run migrations to add missing columns to existing tables
             runMigrations(conn);
             
@@ -87,7 +98,10 @@ public class DatabaseInitializer {
 
             System.out.println("Database initialized successfully.");
         } catch (Exception e) {
-            e.printStackTrace();
+            System.err.println("⚠️  Database initialization failed: " + e.getMessage());
+            System.err.println("   Application will continue without database initialization.");
+            System.err.println("   Some features may not work correctly.");
+            // Don't crash the application - let it continue without DB
         }
     }
     

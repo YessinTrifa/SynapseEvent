@@ -1,67 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<VBox xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.synapseevent.controller.PartyingController">
-    <!-- Filter Section -->
-    <HBox spacing="10" style="-fx-padding: 10;">
-        <Label text="Filter by Date:" />
-        <DatePicker fx:id="filterDatePicker" promptText="Select Date" />
-        <Button text="Apply Date Filter" onAction="#filterByDate" />
-        
-        <Label text="Filter by Venue Type:" />
-        <ComboBox fx:id="venueTypeFilterComboBox" />
-        <Button text="Apply Type Filter" onAction="#filterByVenueType" />
-    </HBox>
-
-    <TableView fx:id="partyingTable" onMouseClicked="#selectPartyingEvent">
-        <columns>
-            <TableColumn fx:id="idColumn" text="ID" />
-            <TableColumn fx:id="nameColumn" text="Name" />
-            <TableColumn fx:id="dateColumn" text="Date" />
-            <TableColumn fx:id="descriptionColumn" text="Description" />
-            <TableColumn fx:id="venueColumn" text="Venue" />
-            <TableColumn fx:id="capacityColumn" text="Capacity" />
-            <TableColumn fx:id="priceColumn" text="Price" />
-            <TableColumn fx:id="statusColumn" text="Status" />
-        </columns>
-    </TableView>
-
-    <GridPane hgap="10" vgap="10">
-        <Label text="Name:" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
-        <TextField fx:id="nameField" promptText="Name" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
-
-        <Label text="Date:" GridPane.columnIndex="2" GridPane.rowIndex="0"/>
-        <DatePicker fx:id="datePicker" promptText="Date" GridPane.columnIndex="3" GridPane.rowIndex="0"/>
-
-        <Label text="Start Time:" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
-        <Spinner fx:id="startTimeHourSpinner" promptText="HH" GridPane.columnIndex="1" GridPane.rowIndex="1" min="0" max="23" initialValue="18"/>
-
-        <Label text="End Time:" GridPane.columnIndex="2" GridPane.rowIndex="1"/>
-        <Spinner fx:id="endTimeHourSpinner" promptText="HH" GridPane.columnIndex="3" GridPane.rowIndex="1" min="0" max="23" initialValue="23"/>
-
-        <Label text="Venue:" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
-        <ComboBox fx:id="venueComboBox" promptText="Select Venue" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
-
-        <Label text="Capacity:" GridPane.columnIndex="2" GridPane.rowIndex="2"/>
-        <Spinner fx:id="capacitySpinner" promptText="Capacity" GridPane.columnIndex="3" GridPane.rowIndex="2" min="1" max="1000" initialValue="50"/>
-
-        <Label text="Price (TND):" GridPane.columnIndex="0" GridPane.rowIndex="3"/>
-        <Spinner fx:id="priceSpinner" promptText="Price" GridPane.columnIndex="1" GridPane.rowIndex="3" min="0" max="10000" initialValue="0" amountToStepBy="10"/>
-
-        <Label text="Status:" GridPane.columnIndex="2" GridPane.rowIndex="3"/>
-        <ComboBox fx:id="statusComboBox" GridPane.columnIndex="3" GridPane.rowIndex="3"/>
-
-        <Label text="Description:" GridPane.columnIndex="0" GridPane.rowIndex="4"/>
-        <TextArea fx:id="descriptionField" promptText="Description" wrapText="true" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="4"/>
-    </GridPane>
-
-    <HBox spacing="10">
-        <Button text="Add" onAction="#addPartyingEvent" />
-        <Button text="Update" onAction="#updatePartyingEvent" />
-        <Button text="Delete" onAction="#deletePartyingEvent" />
-        <Button text="Publish" onAction="#publishEvent" style="-fx-background-color: #4CAF50; -fx-text-fill: white;"/>
-        <Button text="Save as Draft" onAction="#saveAsDraft" />
-    </HBox>
-</VBox>
+<BorderPane xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.synapseevent.controller.PartyingController">
+    <top>
+        <VBox style="-fx-background-color: linear-gradient(to right, #dc2626, #ef4444); -fx-padding: 15;" spacing="10">
+            <Label text="Partying Events Management" style="-fx-text-fill: white; -fx-font-size: 24; -fx-font-weight: bold;" />
+        </VBox>
+    </top>
+    
+    <center>
+        <VBox spacing="10" style="-fx-padding: 10;">
+            <Label text="Partying Events" style="-fx-font-size: 14; -fx-font-weight: bold;" />
+            <Label text="Partying events management interface" style="-fx-text-fill: gray;" />
+            <Button text="Add Event" />
+            <Button text="Back" />
+        </VBox>
+    </center>
+</BorderPane>

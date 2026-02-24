@@ -1,14 +1,36 @@
 package com.synapseevent.entities;
 
+import jakarta.persistence.*;
+
+@Entity
+@Table(name = "venues")
 public class Venue {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    
+    @Column(name = "name")
     private String name;
+    
+    @Column(name = "type")
     private String type; // CLUB, BEACH, HOTEL
+    
+    @Column(name = "address")
     private String address;
+    
+    @Column(name = "contactInfo")
     private String contactInfo;
+    
+    @Column(name = "priceRange")
     private String priceRange; // e.g., "TND", "TNDTND", "TNDTNDTND"
+    
+    @Column(name = "rating")
     private Double rating; // 1-5 stars
+    
+    @Column(name = "description", columnDefinition = "TEXT")
     private String description;
+    
+    @Column(name = "amenities")
     private String amenities;
 
     public Venue() {}

@@ -2,13 +2,31 @@ package com.synapseevent.entities;
 
 import java.time.LocalDateTime;
 
+import jakarta.persistence.*;
+
+@Entity
+@Table(name = "reviews")
 public class Review {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    
+    @Column(name = "userId")
     private Long userId;
+    
+    @Column(name = "eventType")
     private String eventType;
+    
+    @Column(name = "eventId")
     private Long eventId;
+    
+    @Column(name = "rating")
     private Integer rating; // 1-5 stars
+    
+    @Column(name = "comment", columnDefinition = "TEXT")
     private String comment;
+    
+    @Column(name = "createdAt")
     private LocalDateTime createdAt;
 
     // Constructors

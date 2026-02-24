@@ -2,12 +2,29 @@ package com.synapseevent.entities;
 
 import java.time.LocalDate;
 
+import jakarta.persistence.*;
+
+@Entity
+@Table(name = "bookings")
 public class Booking {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    
+    @ManyToOne
+    @JoinColumn(name = "user_id")
     private User user;
+    
+    @Column(name = "eventType")
     private String eventType;
+    
+    @Column(name = "eventId")
     private Long eventId;
+    
+    @Column(name = "bookingDate")
     private LocalDate bookingDate;
+    
+    @Column(name = "status")
     private String status;
 
     // Constructors

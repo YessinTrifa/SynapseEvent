@@ -29,4 +29,12 @@ public class MaConnection {
     public Connection getConnection() {
         return connection;
     }
+
+    public boolean isConnected() {
+        try {
+            return connection != null && !connection.isClosed();
+        } catch (SQLException e) {
+            return false;
+        }
+    }
 }

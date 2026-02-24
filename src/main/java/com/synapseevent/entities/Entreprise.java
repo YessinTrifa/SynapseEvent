@@ -1,8 +1,18 @@
 package com.synapseevent.entities;
 
+import jakarta.persistence.*;
+
+@Entity
+@Table(name = "entreprises")
 public class Entreprise {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    
+    @Column(name = "nom")
     private String nom;
+    
+    @Column(name = "siret")
     private String siret;
 
     public Entreprise() {}

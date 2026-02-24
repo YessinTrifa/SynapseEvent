@@ -90,6 +90,15 @@ CREATE TABLE IF NOT EXISTS PaddleEvent (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
     date DATE NOT NULL,
+    start_time TIME,
+    end_time TIME,
+    location VARCHAR(255),
+    map VARCHAR(500),
+    capacity INT,
+    reservation INT DEFAULT 0,
+    price DECIMAL(10,2),
+    disponibilite BOOLEAN DEFAULT TRUE,
+    organizer VARCHAR(255),
     description TEXT,
     status VARCHAR(20) DEFAULT 'draft'
 );
