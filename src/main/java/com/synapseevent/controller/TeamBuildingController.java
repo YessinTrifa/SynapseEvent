@@ -19,7 +19,6 @@ public class TeamBuildingController {
     @FXML private TableColumn<TeamBuildingEvent, Long> idColumn;
     @FXML private TableColumn<TeamBuildingEvent, String> nameColumn;
     @FXML private TableColumn<TeamBuildingEvent, String> dateColumn;
-    @FXML private TableColumn<TeamBuildingEvent, String> descriptionColumn;
     @FXML private TableColumn<TeamBuildingEvent, String> locationColumn;
     @FXML private TableColumn<TeamBuildingEvent, String> capacityColumn;
     @FXML private TableColumn<TeamBuildingEvent, String> priceColumn;
@@ -45,7 +44,6 @@ public class TeamBuildingController {
         nameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
         dateColumn.setCellValueFactory(cellData -> new SimpleStringProperty(
             cellData.getValue().getDate() != null ? cellData.getValue().getDate().toString() : ""));
-        descriptionColumn.setCellValueFactory(new PropertyValueFactory<>("description"));
         locationColumn.setCellValueFactory(cellData -> new SimpleStringProperty(
             cellData.getValue().getLocation() != null ? cellData.getValue().getLocation() : ""));
         capacityColumn.setCellValueFactory(cellData -> new SimpleStringProperty(
@@ -227,6 +225,7 @@ public class TeamBuildingController {
         }
     }
 
+    @FXML
     private void clearFields() {
         nameField.clear();
         datePicker.setValue(null);

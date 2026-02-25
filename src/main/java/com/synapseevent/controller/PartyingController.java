@@ -22,7 +22,6 @@ public class PartyingController {
     @FXML private TableColumn<PartyingEvent, Long> idColumn;
     @FXML private TableColumn<PartyingEvent, String> nameColumn;
     @FXML private TableColumn<PartyingEvent, String> dateColumn;
-    @FXML private TableColumn<PartyingEvent, String> descriptionColumn;
     @FXML private TableColumn<PartyingEvent, String> venueColumn;
     @FXML private TableColumn<PartyingEvent, String> capacityColumn;
     @FXML private TableColumn<PartyingEvent, String> priceColumn;
@@ -50,7 +49,6 @@ public class PartyingController {
         nameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
         dateColumn.setCellValueFactory(cellData -> new SimpleStringProperty(
             cellData.getValue().getDate() != null ? cellData.getValue().getDate().toString() : ""));
-        descriptionColumn.setCellValueFactory(new PropertyValueFactory<>("description"));
         venueColumn.setCellValueFactory(cellData -> new SimpleStringProperty(
             cellData.getValue().getVenue() != null ? cellData.getValue().getVenue().toString() : ""));
         capacityColumn.setCellValueFactory(cellData -> new SimpleStringProperty(
@@ -294,6 +292,7 @@ public class PartyingController {
         }
     }
 
+    @FXML
     private void clearFields() {
         nameField.clear();
         datePicker.setValue(null);

@@ -10,11 +10,14 @@
 
 <VBox xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" 
       fx:controller="com.synapseevent.controller.AdminDashboardController" 
-      style="-fx-background-color: linear-gradient(to bottom, #0f172a, #111827);">
+      stylesheets="@../styles/modern.css"
+      spacing="10"
+      style="-fx-background-color: linear-gradient(from 0% 0% to 100% 100%, #0f172a 0%, #111827 50%, #1e293b 100%);">
 
     <!-- Header -->
-    <HBox alignment="CENTER_LEFT" style="-fx-background-color: rgba(30, 41, 59, 0.8); -fx-padding: 15 20; -fx-border-color: rgba(255,255,255,0.1); -fx-border-width: 0 0 1 0;">
-        <Label text="SynapseEvent" textFill="white" style="-fx-font-size: 20; -fx-font-weight: bold;">
+    <HBox alignment="CENTER_LEFT" style="-fx-background-color: rgba(15, 23, 42, 0.92); -fx-padding: 18 24; -fx-border-color: rgba(255,255,255,0.10); -fx-border-width: 0 0 1 0; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.25), 18, 0, 0, 0);">
+        <VBox spacing="2">
+            <Label text="🎛️ SynapseEvent" textFill="white" style="-fx-font-size: 20; -fx-font-weight: bold;">
             <textFill>
                 <RadialGradient centerX="0.5" centerY="0.5" radius="0.5">
                     <stops>
@@ -31,46 +34,46 @@
                     </stops>
                 </RadialGradient>
             </textFill>
-        </Label>
+            </Label>
+            <Label text="Admin Dashboard" textFill="#94a3b8" style="-fx-font-size: 12;" />
+        </VBox>
         <Region HBox.hgrow="ALWAYS" />
-        <Label text="Admin Dashboard" textFill="#94a3b8" style="-fx-font-size: 14;" />
-        <Region prefWidth="20" />
-        <Button text="Logout" onAction="#logout" 
-                style="-fx-background-color: rgba(239, 68, 68, 0.2); -fx-text-fill: #f87171; -fx-border-color: #f87171; -fx-border-radius: 6; -fx-background-radius: 6; -fx-padding: 8 16;" />
+        <Button text="🚪 Logout" onAction="#logout" 
+                style="-fx-background-color: rgba(239, 68, 68, 0.18); -fx-text-fill: #f87171; -fx-border-color: rgba(239, 68, 68, 0.55); -fx-border-radius: 8; -fx-background-radius: 8; -fx-padding: 9 16; -fx-font-weight: 600;" />
     </HBox>
 
     <!-- Statistics Cards -->
-    <HBox spacing="15" style="-fx-padding: 20 20 10 20;">
-        <VBox style="-fx-background-color: rgba(30, 41, 59, 0.6); -fx-background-radius: 12; -fx-padding: 15; -fx-border-color: rgba(255,255,255,0.08); -fx-border-radius: 12;" HBox.hgrow="ALWAYS">
-            <Label text="Total Users" textFill="#94a3b8" style="-fx-font-size: 12;" />
+    <HBox spacing="15" style="-fx-padding: 10 20 0 20;">
+        <VBox style="-fx-background-color: linear-gradient(from 0% 0% to 100% 100%, rgba(59, 130, 246, 0.12), rgba(30, 41, 59, 0.55)); -fx-background-radius: 14; -fx-padding: 16; -fx-border-color: rgba(59, 130, 246, 0.20); -fx-border-radius: 14;" HBox.hgrow="ALWAYS">
+            <Label text="👥 Total Users" textFill="#94a3b8" style="-fx-font-size: 12; -fx-font-weight: 600;" />
             <Label fx:id="totalUsersLabel" text="0" textFill="white" style="-fx-font-size: 28; -fx-font-weight: bold;" />
         </VBox>
-        <VBox style="-fx-background-color: rgba(30, 41, 59, 0.6); -fx-background-radius: 12; -fx-padding: 15; -fx-border-color: rgba(255,255,255,0.08); -fx-border-radius: 12;" HBox.hgrow="ALWAYS">
-            <Label text="Total Events" textFill="#94a3b8" style="-fx-font-size: 12;" />
+        <VBox style="-fx-background-color: linear-gradient(from 0% 0% to 100% 100%, rgba(16, 185, 129, 0.12), rgba(30, 41, 59, 0.55)); -fx-background-radius: 14; -fx-padding: 16; -fx-border-color: rgba(16, 185, 129, 0.20); -fx-border-radius: 14;" HBox.hgrow="ALWAYS">
+            <Label text="📅 Total Events" textFill="#94a3b8" style="-fx-font-size: 12; -fx-font-weight: 600;" />
             <Label fx:id="totalEventsLabel" text="0" textFill="white" style="-fx-font-size: 28; -fx-font-weight: bold;" />
         </VBox>
-        <VBox style="-fx-background-color: rgba(30, 41, 59, 0.6); -fx-background-radius: 12; -fx-padding: 15; -fx-border-color: rgba(255,255,255,0.08); -fx-border-radius: 12;" HBox.hgrow="ALWAYS">
-            <Label text="Pending Bookings" textFill="#94a3b8" style="-fx-font-size: 12;" />
+        <VBox style="-fx-background-color: linear-gradient(from 0% 0% to 100% 100%, rgba(245, 158, 11, 0.14), rgba(30, 41, 59, 0.55)); -fx-background-radius: 14; -fx-padding: 16; -fx-border-color: rgba(245, 158, 11, 0.20); -fx-border-radius: 14;" HBox.hgrow="ALWAYS">
+            <Label text="⏳ Pending Bookings" textFill="#94a3b8" style="-fx-font-size: 12; -fx-font-weight: 600;" />
             <Label fx:id="pendingBookingsLabel" text="0" textFill="white" style="-fx-font-size: 28; -fx-font-weight: bold;" />
         </VBox>
-        <VBox style="-fx-background-color: rgba(30, 41, 59, 0.6); -fx-background-radius: 12; -fx-padding: 15; -fx-border-color: rgba(255,255,255,0.08); -fx-border-radius: 12;" HBox.hgrow="ALWAYS">
-            <Label text="Open Requests" textFill="#94a3b8" style="-fx-font-size: 12;" />
+        <VBox style="-fx-background-color: linear-gradient(from 0% 0% to 100% 100%, rgba(139, 92, 246, 0.14), rgba(30, 41, 59, 0.55)); -fx-background-radius: 14; -fx-padding: 16; -fx-border-color: rgba(139, 92, 246, 0.20); -fx-border-radius: 14;" HBox.hgrow="ALWAYS">
+            <Label text="📝 Open Requests" textFill="#94a3b8" style="-fx-font-size: 12; -fx-font-weight: 600;" />
             <Label fx:id="openRequestsLabel" text="0" textFill="white" style="-fx-font-size: 28; -fx-font-weight: bold;" />
         </VBox>
     </HBox>
 
     <!-- Main TabPane -->
     <TabPane tabClosingPolicy="UNAVAILABLE" style="-fx-background-color: transparent; -fx-padding: 10 20 20 20;" VBox.vgrow="ALWAYS">
-        <Tab text="Users" style="-fx-background-color: #1e293b; -fx-text-fill: #94a3b8; -fx-font-size: 13;">
+        <Tab text="👥 Users" style="-fx-background-color: #1e293b; -fx-text-fill: #94a3b8; -fx-font-size: 13;">
             <content>
-                <VBox spacing="15" style="-fx-background-color: rgba(15, 23, 42, 0.5); -fx-background-radius: 12; -fx-padding: 20;">
+                <VBox spacing="15" styleClass="card" style="-fx-background-color: rgba(15, 23, 42, 0.5); -fx-background-radius: 12; -fx-padding: 20;">
                     <HBox spacing="10">
                         <Button text="+ Add User" onAction="#addUser" 
                                 style="-fx-background-color: #3b82f6; -fx-text-fill: white; -fx-background-radius: 8; -fx-padding: 10 20; -fx-font-weight: 600;" />
                         <Button text="+ Create Enterprise" onAction="#createEnterprise" 
                                 style="-fx-background-color: rgba(139, 92, 246, 0.2); -fx-text-fill: #a78bfa; -fx-border-color: #8b5cf6; -fx-border-radius: 8; -fx-background-radius: 8; -fx-padding: 10 20; -fx-font-weight: 600;" />
                     </HBox>
-                    <TableView fx:id="usersTable" style="-fx-background-color: rgba(30, 41, 59, 0.4); -fx-background-radius: 8; -fx-border-color: rgba(255,255,255,0.1); -fx-border-radius: 8; -fx-text-fill: white;" VBox.vgrow="ALWAYS">
+                    <TableView fx:id="usersTable" styleClass="table-view" style="-fx-background-color: rgba(30, 41, 59, 0.4); -fx-background-radius: 8; -fx-border-color: rgba(255,255,255,0.1); -fx-border-radius: 8; -fx-text-fill: white;" VBox.vgrow="ALWAYS">
                         <columns>
                             <TableColumn fx:id="userNameColumn" text="Name" style="-fx-text-fill: white; -fx-background-color: #1e293b;" />
                             <TableColumn fx:id="userEmailColumn" text="Email" style="-fx-text-fill: white; -fx-background-color: #1e293b;" />
@@ -84,17 +87,17 @@
                 </VBox>
             </content>
         </Tab>
-        <Tab text="Events" style="-fx-background-color: #1e293b; -fx-text-fill: #94a3b8; -fx-font-size: 13;">
+        <Tab text="📅 Events" style="-fx-background-color: #1e293b; -fx-text-fill: #94a3b8; -fx-font-size: 13;">
             <content>
-                <VBox spacing="15" style="-fx-background-color: rgba(15, 23, 42, 0.5); -fx-background-radius: 12; -fx-padding: 20;">
+                <VBox spacing="15" styleClass="card" style="-fx-background-color: rgba(15, 23, 42, 0.5); -fx-background-radius: 12; -fx-padding: 20;">
                     <HBox spacing="10" alignment="CENTER_LEFT">
-                        <Button text="+ Create Event" onAction="#createEvent" 
+                        <Button text="➕ Create Event" onAction="#createEvent" 
                                 style="-fx-background-color: #10b981; -fx-text-fill: white; -fx-background-radius: 8; -fx-padding: 10 20; -fx-font-weight: 600;" />
                         <Label text="Filter by Type:" textFill="#94a3b8" />
                         <ComboBox fx:id="eventTypeFilter" onAction="#filterEventsByType" 
                                   style="-fx-background-color: rgba(30, 41, 59, 0.8); -fx-text-fill: white; -fx-border-color: rgba(255,255,255,0.2); -fx-background-radius: 8;" />
                     </HBox>
-                    <TableView fx:id="eventsTable" style="-fx-background-color: rgba(30, 41, 59, 0.4); -fx-background-radius: 8; -fx-border-color: rgba(255,255,255,0.1); -fx-border-radius: 8; -fx-text-fill: white;" VBox.vgrow="ALWAYS">
+                    <TableView fx:id="eventsTable" styleClass="table-view" style="-fx-background-color: rgba(30, 41, 59, 0.4); -fx-background-radius: 8; -fx-border-color: rgba(255,255,255,0.1); -fx-border-radius: 8; -fx-text-fill: white;" VBox.vgrow="ALWAYS">
                         <columns>
                             <TableColumn fx:id="eventNameColumn" text="Name" style="-fx-text-fill: white; -fx-background-color: #1e293b;" />
                             <TableColumn fx:id="eventDateColumn" text="Date" style="-fx-text-fill: white; -fx-background-color: #1e293b;" />
@@ -112,10 +115,10 @@
                 </VBox>
             </content>
         </Tab>
-        <Tab text="Bookings" style="-fx-background-color: #1e293b; -fx-text-fill: #94a3b8; -fx-font-size: 13;">
+        <Tab text="🎫 Bookings" style="-fx-background-color: #1e293b; -fx-text-fill: #94a3b8; -fx-font-size: 13;">
             <content>
-                <VBox spacing="15" style="-fx-background-color: rgba(15, 23, 42, 0.5); -fx-background-radius: 12; -fx-padding: 20;">
-                    <TableView fx:id="bookingsTable" style="-fx-background-color: rgba(30, 41, 59, 0.4); -fx-background-radius: 8; -fx-border-color: rgba(255,255,255,0.1); -fx-border-radius: 8; -fx-text-fill: white;" VBox.vgrow="ALWAYS">
+                <VBox spacing="15" styleClass="card" style="-fx-background-color: rgba(15, 23, 42, 0.5); -fx-background-radius: 12; -fx-padding: 20;">
+                    <TableView fx:id="bookingsTable" styleClass="table-view" style="-fx-background-color: rgba(30, 41, 59, 0.4); -fx-background-radius: 8; -fx-border-color: rgba(255,255,255,0.1); -fx-border-radius: 8; -fx-text-fill: white;" VBox.vgrow="ALWAYS">
                         <columns>
                             <TableColumn fx:id="bookingUserColumn" text="User" style="-fx-text-fill: white; -fx-background-color: #1e293b;" />
                             <TableColumn fx:id="bookingTypeColumn" text="Event" style="-fx-text-fill: white; -fx-background-color: #1e293b;" />
@@ -131,10 +134,10 @@
                 </VBox>
             </content>
         </Tab>
-        <Tab text="Custom Requests" style="-fx-background-color: #1e293b; -fx-text-fill: #94a3b8; -fx-font-size: 13;">
+        <Tab text="📝 Custom Requests" style="-fx-background-color: #1e293b; -fx-text-fill: #94a3b8; -fx-font-size: 13;">
             <content>
-                <VBox spacing="15" style="-fx-background-color: rgba(15, 23, 42, 0.5); -fx-background-radius: 12; -fx-padding: 20;">
-                    <TableView fx:id="customRequestsTable" style="-fx-background-color: rgba(30, 41, 59, 0.4); -fx-background-radius: 8; -fx-border-color: rgba(255,255,255,0.1); -fx-border-radius: 8; -fx-text-fill: white;" VBox.vgrow="ALWAYS">
+                <VBox spacing="15" styleClass="card" style="-fx-background-color: rgba(15, 23, 42, 0.5); -fx-background-radius: 12; -fx-padding: 20;">
+                    <TableView fx:id="customRequestsTable" styleClass="table-view" style="-fx-background-color: rgba(30, 41, 59, 0.4); -fx-background-radius: 8; -fx-border-color: rgba(255,255,255,0.1); -fx-border-radius: 8; -fx-text-fill: white;" VBox.vgrow="ALWAYS">
                         <columns>
                             <TableColumn fx:id="requestUserColumn" text="User" style="-fx-text-fill: white; -fx-background-color: #1e293b;" />
                             <TableColumn fx:id="requestTypeColumn" text="Type" style="-fx-text-fill: white; -fx-background-color: #1e293b;" />
@@ -154,14 +157,14 @@
                 </VBox>
             </content>
         </Tab>
-        <Tab text="Enterprises" style="-fx-background-color: #1e293b; -fx-text-fill: #94a3b8; -fx-font-size: 13;">
+        <Tab text="🏢 Enterprises" style="-fx-background-color: #1e293b; -fx-text-fill: #94a3b8; -fx-font-size: 13;">
             <content>
-                <VBox spacing="15" style="-fx-background-color: rgba(15, 23, 42, 0.5); -fx-background-radius: 12; -fx-padding: 20;">
+                <VBox spacing="15" styleClass="card" style="-fx-background-color: rgba(15, 23, 42, 0.5); -fx-background-radius: 12; -fx-padding: 20;">
                     <HBox spacing="10">
-                        <Button text="+ Add Enterprise" onAction="#addEnterprise" 
+                        <Button text="➕ Add Enterprise" onAction="#addEnterprise" 
                                 style="-fx-background-color: rgba(139, 92, 246, 0.2); -fx-text-fill: #a78bfa; -fx-border-color: #8b5cf6; -fx-border-radius: 8; -fx-background-radius: 8; -fx-padding: 10 20; -fx-font-weight: 600;" />
                     </HBox>
-                    <TableView fx:id="entreprisesTable" style="-fx-background-color: rgba(30, 41, 59, 0.4); -fx-background-radius: 8; -fx-border-color: rgba(255,255,255,0.1); -fx-border-radius: 8; -fx-text-fill: white;" VBox.vgrow="ALWAYS">
+                    <TableView fx:id="entreprisesTable" styleClass="table-view" style="-fx-background-color: rgba(30, 41, 59, 0.4); -fx-background-radius: 8; -fx-border-color: rgba(255,255,255,0.1); -fx-border-radius: 8; -fx-text-fill: white;" VBox.vgrow="ALWAYS">
                         <columns>
                             <TableColumn fx:id="entrepriseNameColumn" text="Name" style="-fx-text-fill: white; -fx-background-color: #1e293b;" />
                             <TableColumn fx:id="entrepriseSiretColumn" text="SIRET" style="-fx-text-fill: white; -fx-background-color: #1e293b;" />

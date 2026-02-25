@@ -20,7 +20,6 @@ public class FormationController {
     @FXML private TableColumn<FormationEvent, Long> idColumn;
     @FXML private TableColumn<FormationEvent, String> nameColumn;
     @FXML private TableColumn<FormationEvent, String> dateColumn;
-    @FXML private TableColumn<FormationEvent, String> descriptionColumn;
     @FXML private TableColumn<FormationEvent, String> locationColumn;
     @FXML private TableColumn<FormationEvent, String> capacityColumn;
     @FXML private TableColumn<FormationEvent, String> priceColumn;
@@ -46,7 +45,6 @@ public class FormationController {
         nameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
         dateColumn.setCellValueFactory(cellData -> new SimpleStringProperty(
             cellData.getValue().getDate() != null ? cellData.getValue().getDate().toString() : ""));
-        descriptionColumn.setCellValueFactory(new PropertyValueFactory<>("description"));
         locationColumn.setCellValueFactory(cellData -> new SimpleStringProperty(
             cellData.getValue().getLocation() != null ? cellData.getValue().getLocation() : ""));
         capacityColumn.setCellValueFactory(cellData -> new SimpleStringProperty(
@@ -197,47 +195,50 @@ public class FormationController {
     @FXML
     private void selectFormationEvent() {
         FormationEvent selected = formationTable.getSelectionModel().getSelectedItem();
-        if (selected != null) {
-            nameField.setText(selected.getName());
-            datePicker.setValue(selected.getDate());
+        if (selected == null) {
+            return;
+        }
 
-            if (selected.getStartTime() != null) {
-                startTimeHourSpinner.getValueFactory().setValue(selected.getStartTime().getHour());
-            }
-            if (selected.getEndTime() != null) {
-                endTimeHourSpinner.getValueFactory().setValue(selected.getEndTime().getHour());
-            }
+        nameField.setText(selected.getName());
+        datePicker.setValue(selected.getDate());
 
-            // Try to find and select the venue in the combo box
-            if (selected.getLocation() != null) {
-                for (Venue venue : venueComboBox.getItems()) {
-                    if (venue.getName().equals(selected.getLocation())) {
-                        venueComboBox.setValue(venue);
-                        break;
-                    }
+        if (selected.getStartTime() != null) {
+            startTimeHourSpinner.getValueFactory().setValue(selected.getStartTime().getHour());
+        }
+        if (selected.getEndTime() != null) {
+            endTimeHourSpinner.getValueFactory().setValue(selected.getEndTime().getHour());
+        }
+
+        if (selected.getLocation() != null) {
+            for (Venue venue : venueComboBox.getItems()) {
+                if (venue.getName().equals(selected.getLocation())) {
+                    venueComboBox.setValue(venue);
+                    break;
                 }
             }
-            if (selected.getCapacity() != null) {
-                capacitySpinner.getValueFactory().setValue(selected.getCapacity());
-            }
-            if (selected.getPrice() != null) {
-                priceSpinner.getValueFactory().setValue(selected.getPrice());
-            }
-            statusComboBox.setValue(selected.getStatus());
-            descriptionField.setText(selected.getDescription());
         }
+
+        if (selected.getCapacity() != null) {
+            capacitySpinner.getValueFactory().setValue(selected.getCapacity());
+        }
+        if (selected.getPrice() != null) {
+            priceSpinner.getValueFactory().setValue(selected.getPrice());
+        }
+
+        statusComboBox.setValue(selected.getStatus());
+        descriptionField.setText(selected.getDescription());
     }
 
+    @FXML
     private void clearFields() {
         nameField.clear();
         datePicker.setValue(null);
         startTimeHourSpinner.getValueFactory().setValue(9);
         endTimeHourSpinner.getValueFactory().setValue(17);
         venueComboBox.setValue(null);
-        venueTypeFilterComboBox.setValue("All");
-        capacitySpinner.getValueFactory().setValue(20);
+        capacitySpinner.getValueFactory().setValue(10);
         priceSpinner.getValueFactory().setValue(0.0);
-        statusComboBox.setValue("draft");
         descriptionField.clear();
+        statusComboBox.setValue("draft");
     }
 }
