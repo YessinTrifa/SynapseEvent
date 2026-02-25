@@ -2,41 +2,28 @@ package com.synapseevent.entities;
 
 import java.time.LocalDateTime;
 
-import jakarta.persistence.*;
-
-@Entity
-@Table(name = "reviews")
 public class Review {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-    
-    @Column(name = "userId")
-    private Long userId;
-    
-    @Column(name = "eventType")
-    private String eventType;
-    
-    @Column(name = "eventId")
-    private Long eventId;
-    
-    @Column(name = "rating")
-    private Integer rating; // 1-5 stars
-    
-    @Column(name = "comment", columnDefinition = "TEXT")
-    private String comment;
-    
-    @Column(name = "createdAt")
-    private LocalDateTime createdAt;
 
-    // Constructors
+    private Long id;
+
+    private Long userId;
+
+    private String eventType;
+    private Long eventId;
+
+    private Integer rating;
+
+    private String comment;
+
+    private LocalDateTime createdAt = LocalDateTime.now();
+
     public Review() {}
 
     public Review(Long userId, String eventType, Long eventId, Integer rating, String comment) {
         this.userId = userId;
         this.eventType = eventType;
         this.eventId = eventId;
-        this.rating = rating;
+        setRating(rating);
         this.comment = comment;
         this.createdAt = LocalDateTime.now();
     }
@@ -46,12 +33,11 @@ public class Review {
         this.userId = userId;
         this.eventType = eventType;
         this.eventId = eventId;
-        this.rating = rating;
+        setRating(rating);
         this.comment = comment;
-        this.createdAt = createdAt;
+        setCreatedAt(createdAt);
     }
 
-    // Getters and Setters
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
 
@@ -65,13 +51,21 @@ public class Review {
     public void setEventId(Long eventId) { this.eventId = eventId; }
 
     public Integer getRating() { return rating; }
-    public void setRating(Integer rating) { this.rating = rating; }
+    public void setRating(Integer rating) {
+        if (rating == null) this.rating = null;
+        else if (rating < 1) this.rating = 1;
+        else if (rating > 5) this.rating = 5;
+        else this.rating = rating;
+    }
 
     public String getComment() { return comment; }
     public void setComment(String comment) { this.comment = comment; }
 
     public LocalDateTime getCreatedAt() { return createdAt; }
-    public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
+    public void setCreatedAt(LocalDateTime createdAt) {
+        if (createdAt == null) this.createdAt = LocalDateTime.now();
+        else this.createdAt = createdAt;
+    }
 
     @Override
     public String toString() {

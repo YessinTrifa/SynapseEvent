@@ -1,54 +1,38 @@
 package com.synapseevent.entities;
 
-import jakarta.persistence.*;
-
-@Entity
-@Table(name = "users")
 public class User {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+
     private Long id;
-    
-    @Column(name = "email", unique = true)
+
     private String email;
-    
-    @Column(name = "password")
     private String password;
-    
-    @Column(name = "nom")
+
     private String nom;
-    
-    @Column(name = "prenom")
     private String prenom;
-    
-    @Column(name = "phone")
+
     private String phone;
-    
-    @Column(name = "address")
     private String address;
-    
-    @Column(name = "profilePicture")
+
     private String profilePicture;
-    
-    @ManyToOne
-    @JoinColumn(name = "role_id")
+
+    private Long roleId;
+    private Long enterpriseId;
+
     private Role role;
-    
-    @ManyToOne
-    @JoinColumn(name = "entreprise_id")
     private Entreprise enterprise;
 
-    // Constructors
     public User() {}
-    public User(String email, String nom, String prenom, Role role, Entreprise enterprise) {
+
+    public User(String email, String nom, String prenom, Long roleId, Long enterpriseId) {
         this.email = email;
         this.nom = nom;
         this.prenom = prenom;
-        this.role = role;
-        this.enterprise = enterprise;
+        this.roleId = roleId;
+        this.enterpriseId = enterpriseId;
     }
 
-    public User(String email, String password, String nom, String prenom, String phone, String address, String profilePicture, Role role, Entreprise enterprise) {
+    public User(String email, String password, String nom, String prenom, String phone, String address,
+                String profilePicture, Long roleId, Long enterpriseId) {
         this.email = email;
         this.password = password;
         this.nom = nom;
@@ -56,20 +40,21 @@ public class User {
         this.phone = phone;
         this.address = address;
         this.profilePicture = profilePicture;
-        this.role = role;
-        this.enterprise = enterprise;
+        this.roleId = roleId;
+        this.enterpriseId = enterpriseId;
     }
 
-    public User(Long id, String email, String nom, String prenom, Role role, Entreprise enterprise) {
+    public User(Long id, String email, String nom, String prenom, Long roleId, Long enterpriseId) {
         this.id = id;
         this.email = email;
         this.nom = nom;
         this.prenom = prenom;
-        this.role = role;
-        this.enterprise = enterprise;
+        this.roleId = roleId;
+        this.enterpriseId = enterpriseId;
     }
 
-    public User(Long id, String email, String password, String nom, String prenom, String phone, String address, String profilePicture, Role role, Entreprise enterprise) {
+    public User(Long id, String email, String password, String nom, String prenom, String phone, String address,
+                String profilePicture, Long roleId, Long enterpriseId) {
         this.id = id;
         this.email = email;
         this.password = password;
@@ -78,8 +63,8 @@ public class User {
         this.phone = phone;
         this.address = address;
         this.profilePicture = profilePicture;
-        this.role = role;
-        this.enterprise = enterprise;
+        this.roleId = roleId;
+        this.enterpriseId = enterpriseId;
     }
 
     public Long getId() { return id; }
@@ -106,11 +91,23 @@ public class User {
     public String getProfilePicture() { return profilePicture; }
     public void setProfilePicture(String profilePicture) { this.profilePicture = profilePicture; }
 
+    public Long getRoleId() { return roleId; }
+    public void setRoleId(Long roleId) { this.roleId = roleId; }
+
+    public Long getEnterpriseId() { return enterpriseId; }
+    public void setEnterpriseId(Long enterpriseId) { this.enterpriseId = enterpriseId; }
+
     public Role getRole() { return role; }
-    public void setRole(Role role) { this.role = role; }
+    public void setRole(Role role) {
+        this.role = role;
+        if (role != null) this.roleId = role.getId();
+    }
 
     public Entreprise getEnterprise() { return enterprise; }
-    public void setEnterprise(Entreprise enterprise) { this.enterprise = enterprise; }
+    public void setEnterprise(Entreprise enterprise) {
+        this.enterprise = enterprise;
+        if (enterprise != null) this.enterpriseId = enterprise.getId();
+    }
 
     @Override
     public String toString() { return nom + " " + prenom; }

@@ -3,76 +3,36 @@ package com.synapseevent.entities;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
-import jakarta.persistence.*;
-
-@Entity
-@Table(name = "paddle_events")
 public class PaddleEvent {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+
     private Long id;
-    
-    @Column(name = "name")
+
     private String name;
-    
-    @Column(name = "date")
     private LocalDate date;
-    
-    @Column(name = "startTime")
+
     private LocalTime startTime;
-    
-    @Column(name = "endTime")
     private LocalTime endTime;
-    
-    @Column(name = "location")
+
     private String location;
-    
-    @Column(name = "map")
     private String map;
-    
-    @Column(name = "capacity")
+
     private Integer capacity;
-    
-    @Column(name = "reservation")
     private Integer reservation;
-    
-    @Column(name = "price")
+
     private Double price;
-    
-    @Column(name = "disponibilite")
-    private Boolean disponibilite;
-    
-    @Column(name = "organizer")
+    private Boolean disponibilite = true;
+
     private String organizer;
-    
-    @Column(name = "description", columnDefinition = "TEXT")
     private String description;
-    
-    @Column(name = "status")
+
     private String status = "draft";
-    
-    @Column(name = "type")
-    private String type = "Paddle";
+
+    private final String type = "Paddle";
 
     public PaddleEvent() {}
 
-    public PaddleEvent(String name, LocalDate date, String description, String status) {
-        this.name = name;
-        this.date = date;
-        this.description = description;
-        this.status = status;
-    }
-
-    public PaddleEvent(Long id, String name, LocalDate date, String description, String status) {
-        this.id = id;
-        this.name = name;
-        this.date = date;
-        this.description = description;
-        this.status = status;
-    }
-
     public PaddleEvent(String name, LocalDate date, LocalTime startTime, LocalTime endTime,
-                       String location, String map, Integer capacity, Integer reservation, 
+                       String location, String map, Integer capacity, Integer reservation,
                        Double price, Boolean disponibilite, String organizer,
                        String description, String status) {
         this.name = name;
@@ -84,29 +44,30 @@ public class PaddleEvent {
         this.capacity = capacity;
         this.reservation = reservation;
         this.price = price;
-        this.disponibilite = disponibilite;
+        setDisponibilite(disponibilite);
         this.organizer = organizer;
         this.description = description;
-        this.status = status;
+        setStatus(status);
     }
 
-    public PaddleEvent(String name, LocalDate date, LocalTime startTime, LocalTime endTime,
-                       String location, Integer capacity, Double price, String organizer,
+    public PaddleEvent(Long id, String name, LocalDate date, LocalTime startTime, LocalTime endTime,
+                       String location, String map, Integer capacity, Integer reservation,
+                       Double price, Boolean disponibilite, String organizer,
                        String description, String status) {
+        this.id = id;
         this.name = name;
         this.date = date;
         this.startTime = startTime;
         this.endTime = endTime;
         this.location = location;
+        this.map = map;
         this.capacity = capacity;
+        this.reservation = reservation;
         this.price = price;
+        setDisponibilite(disponibilite);
         this.organizer = organizer;
         this.description = description;
-        this.status = status;
-        // map and reservation are left as null
-        this.map = null;
-        this.reservation = null;
-        this.disponibilite = true; // default value
+        setStatus(status);
     }
 
     public Long getId() { return id; }
@@ -140,7 +101,10 @@ public class PaddleEvent {
     public void setPrice(Double price) { this.price = price; }
 
     public Boolean getDisponibilite() { return disponibilite; }
-    public void setDisponibilite(Boolean disponibilite) { this.disponibilite = disponibilite; }
+    public void setDisponibilite(Boolean disponibilite) {
+        if (disponibilite == null) this.disponibilite = true;
+        else this.disponibilite = disponibilite;
+    }
 
     public String getOrganizer() { return organizer; }
     public void setOrganizer(String organizer) { this.organizer = organizer; }
@@ -149,10 +113,12 @@ public class PaddleEvent {
     public void setDescription(String description) { this.description = description; }
 
     public String getStatus() { return status; }
-    public void setStatus(String status) { this.status = status; }
+    public void setStatus(String status) {
+        if (status == null || status.isBlank()) this.status = "draft";
+        else this.status = status;
+    }
 
     public String getType() { return type; }
-    public void setType(String type) { this.type = type; }
 
     @Override
     public String toString() { return name; }

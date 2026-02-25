@@ -332,7 +332,12 @@ public class UserDashboardController {
 
     private void loadBookings() {
         try {
-            bookingsTable.setItems(FXCollections.observableArrayList(bookingService.getBookingsByUser(CurrentUser.getCurrentUser())));
+            User current = CurrentUser.getCurrentUser();
+            if (current == null || current.getId() == null) {
+                bookingsTable.setItems(FXCollections.observableArrayList());
+                return;
+            }
+            bookingsTable.setItems(FXCollections.observableArrayList(bookingService.getBookingsByUser(current)));
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -405,19 +410,30 @@ public class UserDashboardController {
     }
 
     private void bookEvent(EventInstance ei) {
-        Booking booking = new Booking(CurrentUser.getCurrentUser(), "instance", ei.getId(), LocalDate.now(), "pending");
+        User current = CurrentUser.getCurrentUser();
+        if (current == null || current.getId() == null) {
+            showAlert("Error", "You must be logged in to book an event.");
+            return;
+        }
+        if (ei == null || ei.getId() == null) {
+            showAlert("Error", "Invalid event.");
+            return;
+        }
+
+        Booking booking = new Booking(current.getId(), ei.getType(), ei.getId(), LocalDate.now(), "pending");
+        booking.setUser(current);
+
         try {
             bookingService.ajouter(booking);
 
-            // Update event instance status to "pending" when a user books it
             ei.setStatus("pending");
             eventInstanceService.modifier(ei);
 
-            // Refresh the tables to show updated status
             loadEvents();
             loadBookings();
         } catch (SQLException e) {
             e.printStackTrace();
+            showAlert("Error", "Error booking event: " + e.getMessage());
         }
     }
 

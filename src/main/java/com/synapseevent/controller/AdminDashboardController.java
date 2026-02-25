@@ -478,10 +478,19 @@ public class AdminDashboardController {
                         return null;
                     }
 
-                    User newUser = new User(emailField.getText().trim(), passwordField.getText(),
-                        nomField.getText().trim(), prenomField.getText().trim(),
-                        phoneField.getText().trim(), addressField.getText().trim(),
-                        null, role, enterprise);
+                    User newUser = new User(
+                            emailField.getText().trim(),
+                            passwordField.getText(),
+                            nomField.getText().trim(),
+                            prenomField.getText().trim(),
+                            phoneField.getText().trim(),
+                            addressField.getText().trim(),
+                            null,
+                            role.getId(),
+                            enterprise.getId()
+                    );
+                    newUser.setRole(role);
+                    newUser.setEnterprise(enterprise);
                     return newUser;
                 } catch (Exception e) {
                     showAlert("Error", "Error creating user: " + e.getMessage());
@@ -582,12 +591,16 @@ public class AdminDashboardController {
 
         ComboBox<String> roleCombo = new ComboBox<>();
         roleCombo.getItems().addAll("Admin", "User", "Manager");
-        roleCombo.setValue(user.getRole().getName());
+        roleCombo.setValue(user.getRole() != null ? user.getRole().getName() : "User");
         roleCombo.setPromptText("Role");
 
         ComboBox<Entreprise> enterpriseCombo = new ComboBox<>();
         enterpriseCombo.setItems(FXCollections.observableArrayList(entrepriseService.getAll()));
-        enterpriseCombo.setValue(user.getEnterprise());
+        if (user.getEnterprise() != null) {
+            enterpriseCombo.setValue(user.getEnterprise());
+        } else if (enterpriseCombo.getItems() != null && !enterpriseCombo.getItems().isEmpty()) {
+            enterpriseCombo.setValue(enterpriseCombo.getItems().get(0));
+        }
         enterpriseCombo.setPromptText("Enterprise");
 
         GridPane grid = new GridPane();
@@ -629,10 +642,16 @@ public class AdminDashboardController {
                 user.setAddress(addressField.getText().trim());
 
                 Role role = roleService.getByName(roleCombo.getValue());
+                Entreprise ent = enterpriseCombo.getValue();
+
                 if (role != null) {
                     user.setRole(role);
+                    user.setRoleId(role.getId());
                 }
-                user.setEnterprise(enterpriseCombo.getValue());
+                if (ent != null) {
+                    user.setEnterprise(ent);
+                    user.setEnterpriseId(ent.getId());
+                }
 
                 return user;
             }
@@ -882,6 +901,7 @@ public class AdminDashboardController {
                 Role role = new RoleService().getByName(newRole);
                 if (role != null) {
                     user.setRole(role);
+                    user.setRoleId(role.getId());
                     userService.modifier(user);
                     loadUsers();
                 }
@@ -929,7 +949,7 @@ public class AdminDashboardController {
             EventInstance event = eventService.findbyId(booking.getEventId());
             if (event != null) {
                 // Check if there are other pending bookings for this event
-                List<Booking> eventBookings = bookingService.getBookingsByEvent("instance", booking.getEventId());
+                List<Booking> eventBookings = bookingService.getBookingsByEvent(booking.getEventType(), booking.getEventId());
                 boolean hasPending = eventBookings.stream()
                     .anyMatch(b -> "pending".equals(b.getStatus()) && !b.getId().equals(booking.getId()));
                 
