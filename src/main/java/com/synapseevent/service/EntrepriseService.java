@@ -7,9 +7,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class EntrepriseService {
-    private Connection conn = MaConnection.getInstance().getConnection();
+    private final MaConnection db = MaConnection.getInstance();
 
     public void add(Entreprise entreprise) {
+        Connection conn;
+        try {
+            conn = db.requireConnection();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return;
+        }
         String sql = "INSERT INTO Enterprise (nom, siret) VALUES (?, ?)";
         try (PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             stmt.setString(1, entreprise.getNom());
@@ -25,6 +32,13 @@ public class EntrepriseService {
     }
 
     public List<Entreprise> getAll() {
+        Connection conn;
+        try {
+            conn = db.requireConnection();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return new ArrayList<>();
+        }
         List<Entreprise> entreprises = new ArrayList<>();
         String sql = "SELECT * FROM Enterprise";
         try (Statement stmt = conn.createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
@@ -39,6 +53,13 @@ public class EntrepriseService {
     }
 
     public Entreprise getById(Long id) {
+        Connection conn;
+        try {
+            conn = db.requireConnection();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
         String sql = "SELECT * FROM Enterprise WHERE id = ?";
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setLong(1, id);
@@ -57,6 +78,13 @@ public class EntrepriseService {
     }
 
     public void update(Entreprise entreprise) {
+        Connection conn;
+        try {
+            conn = db.requireConnection();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return;
+        }
         String sql = "UPDATE Enterprise SET nom = ?, siret = ? WHERE id = ?";
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, entreprise.getNom());
@@ -69,6 +97,13 @@ public class EntrepriseService {
     }
 
     public void delete(Long id) {
+        Connection conn;
+        try {
+            conn = db.requireConnection();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return;
+        }
         String sql = "DELETE FROM Enterprise WHERE id = ?";
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setLong(1, id);
@@ -78,3 +113,5 @@ public class EntrepriseService {
         }
     }
 }
+
+

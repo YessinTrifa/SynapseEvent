@@ -7,10 +7,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class VenueService implements IService<Venue> {
-    private Connection conn = MaConnection.getInstance().getConnection();
+    private final MaConnection db = MaConnection.getInstance();
 
     @Override
     public boolean ajouter(Venue venue) throws SQLException {
+        Connection conn = db.requireConnection();
         String sql = "INSERT INTO Venue (name, type, address, contact_info, price_range, rating, description, amenities) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
         try (PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             stmt.setString(1, venue.getName());
@@ -35,6 +36,7 @@ public class VenueService implements IService<Venue> {
 
     @Override
     public List<Venue> readAll() throws SQLException {
+        Connection conn = db.requireConnection();
         List<Venue> venues = new ArrayList<>();
         String sql = "SELECT * FROM Venue";
         try (Statement stmt = conn.createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
@@ -60,6 +62,7 @@ public class VenueService implements IService<Venue> {
 
     @Override
     public Venue findbyId(Long id) throws SQLException {
+        Connection conn = db.requireConnection();
         String sql = "SELECT * FROM Venue WHERE id = ?";
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setLong(1, id);
@@ -86,6 +89,7 @@ public class VenueService implements IService<Venue> {
 
     @Override
     public boolean modifier(Venue venue) throws SQLException {
+        Connection conn = db.requireConnection();
         String sql = "UPDATE Venue SET name = ?, type = ?, address = ?, contact_info = ?, price_range = ?, rating = ?, description = ?, amenities = ? WHERE id = ?";
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, venue.getName());
@@ -107,6 +111,7 @@ public class VenueService implements IService<Venue> {
 
     @Override
     public boolean supprimer(Venue venue) throws SQLException {
+        Connection conn = db.requireConnection();
         if (venue.getId() != null) {
             String sql = "DELETE FROM Venue WHERE id = ?";
             try (PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -122,6 +127,7 @@ public class VenueService implements IService<Venue> {
     }
 
     public List<Venue> findByType(String type) throws SQLException {
+        Connection conn = db.requireConnection();
         List<Venue> venues = new ArrayList<>();
         String sql = "SELECT * FROM Venue WHERE type = ?";
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -148,6 +154,7 @@ public class VenueService implements IService<Venue> {
     }
 
     public List<String> getAllTypes() throws SQLException {
+        Connection conn = db.requireConnection();
         List<String> types = new ArrayList<>();
         String sql = "SELECT DISTINCT type FROM Venue ORDER BY type";
         try (Statement stmt = conn.createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
@@ -162,6 +169,7 @@ public class VenueService implements IService<Venue> {
     }
 
     public List<String> getAllCities() throws SQLException {
+        Connection conn = db.requireConnection();
         List<String> cities = new ArrayList<>();
         String sql = "SELECT DISTINCT address FROM Venue WHERE address IS NOT NULL ORDER BY address";
         try (Statement stmt = conn.createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
@@ -184,6 +192,7 @@ public class VenueService implements IService<Venue> {
     }
 
     public List<Venue> findByTypeAndCity(String type, String city) throws SQLException {
+        Connection conn = db.requireConnection();
         List<Venue> venues = new ArrayList<>();
         String sql;
         if (city != null && !city.isEmpty() && !"All Cities".equals(city)) {
@@ -230,3 +239,5 @@ public class VenueService implements IService<Venue> {
         return venues;
     }
 }
+
+

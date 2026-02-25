@@ -8,10 +8,11 @@ import java.util.List;
 import java.sql.SQLException;
 
 public class PaddleEventService implements IService<PaddleEvent> {
-    private Connection conn = MaConnection.getInstance().getConnection();
+    private final MaConnection db = MaConnection.getInstance();
 
     @Override
     public boolean ajouter(PaddleEvent event) throws SQLException {
+        Connection conn = db.requireConnection();
         String sql = "INSERT INTO PaddleEvent (name, date, start_time, end_time, location, map, capacity, reservation, price, disponibilite, organizer, description, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         try (PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             stmt.setString(1, event.getName());
@@ -41,6 +42,7 @@ public class PaddleEventService implements IService<PaddleEvent> {
 
     @Override
     public List<PaddleEvent> readAll() throws SQLException {
+        Connection conn = db.requireConnection();
         List<PaddleEvent> events = new ArrayList<>();
         String sql = "SELECT * FROM PaddleEvent";
         try (Statement stmt = conn.createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
@@ -72,6 +74,7 @@ public class PaddleEventService implements IService<PaddleEvent> {
 
     @Override
     public PaddleEvent findbyId(Long id) throws SQLException {
+        Connection conn = db.requireConnection();
         String sql = "SELECT * FROM PaddleEvent WHERE id = ?";
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setLong(1, id);
@@ -104,6 +107,7 @@ public class PaddleEventService implements IService<PaddleEvent> {
 
     @Override
     public boolean modifier(PaddleEvent event) throws SQLException {
+        Connection conn = db.requireConnection();
         String sql = "UPDATE PaddleEvent SET name = ?, date = ?, start_time = ?, end_time = ?, location = ?, map = ?, capacity = ?, reservation = ?, price = ?, disponibilite = ?, organizer = ?, description = ?, status = ? WHERE id = ?";
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, event.getName());
@@ -130,6 +134,7 @@ public class PaddleEventService implements IService<PaddleEvent> {
 
     @Override
     public boolean supprimer(PaddleEvent event) throws SQLException {
+        Connection conn = db.requireConnection();
         if (event.getId() != null) {
             String sql = "DELETE FROM PaddleEvent WHERE id = ?";
             try (PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -145,6 +150,7 @@ public class PaddleEventService implements IService<PaddleEvent> {
     }
 
     public List<PaddleEvent> getPublishedEvents() throws SQLException {
+        Connection conn = db.requireConnection();
         List<PaddleEvent> events = new ArrayList<>();
         String sql = "SELECT * FROM PaddleEvent WHERE status = 'published'";
         try (Statement stmt = conn.createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
@@ -176,6 +182,7 @@ public class PaddleEventService implements IService<PaddleEvent> {
 
     // Advanced search and filter methods
     public List<PaddleEvent> searchByName(String name) throws SQLException {
+        Connection conn = db.requireConnection();
         List<PaddleEvent> events = new ArrayList<>();
         String sql = "SELECT * FROM PaddleEvent WHERE name LIKE ?";
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -192,6 +199,7 @@ public class PaddleEventService implements IService<PaddleEvent> {
     }
 
     public List<PaddleEvent> searchByLocation(String location) throws SQLException {
+        Connection conn = db.requireConnection();
         List<PaddleEvent> events = new ArrayList<>();
         String sql = "SELECT * FROM PaddleEvent WHERE location LIKE ?";
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -208,6 +216,7 @@ public class PaddleEventService implements IService<PaddleEvent> {
     }
 
     public List<PaddleEvent> filterByStatus(String status) throws SQLException {
+        Connection conn = db.requireConnection();
         List<PaddleEvent> events = new ArrayList<>();
         String sql = "SELECT * FROM PaddleEvent WHERE status = ?";
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -224,6 +233,7 @@ public class PaddleEventService implements IService<PaddleEvent> {
     }
 
     public List<PaddleEvent> filterByAvailability(boolean available) throws SQLException {
+        Connection conn = db.requireConnection();
         List<PaddleEvent> events = new ArrayList<>();
         String sql = "SELECT * FROM PaddleEvent WHERE disponibilite = ?";
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -240,6 +250,7 @@ public class PaddleEventService implements IService<PaddleEvent> {
     }
 
     public List<PaddleEvent> filterByPriceRange(double minPrice, double maxPrice) throws SQLException {
+        Connection conn = db.requireConnection();
         List<PaddleEvent> events = new ArrayList<>();
         String sql = "SELECT * FROM PaddleEvent WHERE price BETWEEN ? AND ?";
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -257,6 +268,7 @@ public class PaddleEventService implements IService<PaddleEvent> {
     }
 
     public List<PaddleEvent> filterByCapacityRange(int minCapacity, int maxCapacity) throws SQLException {
+        Connection conn = db.requireConnection();
         List<PaddleEvent> events = new ArrayList<>();
         String sql = "SELECT * FROM PaddleEvent WHERE capacity BETWEEN ? AND ?";
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -274,6 +286,7 @@ public class PaddleEventService implements IService<PaddleEvent> {
     }
 
     public int getTotalCapacity() throws SQLException {
+        Connection conn = db.requireConnection();
         String sql = "SELECT SUM(capacity) as total FROM PaddleEvent";
         try (Statement stmt = conn.createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
             if (rs.next()) {
@@ -287,6 +300,7 @@ public class PaddleEventService implements IService<PaddleEvent> {
     }
 
     public int getTotalReservations() throws SQLException {
+        Connection conn = db.requireConnection();
         String sql = "SELECT SUM(reservation) as total FROM PaddleEvent";
         try (Statement stmt = conn.createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
             if (rs.next()) {
@@ -300,6 +314,7 @@ public class PaddleEventService implements IService<PaddleEvent> {
     }
 
     public double getTotalRevenue() throws SQLException {
+        Connection conn = db.requireConnection();
         String sql = "SELECT SUM(price) as total FROM PaddleEvent WHERE status = 'published'";
         try (Statement stmt = conn.createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
             if (rs.next()) {
@@ -313,6 +328,7 @@ public class PaddleEventService implements IService<PaddleEvent> {
     }
 
     public long getAvailableEventsCount() throws SQLException {
+        Connection conn = db.requireConnection();
         String sql = "SELECT COUNT(*) as count FROM PaddleEvent WHERE disponibilite = true";
         try (Statement stmt = conn.createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
             if (rs.next()) {
@@ -326,6 +342,7 @@ public class PaddleEventService implements IService<PaddleEvent> {
     }
 
     private PaddleEvent mapResultSetToEvent(ResultSet rs) throws SQLException {
+        Connection conn = db.requireConnection();
         PaddleEvent event = new PaddleEvent(
             rs.getString("name"),
             rs.getDate("date").toLocalDate(),

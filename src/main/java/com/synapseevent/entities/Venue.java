@@ -1,48 +1,43 @@
 package com.synapseevent.entities;
 
-import jakarta.persistence.*;
-
-@Entity
-@Table(name = "venues")
 public class Venue {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+
     private Long id;
-    
-    @Column(name = "name")
+
     private String name;
-    
-    @Column(name = "type")
-    private String type; // CLUB, BEACH, HOTEL
-    
-    @Column(name = "address")
+    private String type;
     private String address;
-    
-    @Column(name = "contactInfo")
     private String contactInfo;
-    
-    @Column(name = "priceRange")
-    private String priceRange; // e.g., "TND", "TNDTND", "TNDTNDTND"
-    
-    @Column(name = "rating")
-    private Double rating; // 1-5 stars
-    
-    @Column(name = "description", columnDefinition = "TEXT")
+    private String priceRange;
+
+    private Double rating;
+
     private String description;
-    
-    @Column(name = "amenities")
     private String amenities;
 
     public Venue() {}
 
-    public Venue(String name, String type, String address, String contactInfo, 
+    public Venue(String name, String type, String address, String contactInfo,
                  String priceRange, Double rating, String description, String amenities) {
         this.name = name;
         this.type = type;
         this.address = address;
         this.contactInfo = contactInfo;
         this.priceRange = priceRange;
-        this.rating = rating;
+        setRating(rating);
+        this.description = description;
+        this.amenities = amenities;
+    }
+
+    public Venue(Long id, String name, String type, String address, String contactInfo,
+                 String priceRange, Double rating, String description, String amenities) {
+        this.id = id;
+        this.name = name;
+        this.type = type;
+        this.address = address;
+        this.contactInfo = contactInfo;
+        this.priceRange = priceRange;
+        setRating(rating);
         this.description = description;
         this.amenities = amenities;
     }
@@ -66,7 +61,12 @@ public class Venue {
     public void setPriceRange(String priceRange) { this.priceRange = priceRange; }
 
     public Double getRating() { return rating; }
-    public void setRating(Double rating) { this.rating = rating; }
+    public void setRating(Double rating) {
+        if (rating == null) this.rating = null;
+        else if (rating < 0) this.rating = 0.0;
+        else if (rating > 5) this.rating = 5.0;
+        else this.rating = rating;
+    }
 
     public String getDescription() { return description; }
     public void setDescription(String description) { this.description = description; }

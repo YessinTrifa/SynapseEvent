@@ -3,68 +3,32 @@ package com.synapseevent.entities;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
-import jakarta.persistence.*;
-
-@Entity
-@Table(name = "teambuilding_events")
 public class TeamBuildingEvent {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+
     private Long id;
-    
-    @Column(name = "name")
+
     private String name;
-    
-    @Column(name = "date")
     private LocalDate date;
-    
-    @Column(name = "startTime")
+
     private LocalTime startTime;
-    
-    @Column(name = "endTime")
     private LocalTime endTime;
-    
-    @Column(name = "location")
+
     private String location;
-    
-    @Column(name = "capacity")
     private Integer capacity;
-    
-    @Column(name = "price")
     private Double price;
-    
-    @Column(name = "organizer")
+
     private String organizer;
-    
-    @Column(name = "description", columnDefinition = "TEXT")
     private String description;
-    
-    @Column(name = "status")
+
     private String status = "draft";
-    
-    @Column(name = "type")
-    private String type = "TeamBuilding";
+
+    private final String type = "TeamBuilding";
 
     public TeamBuildingEvent() {}
 
-    public TeamBuildingEvent(String name, LocalDate date, String description, String status) {
-        this.name = name;
-        this.date = date;
-        this.description = description;
-        this.status = status;
-    }
-
-    public TeamBuildingEvent(Long id, String name, LocalDate date, String description, String status) {
-        this.id = id;
-        this.name = name;
-        this.date = date;
-        this.description = description;
-        this.status = status;
-    }
-
     public TeamBuildingEvent(String name, LocalDate date, LocalTime startTime, LocalTime endTime,
-                              String location, Integer capacity, Double price, String organizer,
-                              String description, String status) {
+                             String location, Integer capacity, Double price, String organizer,
+                             String description, String status) {
         this.name = name;
         this.date = date;
         this.startTime = startTime;
@@ -74,7 +38,31 @@ public class TeamBuildingEvent {
         this.price = price;
         this.organizer = organizer;
         this.description = description;
-        this.status = status;
+        setStatus(status);
+    }
+
+    public TeamBuildingEvent(Long id, String name, LocalDate date, LocalTime startTime, LocalTime endTime,
+                             String location, Integer capacity, Double price, String organizer,
+                             String description, String status) {
+        this.id = id;
+        this.name = name;
+        this.date = date;
+        this.startTime = startTime;
+        this.endTime = endTime;
+        this.location = location;
+        this.capacity = capacity;
+        this.price = price;
+        this.organizer = organizer;
+        this.description = description;
+        setStatus(status);
+    }
+
+    public TeamBuildingEvent(Long id, String name, LocalDate date, String description, String status) {
+        this.id = id;
+        this.name = name;
+        this.date = date;
+        this.description = description;
+        setStatus(status);
     }
 
     public Long getId() { return id; }
@@ -108,10 +96,12 @@ public class TeamBuildingEvent {
     public void setDescription(String description) { this.description = description; }
 
     public String getStatus() { return status; }
-    public void setStatus(String status) { this.status = status; }
+    public void setStatus(String status) {
+        if (status == null || status.isBlank()) this.status = "draft";
+        else this.status = status;
+    }
 
     public String getType() { return type; }
-    public void setType(String type) { this.type = type; }
 
     @Override
     public String toString() { return name; }

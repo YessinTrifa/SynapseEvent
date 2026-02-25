@@ -7,9 +7,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class RoleService {
-    private Connection conn = MaConnection.getInstance().getConnection();
+    private final MaConnection db = MaConnection.getInstance();
 
     public void add(Role role) {
+        Connection conn;
+        try {
+            conn = db.requireConnection();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return;
+        }
         String sql = "INSERT INTO Role (name) VALUES (?)";
         try (PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             stmt.setString(1, role.getName());
@@ -24,6 +31,13 @@ public class RoleService {
     }
 
     public List<Role> getAll() {
+        Connection conn;
+        try {
+            conn = db.requireConnection();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return new ArrayList<>();
+        }
         List<Role> roles = new ArrayList<>();
         String sql = "SELECT * FROM Role";
         try (Statement stmt = conn.createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
@@ -38,6 +52,13 @@ public class RoleService {
     }
 
     public Role getById(Long id) {
+        Connection conn;
+        try {
+            conn = db.requireConnection();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
         String sql = "SELECT * FROM Role WHERE id = ?";
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setLong(1, id);
@@ -56,6 +77,13 @@ public class RoleService {
     }
 
     public void update(Role role) {
+        Connection conn;
+        try {
+            conn = db.requireConnection();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return;
+        }
         String sql = "UPDATE Role SET name = ? WHERE id = ?";
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, role.getName());
@@ -67,6 +95,13 @@ public class RoleService {
     }
 
     public void delete(Long id) {
+        Connection conn;
+        try {
+            conn = db.requireConnection();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return;
+        }
         String sql = "DELETE FROM Role WHERE id = ?";
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setLong(1, id);
@@ -77,6 +112,13 @@ public class RoleService {
     }
 
     public Role getByName(String name) {
+        Connection conn;
+        try {
+            conn = db.requireConnection();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
         String sql = "SELECT * FROM Role WHERE name = ?";
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, name);
@@ -90,3 +132,5 @@ public class RoleService {
         return null;
     }
 }
+
+

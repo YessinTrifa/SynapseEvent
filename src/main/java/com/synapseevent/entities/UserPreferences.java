@@ -1,30 +1,18 @@
 package com.synapseevent.entities;
 
-import jakarta.persistence.*;
-
-@Entity
-@Table(name = "user_preferences")
 public class UserPreferences {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+
     private Long id;
-    
-    @Column(name = "userId")
+
     private Long userId;
-    
-    @Column(name = "preferredCategories")
-    private String preferredCategories; // comma-separated
-    
-    @Column(name = "preferredLocations")
+
+    private String preferredCategories;
     private String preferredLocations;
-    
-    @Column(name = "maxPrice")
+
     private Double maxPrice;
-    
-    @Column(name = "minRating")
+
     private Integer minRating;
 
-    // Constructors
     public UserPreferences() {}
 
     public UserPreferences(Long userId, String preferredCategories, String preferredLocations, Double maxPrice, Integer minRating) {
@@ -32,7 +20,7 @@ public class UserPreferences {
         this.preferredCategories = preferredCategories;
         this.preferredLocations = preferredLocations;
         this.maxPrice = maxPrice;
-        this.minRating = minRating;
+        setMinRating(minRating);
     }
 
     public UserPreferences(Long id, Long userId, String preferredCategories, String preferredLocations, Double maxPrice, Integer minRating) {
@@ -41,10 +29,9 @@ public class UserPreferences {
         this.preferredCategories = preferredCategories;
         this.preferredLocations = preferredLocations;
         this.maxPrice = maxPrice;
-        this.minRating = minRating;
+        setMinRating(minRating);
     }
 
-    // Getters and Setters
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
 
@@ -61,7 +48,12 @@ public class UserPreferences {
     public void setMaxPrice(Double maxPrice) { this.maxPrice = maxPrice; }
 
     public Integer getMinRating() { return minRating; }
-    public void setMinRating(Integer minRating) { this.minRating = minRating; }
+    public void setMinRating(Integer minRating) {
+        if (minRating == null) this.minRating = null;
+        else if (minRating < 1) this.minRating = 1;
+        else if (minRating > 5) this.minRating = 5;
+        else this.minRating = minRating;
+    }
 
     @Override
     public String toString() {

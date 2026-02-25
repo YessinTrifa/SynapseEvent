@@ -205,8 +205,20 @@ public class RegisterController {
             // Store password as plain text (for your use case)
             String storedPassword = password;
 
-            // Create new user with plain text password
-            User newUser = new User(email, storedPassword, nom, prenom, phone, address, null, userRole, enterprise);
+            User newUser = new User(
+                    email,
+                    storedPassword,
+                    nom,
+                    prenom,
+                    phone,
+                    address,
+                    null,
+                    userRole.getId(),
+                    enterprise.getId()
+            );
+
+            newUser.setRole(userRole);
+            newUser.setEnterprise(enterprise);
 
             // Save user to database
             boolean success = userService.ajouter(newUser);

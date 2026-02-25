@@ -2,111 +2,167 @@ package com.synapseevent.service;
 
 import com.synapseevent.entities.TeamBuildingEvent;
 import com.synapseevent.utils.MaConnection;
+
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.sql.SQLException;
 
 public class TeamBuildingEventService implements IService<TeamBuildingEvent> {
-    private Connection conn = MaConnection.getInstance().getConnection();
+
+    private final MaConnection db = MaConnection.getInstance();
 
     @Override
     public boolean ajouter(TeamBuildingEvent event) throws SQLException {
-        String sql = "INSERT INTO TeamBuildingEvent (name, date, description, status) VALUES (?, ?, ?, ?)";
+        Connection conn = db.requireConnection();
+
+        String sql = "INSERT INTO TeamBuildingEvent " +
+                "(name, date, start_time, end_time, location, capacity, price, organizer, description, status) " +
+                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+
         try (PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+
             stmt.setString(1, event.getName());
-            stmt.setDate(2, Date.valueOf(event.getDate()));
-            stmt.setString(3, event.getDescription());
-            stmt.setString(4, event.getStatus());
+            stmt.setDate(2, event.getDate() != null ? Date.valueOf(event.getDate()) : null);
+            stmt.setTime(3, event.getStartTime() != null ? Time.valueOf(event.getStartTime()) : null);
+            stmt.setTime(4, event.getEndTime() != null ? Time.valueOf(event.getEndTime()) : null);
+            stmt.setString(5, event.getLocation());
+
+            if (event.getCapacity() == null) stmt.setNull(6, Types.INTEGER);
+            else stmt.setInt(6, event.getCapacity());
+
+            if (event.getPrice() == null) stmt.setNull(7, Types.DOUBLE);
+            else stmt.setDouble(7, event.getPrice());
+
+            stmt.setString(8, event.getOrganizer());
+            stmt.setString(9, event.getDescription());
+            stmt.setString(10, event.getStatus());
+
             int res = stmt.executeUpdate();
-            ResultSet rs = stmt.getGeneratedKeys();
-            if (rs.next()) {
-                event.setId(rs.getLong(1));
+
+            try (ResultSet rs = stmt.getGeneratedKeys()) {
+                if (rs.next()) event.setId(rs.getLong(1));
             }
+
             return res > 0;
-        } catch (SQLException e) {
-            e.printStackTrace();
-            throw e;
         }
     }
 
     @Override
     public List<TeamBuildingEvent> readAll() throws SQLException {
+        Connection conn = db.requireConnection();
         List<TeamBuildingEvent> events = new ArrayList<>();
+
         String sql = "SELECT * FROM TeamBuildingEvent";
+
         try (Statement stmt = conn.createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
             while (rs.next()) {
-                TeamBuildingEvent event = new TeamBuildingEvent(rs.getLong("id"), rs.getString("name"), rs.getDate("date").toLocalDate(), rs.getString("description"), rs.getString("status"));
-                events.add(event);
+                events.add(map(rs));
             }
-        } catch (SQLException e) {
-            e.printStackTrace();
-            throw e;
         }
+
         return events;
     }
 
     @Override
     public TeamBuildingEvent findbyId(Long id) throws SQLException {
+        Connection conn = db.requireConnection();
+
         String sql = "SELECT * FROM TeamBuildingEvent WHERE id = ?";
+
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setLong(1, id);
-            ResultSet rs = stmt.executeQuery();
-            if (rs.next()) {
-                return new TeamBuildingEvent(rs.getLong("id"), rs.getString("name"), rs.getDate("date").toLocalDate(), rs.getString("description"), rs.getString("status"));
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (!rs.next()) return null;
+                return map(rs);
             }
-        } catch (SQLException e) {
-            e.printStackTrace();
-            throw e;
         }
-        return null;
     }
 
     @Override
     public boolean modifier(TeamBuildingEvent event) throws SQLException {
-        String sql = "UPDATE TeamBuildingEvent SET name = ?, date = ?, description = ?, status = ? WHERE id = ?";
+        Connection conn = db.requireConnection();
+
+        String sql = "UPDATE TeamBuildingEvent SET " +
+                "name = ?, date = ?, start_time = ?, end_time = ?, location = ?, capacity = ?, price = ?, organizer = ?, description = ?, status = ? " +
+                "WHERE id = ?";
+
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            if (event.getId() == null) throw new SQLException("id is required");
+
             stmt.setString(1, event.getName());
-            stmt.setDate(2, Date.valueOf(event.getDate()));
-            stmt.setString(3, event.getDescription());
-            stmt.setString(4, event.getStatus());
-            stmt.setLong(5, event.getId());
+            stmt.setDate(2, event.getDate() != null ? Date.valueOf(event.getDate()) : null);
+            stmt.setTime(3, event.getStartTime() != null ? Time.valueOf(event.getStartTime()) : null);
+            stmt.setTime(4, event.getEndTime() != null ? Time.valueOf(event.getEndTime()) : null);
+            stmt.setString(5, event.getLocation());
+
+            if (event.getCapacity() == null) stmt.setNull(6, Types.INTEGER);
+            else stmt.setInt(6, event.getCapacity());
+
+            if (event.getPrice() == null) stmt.setNull(7, Types.DOUBLE);
+            else stmt.setDouble(7, event.getPrice());
+
+            stmt.setString(8, event.getOrganizer());
+            stmt.setString(9, event.getDescription());
+            stmt.setString(10, event.getStatus());
+
+            stmt.setLong(11, event.getId());
+
             int res = stmt.executeUpdate();
             return res > 0;
-        } catch (SQLException e) {
-            e.printStackTrace();
-            throw e;
         }
     }
 
     @Override
     public boolean supprimer(TeamBuildingEvent event) throws SQLException {
-        if (event.getId() != null) {
-            String sql = "DELETE FROM TeamBuildingEvent WHERE id = ?";
-            try (PreparedStatement stmt = conn.prepareStatement(sql)) {
-                stmt.setLong(1, event.getId());
-                int res = stmt.executeUpdate();
-                return res > 0;
-            } catch (SQLException e) {
-                e.printStackTrace();
-                throw e;
-            }
+        Connection conn = db.requireConnection();
+        if (event == null || event.getId() == null) return false;
+
+        String sql = "DELETE FROM TeamBuildingEvent WHERE id = ?";
+
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setLong(1, event.getId());
+            int res = stmt.executeUpdate();
+            return res > 0;
         }
-        return false;
     }
 
     public List<TeamBuildingEvent> getPublishedEvents() throws SQLException {
+        Connection conn = db.requireConnection();
         List<TeamBuildingEvent> events = new ArrayList<>();
+
         String sql = "SELECT * FROM TeamBuildingEvent WHERE status = 'published'";
+
         try (Statement stmt = conn.createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
             while (rs.next()) {
-                TeamBuildingEvent event = new TeamBuildingEvent(rs.getLong("id"), rs.getString("name"), rs.getDate("date").toLocalDate(), rs.getString("description"), rs.getString("status"));
-                events.add(event);
+                events.add(map(rs));
             }
-        } catch (SQLException e) {
-            e.printStackTrace();
-            throw e;
         }
+
         return events;
+    }
+
+    private TeamBuildingEvent map(ResultSet rs) throws SQLException {
+
+        Integer capacity = (Integer) rs.getObject("capacity");
+        Double price = (Double) rs.getObject("price");
+
+        Time st = rs.getTime("start_time");
+        Time et = rs.getTime("end_time");
+
+        return new TeamBuildingEvent(
+                rs.getLong("id"),
+                rs.getString("name"),
+                rs.getDate("date") != null ? rs.getDate("date").toLocalDate() : null,
+                st != null ? st.toLocalTime() : null,
+                et != null ? et.toLocalTime() : null,
+                rs.getString("location"),
+                capacity,
+                price,
+                rs.getString("organizer"),
+                rs.getString("description"),
+                rs.getString("status")
+        );
     }
 }

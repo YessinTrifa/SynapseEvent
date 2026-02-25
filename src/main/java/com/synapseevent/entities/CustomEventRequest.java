@@ -2,102 +2,86 @@ package com.synapseevent.entities;
 
 import java.time.LocalDate;
 
-import jakarta.persistence.*;
-
-@Entity
-@Table(name = "custom_event_requests")
 public class CustomEventRequest {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-    
-    @ManyToOne
-    @JoinColumn(name = "user_id")
-    private User user;
-    
-    @Column(name = "eventType")
-    private String eventType;
-    
-    @Column(name = "eventDate")
-    private LocalDate eventDate;
-    
-    @Column(name = "description", columnDefinition = "TEXT")
-    private String description;
-    
-    @Column(name = "status")
-    private String status;
-    
-    @Column(name = "createdDate")
-    private LocalDate createdDate;
-    
-    @Column(name = "budget")
-    private Double budget;
-    
-    @Column(name = "capacity")
-    private Integer capacity;
-    
-    @Column(name = "location")
-    private String location;
-    
-    @Column(name = "reason")
-    private String reason; // For denial reason
 
-    // Constructors
+    private Long id;
+
+    private Long userId;
+    private User user;
+
+    private String eventType;
+    private LocalDate eventDate;
+
+    private String description;
+
+    private String status = "pending";
+    private LocalDate createdDate = LocalDate.now();
+
+    private Double budget;
+    private Integer capacity;
+    private String location;
+
+    private String reason;
+
     public CustomEventRequest() {}
 
-    public CustomEventRequest(User user, String eventType, LocalDate eventDate, String description, String status, LocalDate createdDate) {
-        this.user = user;
+    public CustomEventRequest(Long userId, String eventType, LocalDate eventDate, String description,
+                              String status, LocalDate createdDate, Double budget, Integer capacity,
+                              String location, String reason) {
+        this.userId = userId;
         this.eventType = eventType;
         this.eventDate = eventDate;
         this.description = description;
-        this.status = status;
-        this.createdDate = createdDate;
+        setStatus(status);
+        setCreatedDate(createdDate);
+        this.budget = budget;
+        this.capacity = capacity;
+        this.location = location;
+        this.reason = reason;
     }
 
-    public CustomEventRequest(Long id, User user, String eventType, LocalDate eventDate, String description, String status, LocalDate createdDate) {
+    public CustomEventRequest(Long id, Long userId, String eventType, LocalDate eventDate, String description,
+                              String status, LocalDate createdDate, Double budget, Integer capacity,
+                              String location, String reason) {
         this.id = id;
-        this.user = user;
+        this.userId = userId;
         this.eventType = eventType;
         this.eventDate = eventDate;
         this.description = description;
-        this.status = status;
-        this.createdDate = createdDate;
+        setStatus(status);
+        setCreatedDate(createdDate);
+        this.budget = budget;
+        this.capacity = capacity;
+        this.location = location;
+        this.reason = reason;
     }
 
-    // New constructor with budget, capacity, and location
-    public CustomEventRequest(User user, String eventType, LocalDate eventDate, String description, 
-                              String status, LocalDate createdDate, Double budget, Integer capacity, String location) {
-        this.user = user;
+    public CustomEventRequest(Long id, User user, String eventType, LocalDate eventDate, String description,
+                              String status, LocalDate createdDate, Double budget, Integer capacity,
+                              String location) {
+        this.id = id;
+        setUser(user);
         this.eventType = eventType;
         this.eventDate = eventDate;
         this.description = description;
-        this.status = status;
-        this.createdDate = createdDate;
+        setStatus(status);
+        setCreatedDate(createdDate);
         this.budget = budget;
         this.capacity = capacity;
         this.location = location;
     }
 
-    public CustomEventRequest(Long id, User user, String eventType, LocalDate eventDate, String description, 
-                              String status, LocalDate createdDate, Double budget, Integer capacity, String location) {
-        this.id = id;
-        this.user = user;
-        this.eventType = eventType;
-        this.eventDate = eventDate;
-        this.description = description;
-        this.status = status;
-        this.createdDate = createdDate;
-        this.budget = budget;
-        this.capacity = capacity;
-        this.location = location;
-    }
-
-    // Getters and Setters
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
 
+    public Long getUserId() { return userId; }
+    public void setUserId(Long userId) { this.userId = userId; }
+
     public User getUser() { return user; }
-    public void setUser(User user) { this.user = user; }
+    public void setUser(User user) {
+        this.user = user;
+        if (user != null) this.userId = user.getId();
+    }
 
     public String getEventType() { return eventType; }
     public void setEventType(String eventType) { this.eventType = eventType; }
@@ -109,10 +93,16 @@ public class CustomEventRequest {
     public void setDescription(String description) { this.description = description; }
 
     public String getStatus() { return status; }
-    public void setStatus(String status) { this.status = status; }
+    public void setStatus(String status) {
+        if (status == null || status.isBlank()) this.status = "pending";
+        else this.status = status;
+    }
 
     public LocalDate getCreatedDate() { return createdDate; }
-    public void setCreatedDate(LocalDate createdDate) { this.createdDate = createdDate; }
+    public void setCreatedDate(LocalDate createdDate) {
+        if (createdDate == null) this.createdDate = LocalDate.now();
+        else this.createdDate = createdDate;
+    }
 
     public Double getBudget() { return budget; }
     public void setBudget(Double budget) { this.budget = budget; }
@@ -130,7 +120,7 @@ public class CustomEventRequest {
     public String toString() {
         return "CustomEventRequest{" +
                 "id=" + id +
-                ", user=" + user +
+                ", userId=" + userId +
                 ", eventType='" + eventType + '\'' +
                 ", eventDate=" + eventDate +
                 ", description='" + description + '\'' +

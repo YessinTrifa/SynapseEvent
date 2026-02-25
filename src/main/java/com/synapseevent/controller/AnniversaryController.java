@@ -15,6 +15,16 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 
 public class AnniversaryController {
+    @FXML private TableView<AnniversaryEvent> anniversaryTable;
+    @FXML private TableColumn<AnniversaryEvent, Long> idColumn;
+    @FXML private TableColumn<AnniversaryEvent, String> nameColumn;
+    @FXML private TableColumn<AnniversaryEvent, String> dateColumn;
+    @FXML private TableColumn<AnniversaryEvent, String> descriptionColumn;
+    @FXML private TableColumn<AnniversaryEvent, String> locationColumn;
+    @FXML private TableColumn<AnniversaryEvent, String> capacityColumn;
+    @FXML private TableColumn<AnniversaryEvent, String> priceColumn;
+    @FXML private TableColumn<AnniversaryEvent, String> statusColumn;
+
     @FXML private TextField nameField;
     @FXML private DatePicker datePicker;
     @FXML private Spinner<Integer> startTimeHourSpinner;
@@ -31,6 +41,19 @@ public class AnniversaryController {
 
     @FXML
     public void initialize() {
+        idColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
+        nameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
+        dateColumn.setCellValueFactory(cellData -> new SimpleStringProperty(
+            cellData.getValue().getDate() != null ? cellData.getValue().getDate().toString() : ""));
+        descriptionColumn.setCellValueFactory(new PropertyValueFactory<>("description"));
+        locationColumn.setCellValueFactory(cellData -> new SimpleStringProperty(
+            cellData.getValue().getLocation() != null ? cellData.getValue().getLocation() : ""));
+        capacityColumn.setCellValueFactory(cellData -> new SimpleStringProperty(
+            cellData.getValue().getCapacity() != null ? cellData.getValue().getCapacity().toString() : ""));
+        priceColumn.setCellValueFactory(cellData -> new SimpleStringProperty(
+            cellData.getValue().getPrice() != null ? cellData.getValue().getPrice().toString() + " TND" : ""));
+        statusColumn.setCellValueFactory(new PropertyValueFactory<>("status"));
+
         // Set status ComboBox items programmatically
         ObservableList<String> statuses = FXCollections.observableArrayList("draft", "published", "cancelled");
         statusComboBox.setItems(statuses);
@@ -44,6 +67,8 @@ public class AnniversaryController {
         // Load venues and set up filter listener
         loadVenues();
         venueTypeFilterComboBox.setOnAction(e -> filterVenuesByType());
+
+        loadData();
     }
 
     private void loadVenues() {
@@ -68,7 +93,11 @@ public class AnniversaryController {
     }
 
     private void loadData() {
-        // No table to load data into in anniversary.fxml
+        try {
+            anniversaryTable.setItems(FXCollections.observableArrayList(anniversaryEventService.readAll()));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @FXML
@@ -99,27 +128,103 @@ public class AnniversaryController {
 
     @FXML
     private void updateAnniversaryEvent() {
-        // No table to get selected item from in anniversary.fxml
+        AnniversaryEvent selected = anniversaryTable.getSelectionModel().getSelectedItem();
+        if (selected != null) {
+            selected.setName(nameField.getText());
+            selected.setDate(datePicker.getValue());
+            selected.setStartTime(LocalTime.of(startTimeHourSpinner.getValue(), 0));
+            selected.setEndTime(LocalTime.of(endTimeHourSpinner.getValue(), 0));
+            Venue selectedVenue = venueComboBox.getValue();
+            selected.setLocation(selectedVenue != null ? selectedVenue.getName() : "");
+            selected.setCapacity(capacitySpinner.getValue());
+            selected.setPrice(priceSpinner.getValue());
+            selected.setDescription(descriptionField.getText());
+            if (statusComboBox.getValue() != null) {
+                selected.setStatus(statusComboBox.getValue());
+            }
+
+            try {
+                anniversaryEventService.modifier(selected);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            loadData();
+        }
     }
 
     @FXML
     private void deleteAnniversaryEvent() {
-        // No table to get selected item from in anniversary.fxml
+        AnniversaryEvent selected = anniversaryTable.getSelectionModel().getSelectedItem();
+        if (selected != null) {
+            try {
+                anniversaryEventService.supprimer(selected);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            loadData();
+        }
     }
 
     @FXML
     private void publishEvent() {
-        // No table to get selected item from in anniversary.fxml
+        AnniversaryEvent selected = anniversaryTable.getSelectionModel().getSelectedItem();
+        if (selected != null) {
+            selected.setStatus("published");
+            try {
+                anniversaryEventService.modifier(selected);
+                loadData();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     @FXML
     private void saveAsDraft() {
-        // No table to get selected item from in anniversary.fxml
+        AnniversaryEvent selected = anniversaryTable.getSelectionModel().getSelectedItem();
+        if (selected != null) {
+            selected.setStatus("draft");
+            try {
+                anniversaryEventService.modifier(selected);
+                loadData();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     @FXML
     private void selectAnniversaryEvent() {
-        // No table to get selected item from in anniversary.fxml
+        AnniversaryEvent selected = anniversaryTable.getSelectionModel().getSelectedItem();
+        if (selected != null) {
+            nameField.setText(selected.getName());
+            datePicker.setValue(selected.getDate());
+
+            if (selected.getStartTime() != null) {
+                startTimeHourSpinner.getValueFactory().setValue(selected.getStartTime().getHour());
+            }
+            if (selected.getEndTime() != null) {
+                endTimeHourSpinner.getValueFactory().setValue(selected.getEndTime().getHour());
+            }
+
+            // Try to find and select the venue in the combo box
+            if (selected.getLocation() != null) {
+                for (Venue venue : venueComboBox.getItems()) {
+                    if (venue.getName().equals(selected.getLocation())) {
+                        venueComboBox.setValue(venue);
+                        break;
+                    }
+                }
+            }
+            if (selected.getCapacity() != null) {
+                capacitySpinner.getValueFactory().setValue(selected.getCapacity());
+            }
+            if (selected.getPrice() != null) {
+                priceSpinner.getValueFactory().setValue(selected.getPrice());
+            }
+            statusComboBox.setValue(selected.getStatus());
+            descriptionField.setText(selected.getDescription());
+        }
     }
 
     private void clearFields() {

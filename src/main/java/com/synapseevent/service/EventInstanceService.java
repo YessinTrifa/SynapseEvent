@@ -10,10 +10,11 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 
 public class EventInstanceService implements IService<EventInstance> {
-    private Connection conn = MaConnection.getInstance().getConnection();
+    private final MaConnection db = MaConnection.getInstance();
 
     @Override
     public boolean ajouter(EventInstance eventInstance) throws SQLException {
+        Connection conn = db.requireConnection();
         String sql = "INSERT INTO event_instance (name, date, start_time, end_time, location, capacity, price, organizer, description, status, type) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         try (PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             stmt.setString(1, eventInstance.getName());
@@ -57,6 +58,7 @@ public class EventInstanceService implements IService<EventInstance> {
 
     @Override
     public List<EventInstance> readAll() throws SQLException {
+        Connection conn = db.requireConnection();
         List<EventInstance> instances = new ArrayList<>();
         String sql = "SELECT * FROM event_instance";
         try (Statement stmt = conn.createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
@@ -86,6 +88,7 @@ public class EventInstanceService implements IService<EventInstance> {
 
     @Override
     public EventInstance findbyId(Long id) throws SQLException {
+        Connection conn = db.requireConnection();
         String sql = "SELECT * FROM event_instance WHERE id = ?";
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setLong(1, id);
@@ -115,6 +118,7 @@ public class EventInstanceService implements IService<EventInstance> {
 
     @Override
     public boolean modifier(EventInstance eventInstance) throws SQLException {
+        Connection conn = db.requireConnection();
         String sql = "UPDATE event_instance SET name = ?, date = ?, start_time = ?, end_time = ?, location = ?, capacity = ?, price = ?, organizer = ?, description = ?, status = ?, type = ? WHERE id = ?";
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, eventInstance.getName());
@@ -155,6 +159,7 @@ public class EventInstanceService implements IService<EventInstance> {
 
     @Override
     public boolean supprimer(EventInstance eventInstance) throws SQLException {
+        Connection conn = db.requireConnection();
         if (eventInstance.getId() != null) {
             String sql = "DELETE FROM event_instance WHERE id = ?";
             try (PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -170,6 +175,7 @@ public class EventInstanceService implements IService<EventInstance> {
     }
 
     public List<EventInstance> findByType(String type) throws SQLException {
+        Connection conn = db.requireConnection();
         List<EventInstance> instances = new ArrayList<>();
         String sql = "SELECT * FROM event_instance WHERE type = ?";
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -200,6 +206,7 @@ public class EventInstanceService implements IService<EventInstance> {
     }
 
     public List<EventInstance> getPublishedEvents() throws SQLException {
+        Connection conn = db.requireConnection();
         List<EventInstance> instances = new ArrayList<>();
         String sql = "SELECT * FROM event_instance WHERE status = 'published'";
         try (Statement stmt = conn.createStatement(); ResultSet rs = stmt.executeQuery(sql)) {

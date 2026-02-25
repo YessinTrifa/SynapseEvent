@@ -2,57 +2,50 @@ package com.synapseevent.entities;
 
 import java.time.LocalDate;
 
-import jakarta.persistence.*;
-
-@Entity
-@Table(name = "bookings")
 public class Booking {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-    
-    @ManyToOne
-    @JoinColumn(name = "user_id")
-    private User user;
-    
-    @Column(name = "eventType")
-    private String eventType;
-    
-    @Column(name = "eventId")
-    private Long eventId;
-    
-    @Column(name = "bookingDate")
-    private LocalDate bookingDate;
-    
-    @Column(name = "status")
-    private String status;
 
-    // Constructors
+    private Long id;
+
+    private Long userId;
+    private User user;
+
+    private String eventType;
+    private Long eventId;
+
+    private LocalDate bookingDate;
+
+    private String status = "pending";
+
     public Booking() {}
 
-    public Booking(User user, String eventType, Long eventId, LocalDate bookingDate, String status) {
-        this.user = user;
+    public Booking(Long userId, String eventType, Long eventId, LocalDate bookingDate, String status) {
+        this.userId = userId;
         this.eventType = eventType;
         this.eventId = eventId;
         this.bookingDate = bookingDate;
-        this.status = status;
+        setStatus(status);
     }
 
-    public Booking(Long id, User user, String eventType, Long eventId, LocalDate bookingDate, String status) {
+    public Booking(Long id, Long userId, String eventType, Long eventId, LocalDate bookingDate, String status) {
         this.id = id;
-        this.user = user;
+        this.userId = userId;
         this.eventType = eventType;
         this.eventId = eventId;
         this.bookingDate = bookingDate;
-        this.status = status;
+        setStatus(status);
     }
 
-    // Getters and Setters
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
 
+    public Long getUserId() { return userId; }
+    public void setUserId(Long userId) { this.userId = userId; }
+
     public User getUser() { return user; }
-    public void setUser(User user) { this.user = user; }
+    public void setUser(User user) {
+        this.user = user;
+        if (user != null) this.userId = user.getId();
+    }
 
     public String getEventType() { return eventType; }
     public void setEventType(String eventType) { this.eventType = eventType; }
@@ -64,13 +57,16 @@ public class Booking {
     public void setBookingDate(LocalDate bookingDate) { this.bookingDate = bookingDate; }
 
     public String getStatus() { return status; }
-    public void setStatus(String status) { this.status = status; }
+    public void setStatus(String status) {
+        if (status == null || status.isBlank()) this.status = "pending";
+        else this.status = status;
+    }
 
     @Override
     public String toString() {
         return "Booking{" +
                 "id=" + id +
-                ", user=" + user +
+                ", userId=" + userId +
                 ", eventType='" + eventType + '\'' +
                 ", eventId=" + eventId +
                 ", bookingDate=" + bookingDate +

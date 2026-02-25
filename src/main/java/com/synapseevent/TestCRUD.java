@@ -6,57 +6,67 @@ import com.synapseevent.entities.User;
 import com.synapseevent.service.RoleService;
 import com.synapseevent.service.EntrepriseService;
 import com.synapseevent.service.UserService;
+
 import java.sql.SQLException;
 
 public class TestCRUD {
     public static void main(String[] args) {
-        // Test Role CRUD
+
         RoleService roleService = new RoleService();
-        Role role = new Role("TestRole");
-        roleService.add(role);
-        System.out.println("Added Role: " + role.getName());
-
-        // Test Entreprise CRUD
         EntrepriseService entrepriseService = new EntrepriseService();
-        Entreprise entreprise = new Entreprise("TestEntreprise", "123456789");
-        entrepriseService.add(entreprise);
-        System.out.println("Added Entreprise: " + entreprise.getNom());
-
-        // Test User CRUD
         UserService userService = new UserService();
-        User user = new User("test@example.com", "TestNom", "TestPrenom", role, entreprise);
-        try {
-            boolean added = userService.ajouter(user);
-            System.out.println("Added User: " + added + " - " + user.getNom() + " " + user.getPrenom());
 
-            // Find by ID
+        try {
+            Role role = new Role("TestRole");
+            roleService.add(role);
+            System.out.println("Added Role: " + role.getName() + " id=" + role.getId());
+
+            Entreprise entreprise = new Entreprise("TestEntreprise", "123456789");
+            entrepriseService.add(entreprise);
+            System.out.println("Added Entreprise: " + entreprise.getNom() + " id=" + entreprise.getId());
+
+            User user = new User(
+                    "test@example.com",
+                    "TestPassword123",
+                    "TestNom",
+                    "TestPrenom",
+                    "22112233",
+                    "Tunis",
+                    null,
+                    role.getId(),
+                    entreprise.getId()
+            );
+            user.setRole(role);
+            user.setEnterprise(entreprise);
+
+            boolean added = userService.ajouter(user);
+            System.out.println("Added User: " + added + " id=" + user.getId() + " - " + user.getNom() + " " + user.getPrenom());
+
             User found = userService.findbyId(user.getId());
             System.out.println("Found User: " + (found != null ? found.getNom() + " " + found.getPrenom() : "Not found"));
 
-            // Update user
             user.setNom("UpdatedNom");
             boolean updated = userService.modifier(user);
             System.out.println("Updated User: " + updated + " - " + user.getNom() + " " + user.getPrenom());
 
-            // List all users
             System.out.println("All Users:");
             for (User u : userService.readAll()) {
-                System.out.println(u.getNom() + " " + u.getPrenom());
+                System.out.println(u.getId() + " | " + u.getNom() + " " + u.getPrenom() + " | " + u.getEmail());
             }
 
-            // Delete user
             boolean deleted = userService.supprimer(user);
             System.out.println("Deleted User: " + deleted);
 
-            // List all users after delete
             System.out.println("All Users after delete:");
             for (User u : userService.readAll()) {
-                System.out.println(u.getNom() + " " + u.getPrenom());
+                System.out.println(u.getId() + " | " + u.getNom() + " " + u.getPrenom() + " | " + u.getEmail());
             }
-        } catch (SQLException e) {
-            System.out.println(e);
-        }
 
-        System.out.println("CRUD test completed successfully!");
+            System.out.println("CRUD test completed successfully!");
+
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+            e.printStackTrace();
+        }
     }
 }

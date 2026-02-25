@@ -6,71 +6,83 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.PasswordField?>
 <?import javafx.scene.control.RadioButton?>
+<?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.control.ToggleGroup?>
-<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.paint.Color?>
 <?import javafx.scene.paint.LinearGradient?>
 <?import javafx.scene.paint.Stop?>
 
-<AnchorPane style="-fx-background-color: linear-gradient(to bottom right, #0f172a, #1e293b);;" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.synapseevent.controller.RegisterController">
-   <children>
-      <VBox alignment="CENTER" spacing="12.0" style="-fx-padding: 20; -fx-background-color: linear-gradient(to bottom, #0f172a, #111827); -fx-background-radius: 18; -fx-border-radius: 18; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.35), 24, 0, 0, 10);">
-          <Label style="-fx-font-size: 26; -fx-font-weight: 800;;" text="Create New Account">
-            <textFill>
-               <LinearGradient endX="1.0" endY="1.0">
-                  <stops>
-                     <Stop>
-                        <color>
-                           <Color red="0.24475634098052979" green="0.6200493574142456" blue="0.7684210538864136" />
-                        </color>
-                     </Stop>
-                     <Stop offset="1.0">
-                        <color>
-                           <Color red="1.0" green="1.0" blue="1.0" />
-                        </color>
-                     </Stop>
-                  </stops>
-               </LinearGradient>
-            </textFill>
-         </Label>
-          
-                      <TextField fx:id="nomField" maxWidth="360.0" prefWidth="40.0" promptText="Last Name" style="-fx-background-radius: 12;; -fx-border-radius: 12;; -fx-border-color: rgba(255,255,255,0.18);; -fx-background-color: rgba(255,255,255,0.95);; -fx-padding: 10 12;; -fx-font-size: 12;;" />
-          <TextField fx:id="prenomField" promptText="First Name" style="-fx-background-color: rgba(255,255,255,0.95); -fx-background-radius: 12; -fx-border-color: rgba(255,255,255,0.18); -fx-padding: 10 12; -fx-font-size: 12; -fx-border-radius: 12;;" />
-          <TextField fx:id="emailField" promptText="Email" style="-fx-background-color: rgba(255,255,255,0.95); -fx-border-color: rgba(255,255,255,0.18); -fx-padding: 10 12; -fx-font-size: 12; -fx-border-radius: 12; -fx-background-radius: 12;;" />
-          <PasswordField fx:id="passwordField" promptText="Password" style="-fx-background-radius: 12;; -fx-border-radius: 12;; -fx-padding: 10 12;; -fx-font-size: 12;; -fx-border-color: rgba(255,255,255,0.18);; -fx-background-color: rgba(255,255,255,0.95);;" />
-          <PasswordField fx:id="confirmPasswordField" promptText="Confirm Password" style="-fx-background-radius: 12;; -fx-border-radius: 12;; -fx-padding: 10 12;; -fx-font-size: 12;; -fx-border-color: rgba(255,255,255,0.18);; -fx-background-color: rgba(255,255,255,0.95);;" />
-          <TextField fx:id="phoneField" promptText="Phone (optional)" style="-fx-background-color: rgba(255,255,255,0.95); -fx-border-color: rgba(255,255,255,0.18); -fx-border-radius: 12; -fx-background-radius: 12; -fx-padding: 10 12; -fx-font-size: 12;" />
-          <TextField fx:id="addressField" promptText="Address (optional)" style="-fx-border-color: rgba(255,255,255,0.18);; -fx-background-color: rgba(255,255,255,0.95);; -fx-font-size: 12;; -fx-border-radius: 12;; -fx-background-radius: 12;; -fx-padding: 10 12;;" />
-          
-                      <!-- Enterprise Section -->
-          <Label style="-fx-font-size: 14; -fx-font-weight: 700;; -fx-text-fill: rgba(255,255,255,0.75);;" text="Enterprise Information" textFill="WHITE" />
-         <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" spacing="10.0" style="-fx-background-color: rgba(255,255,255,0.06); -fx-background-radius: 14;; -fx-border-radius: 14;; -fx-border-color: rgba(255,255,255,0.10);; -fx-padding: 14;;">
-            <children>
-                
-                            <RadioButton fx:id="existingEnterpriseRadio" onAction="#onExistingEnterpriseSelected" selected="true" text="Select Existing Enterprise" textFill="#fafafa">
-                    <toggleGroup>
-                        <ToggleGroup fx:id="enterpriseToggle" />
-                    </toggleGroup>
-                </RadioButton>
-                
-                            <ComboBox fx:id="entrepriseCombo" maxWidth="260.0" prefHeight="40.0" promptText="Select Enterprise" style="-fx-border-radius: 12;; -fx-background-radius: 12;; -fx-border-color: rgba(255,255,255,0.18);; -fx-background-color: rgba(255,255,255,0.95);;" />
-            </children>
-         </VBox>
-          
-                      <RadioButton fx:id="newEnterpriseRadio" onAction="#onNewEnterpriseSelected" text="Create New Enterprise" textFill="WHITE" toggleGroup="$enterpriseToggle" />
-          
-                      <TextField fx:id="entrepriseNameField" promptText="Enterprise Name" visible="false" />
-          <TextField fx:id="entrepriseSiretField" promptText="SIRET Number" visible="false" />
-          
-                      <Button defaultButton="true" onAction="#registerUser" prefHeight="42.0" prefWidth="220.0" style="-fx-background-color: #010048; -fx-text-fill: white;; -fx-font-weight: 800;; -fx-background-radius: 12;;" text="Register" />
-          <Button onAction="#goToLogin" style="-fx-background-color: transparent; -fx-text-fill: #60a5fa;; -fx-font-weight: 700;; -fx-underline: true;;" text="Back to Login" textFill="WHITE" />
-          
-                      <Label fx:id="messageLabel" />
-         <padding>
-            <Insets bottom="26.0" left="26.0" right="26.0" top="26.0" />
-         </padding>
-      </VBox>
+<StackPane style="-fx-background-color: linear-gradient(to bottom right, #0f172a, #1e293b);"
+           xmlns="http://javafx.com/javafx/17"
+           xmlns:fx="http://javafx.com/fxml/1"
+           fx:controller="com.synapseevent.controller.RegisterController">
+    <children>
+      <ScrollPane fitToWidth="true" style="-fx-background-color: transparent; -fx-border-color: transparent; -fx-padding: 0;">
+         <content>
+            <StackPane alignment="TOP_CENTER" prefHeight="836.0" prefWidth="600.0" style="-fx-background-color: transparent;">
+               <children>
+                  <VBox alignment="CENTER" maxWidth="600.0" prefWidth="600.0" spacing="12.0" style="-fx-padding: 20; -fx-background-color: linear-gradient(to bottom, #0f172a, #111827); -fx-background-radius: 18; -fx-border-radius: 18; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.35), 24, 0, 0, 10);">
+                      <Label style="-fx-font-size: 26; -fx-font-weight: 800;;" text="Create New Account">
+                        <textFill>
+                           <LinearGradient endX="1.0" endY="1.0">
+                              <stops>
+                                 <Stop>
+                                    <color>
+                                       <Color red="0.24475634098052979" green="0.6200493574142456" blue="0.7684210538864136" />
+                                    </color>
+                                 </Stop>
+                                 <Stop offset="1.0">
+                                    <color>
+                                       <Color red="1.0" green="1.0" blue="1.0" />
+                                    </color>
+                                 </Stop>
+                              </stops>
+                           </LinearGradient>
+                        </textFill>
+                     </Label>
+                      
+                                              <TextField fx:id="nomField" maxWidth="561.0" prefHeight="40.0" prefWidth="561.0" promptText="Last Name" style="-fx-background-radius: 12;; -fx-border-radius: 12;; -fx-border-color: rgba(255,255,255,0.18);; -fx-background-color: rgba(255,255,255,0.95);; -fx-padding: 10 12;; -fx-font-size: 12;;" />
+                      <TextField fx:id="prenomField" promptText="First Name" style="-fx-background-color: rgba(255,255,255,0.95); -fx-background-radius: 12; -fx-border-color: rgba(255,255,255,0.18); -fx-padding: 10 12; -fx-font-size: 12; -fx-border-radius: 12;;" />
+                      <TextField fx:id="emailField" promptText="Email" style="-fx-background-color: rgba(255,255,255,0.95); -fx-border-color: rgba(255,255,255,0.18); -fx-padding: 10 12; -fx-font-size: 12; -fx-border-radius: 12; -fx-background-radius: 12;;" />
+                      <PasswordField fx:id="passwordField" promptText="Password" style="-fx-background-radius: 12;; -fx-border-radius: 12;; -fx-padding: 10 12;; -fx-font-size: 12;; -fx-border-color: rgba(255,255,255,0.18);; -fx-background-color: rgba(255,255,255,0.95);;" />
+                      <PasswordField fx:id="confirmPasswordField" promptText="Confirm Password" style="-fx-background-radius: 12;; -fx-border-radius: 12;; -fx-padding: 10 12;; -fx-font-size: 12;; -fx-border-color: rgba(255,255,255,0.18);; -fx-background-color: rgba(255,255,255,0.95);;" />
+                      <TextField fx:id="phoneField" promptText="Phone (optional)" style="-fx-background-color: rgba(255,255,255,0.95); -fx-border-color: rgba(255,255,255,0.18); -fx-border-radius: 12; -fx-background-radius: 12; -fx-padding: 10 12; -fx-font-size: 12;" />
+                      <TextField fx:id="addressField" promptText="Address (optional)" style="-fx-border-color: rgba(255,255,255,0.18);; -fx-background-color: rgba(255,255,255,0.95);; -fx-font-size: 12;; -fx-border-radius: 12;; -fx-background-radius: 12;; -fx-padding: 10 12;;" />
+                      
+                                        <!-- Enterprise Section -->
+                      <Label style="-fx-font-size: 14; -fx-font-weight: 700;; -fx-text-fill: rgba(255,255,255,0.75);;" text="Enterprise Information" textFill="WHITE" />
+                     <VBox alignment="CENTER" prefHeight="152.0" prefWidth="549.0" spacing="10.0" style="-fx-background-color: rgba(255,255,255,0.06); -fx-background-radius: 14;; -fx-border-radius: 14;; -fx-border-color: rgba(255,255,255,0.10);; -fx-padding: 14;;">
+                        <children>
+                            
+                                              <RadioButton fx:id="existingEnterpriseRadio" onAction="#onExistingEnterpriseSelected" selected="true" text="Select Existing Enterprise" textFill="#fafafa">
+                                <toggleGroup>
+                                    <ToggleGroup fx:id="enterpriseToggle" />
+                                </toggleGroup>
+                            </RadioButton>
+                            
+                                              <ComboBox fx:id="entrepriseCombo" maxWidth="260.0" prefHeight="40.0" promptText="Select Enterprise" style="-fx-border-radius: 12;; -fx-background-radius: 12;; -fx-border-color: rgba(255,255,255,0.18);; -fx-background-color: rgba(255,255,255,0.95);;" />
+                        </children>
+                     </VBox>
+                      
+                                        <RadioButton fx:id="newEnterpriseRadio" onAction="#onNewEnterpriseSelected" text="Create New Enterprise" textFill="WHITE" toggleGroup="$enterpriseToggle" />
+                      
+                                        <TextField fx:id="entrepriseNameField" promptText="Enterprise Name" visible="false" />
+                      
+                                        <Button defaultButton="true" onAction="#registerUser" prefHeight="42.0" prefWidth="220.0" style="-fx-background-color: #010048; -fx-text-fill: white;; -fx-font-weight: 800;; -fx-background-radius: 12;;" text="Register" />
+                      <TextField fx:id="entrepriseSiretField" promptText="SIRET Number" visible="false" />
+                      <Button onAction="#goToLogin" style="-fx-background-color: transparent; -fx-text-fill: #60a5fa;; -fx-font-weight: 700;; -fx-underline: true;;" text="Back to Login" textFill="WHITE" />
+                      
+                                        <Label fx:id="messageLabel" />
+                     <padding>
+                        <Insets bottom="26.0" left="26.0" right="26.0" top="26.0" />
+                     </padding>
+                  </VBox>
+               </children>
+            </StackPane>
+         </content>
+      </ScrollPane>
    </children>
-</AnchorPane>
+</StackPane>
