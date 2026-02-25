@@ -1,15 +1,41 @@
 package com.synapseevent.entities;
 
+import jakarta.persistence.*;
+
+@Entity
+@Table(name = "users")
 public class User {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    
+    @Column(name = "email", unique = true)
     private String email;
+    
+    @Column(name = "password")
     private String password;
+    
+    @Column(name = "nom")
     private String nom;
+    
+    @Column(name = "prenom")
     private String prenom;
+    
+    @Column(name = "phone")
     private String phone;
+    
+    @Column(name = "address")
     private String address;
+    
+    @Column(name = "profilePicture")
     private String profilePicture;
+    
+    @ManyToOne
+    @JoinColumn(name = "role_id")
     private Role role;
+    
+    @ManyToOne
+    @JoinColumn(name = "entreprise_id")
     private Entreprise enterprise;
 
     // Constructors

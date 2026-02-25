@@ -32,9 +32,12 @@ public class PaddleController {
     @FXML private ComboBox<String> venueTypeFilterComboBox;
     @FXML private ComboBox<Venue> venueComboBox;
     @FXML private Spinner<Integer> capacitySpinner;
+    @FXML private Spinner<Integer> reservationSpinner;
     @FXML private Spinner<Double> priceSpinner;
     @FXML private ComboBox<String> statusComboBox;
     @FXML private TextArea descriptionField;
+    @FXML private TextField mapField;
+    @FXML private CheckBox disponibiliteCheckBox;
 
     private PaddleEventService paddleEventService = new PaddleEventService();
     private VenueService venueService = new VenueService();
@@ -67,6 +70,13 @@ public class PaddleController {
         // Load venues and set up filter listener
         loadVenues();
         venueTypeFilterComboBox.setOnAction(e -> filterVenuesByType());
+        
+        // Add table selection listener to load event data when selected
+        paddleTable.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
+            if (newVal != null) {
+                selectPaddleEvent();
+            }
+        });
 
         loadData();
     }
@@ -108,14 +118,17 @@ public class PaddleController {
         LocalTime endTime = LocalTime.of(endTimeHourSpinner.getValue(), 0);
         Venue selectedVenue = venueComboBox.getValue();
         String location = selectedVenue != null ? selectedVenue.getName() : "";
+        String map = mapField.getText();
         Integer capacity = capacitySpinner.getValue();
+        Integer reservation = reservationSpinner.getValue();
         Double price = priceSpinner.getValue();
+        Boolean disponibilite = disponibiliteCheckBox.isSelected();
         String description = descriptionField.getText();
         String status = statusComboBox.getValue() != null ? statusComboBox.getValue() : "draft";
 
         if (name != null && !name.isEmpty() && date != null) {
             PaddleEvent event = new PaddleEvent(name, date, startTime, endTime,
-                location, capacity, price, "admin@synapse.com", description, status);
+                location, map, capacity, reservation, price, disponibilite, "admin@synapse.com", description, status);
             try {
                 paddleEventService.ajouter(event);
             } catch (Exception e) {
@@ -136,8 +149,11 @@ public class PaddleController {
             selected.setEndTime(LocalTime.of(endTimeHourSpinner.getValue(), 0));
             Venue selectedVenue = venueComboBox.getValue();
             selected.setLocation(selectedVenue != null ? selectedVenue.getName() : "");
+            selected.setMap(mapField.getText());
             selected.setCapacity(capacitySpinner.getValue());
+            selected.setReservation(reservationSpinner.getValue());
             selected.setPrice(priceSpinner.getValue());
+            selected.setDisponibilite(disponibiliteCheckBox.isSelected());
             selected.setDescription(descriptionField.getText());
             if (statusComboBox.getValue() != null) {
                 selected.setStatus(statusComboBox.getValue());
@@ -216,17 +232,41 @@ public class PaddleController {
                     }
                 }
             }
+            
+            // Set map field
+            if (selected.getMap() != null) {
+                mapField.setText(selected.getMap());
+            } else {
+                mapField.clear();
+            }
+            
+            // Set capacity and reservation
             if (selected.getCapacity() != null) {
                 capacitySpinner.getValueFactory().setValue(selected.getCapacity());
             }
+            if (selected.getReservation() != null) {
+                reservationSpinner.getValueFactory().setValue(selected.getReservation());
+            }
+            
+            // Set price
             if (selected.getPrice() != null) {
                 priceSpinner.getValueFactory().setValue(selected.getPrice());
             }
+            
+            // Set disponibilite
+            if (selected.getDisponibilite() != null) {
+                disponibiliteCheckBox.setSelected(selected.getDisponibilite());
+            } else {
+                disponibiliteCheckBox.setSelected(true);
+            }
+            
+            // Set status and description
             statusComboBox.setValue(selected.getStatus());
             descriptionField.setText(selected.getDescription());
         }
     }
 
+    @FXML
     private void clearFields() {
         nameField.clear();
         datePicker.setValue(null);
@@ -234,10 +274,12 @@ public class PaddleController {
         endTimeHourSpinner.getValueFactory().setValue(17);
         venueComboBox.setValue(null);
         venueTypeFilterComboBox.setValue("All");
+        mapField.clear();
         capacitySpinner.getValueFactory().setValue(20);
+        reservationSpinner.getValueFactory().setValue(0);
         priceSpinner.getValueFactory().setValue(0.0);
         statusComboBox.setValue("draft");
         descriptionField.clear();
-
+        disponibiliteCheckBox.setSelected(true);
     }
 }

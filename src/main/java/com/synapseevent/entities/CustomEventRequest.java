@@ -2,17 +2,44 @@ package com.synapseevent.entities;
 
 import java.time.LocalDate;
 
+import jakarta.persistence.*;
+
+@Entity
+@Table(name = "custom_event_requests")
 public class CustomEventRequest {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    
+    @ManyToOne
+    @JoinColumn(name = "user_id")
     private User user;
+    
+    @Column(name = "eventType")
     private String eventType;
+    
+    @Column(name = "eventDate")
     private LocalDate eventDate;
+    
+    @Column(name = "description", columnDefinition = "TEXT")
     private String description;
+    
+    @Column(name = "status")
     private String status;
+    
+    @Column(name = "createdDate")
     private LocalDate createdDate;
+    
+    @Column(name = "budget")
     private Double budget;
+    
+    @Column(name = "capacity")
     private Integer capacity;
+    
+    @Column(name = "location")
     private String location;
+    
+    @Column(name = "reason")
     private String reason; // For denial reason
 
     // Constructors

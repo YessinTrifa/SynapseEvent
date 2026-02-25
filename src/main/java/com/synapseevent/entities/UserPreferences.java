@@ -1,11 +1,27 @@
 package com.synapseevent.entities;
 
+import jakarta.persistence.*;
+
+@Entity
+@Table(name = "user_preferences")
 public class UserPreferences {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    
+    @Column(name = "userId")
     private Long userId;
+    
+    @Column(name = "preferredCategories")
     private String preferredCategories; // comma-separated
+    
+    @Column(name = "preferredLocations")
     private String preferredLocations;
+    
+    @Column(name = "maxPrice")
     private Double maxPrice;
+    
+    @Column(name = "minRating")
     private Integer minRating;
 
     // Constructors

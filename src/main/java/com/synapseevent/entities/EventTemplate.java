@@ -2,16 +2,40 @@ package com.synapseevent.entities;
 
 import java.time.LocalTime;
 
+import jakarta.persistence.*;
+
+@Entity
+@Table(name = "event_templates")
 public class EventTemplate {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    
+    @Column(name = "name")
     private String name;
+    
+    @Column(name = "eventType")
     private String eventType;
+    
+    @Column(name = "defaultStartTime")
     private LocalTime defaultStartTime;
+    
+    @Column(name = "defaultEndTime")
     private LocalTime defaultEndTime;
+    
+    @Column(name = "defaultCapacity")
     private Integer defaultCapacity;
+    
+    @Column(name = "defaultPrice")
     private Double defaultPrice;
+    
+    @Column(name = "defaultCategory")
     private String defaultCategory;
+    
+    @Column(name = "defaultDescription", columnDefinition = "TEXT")
     private String defaultDescription;
+    
+    @Column(name = "templateDescription", columnDefinition = "TEXT")
     private String templateDescription;
 
     // Constructors

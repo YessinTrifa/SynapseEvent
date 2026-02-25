@@ -3,19 +3,49 @@ package com.synapseevent.entities;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
+import jakarta.persistence.*;
+
+@Entity
+@Table(name = "anniversary_events")
 public class AnniversaryEvent {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    
+    @Column(name = "name")
     private String name;
+    
+    @Column(name = "date")
     private LocalDate date;
+    
+    @Column(name = "startTime")
     private LocalTime startTime;
+    
+    @Column(name = "endTime")
     private LocalTime endTime;
+    
+    @Column(name = "location")
     private String location;
+    
+    @Column(name = "capacity")
     private Integer capacity;
+    
+    @Column(name = "price")
     private Double price;
+    
+    @Column(name = "organizer")
     private String organizer;
+    
+    @Column(name = "category")
     private String category;
+    
+    @Column(name = "description", columnDefinition = "TEXT")
     private String description;
+    
+    @Column(name = "status")
     private String status = "draft";
+    
+    @Column(name = "type")
     private String type = "Anniversary";
     
     // Constructors

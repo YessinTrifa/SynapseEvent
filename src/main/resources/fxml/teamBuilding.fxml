@@ -1,59 +1,73 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<VBox xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.synapseevent.controller.TeamBuildingController">
-    <TableView fx:id="teamBuildingTable" onMouseClicked="#selectTeamBuildingEvent">
-        <columns>
-            <TableColumn fx:id="idColumn" text="ID" />
-            <TableColumn fx:id="nameColumn" text="Name" />
-            <TableColumn fx:id="dateColumn" text="Date" />
-            <TableColumn fx:id="descriptionColumn" text="Description" />
-            <TableColumn fx:id="locationColumn" text="Location" />
-            <TableColumn fx:id="capacityColumn" text="Capacity" />
-            <TableColumn fx:id="priceColumn" text="Price" />
-            <TableColumn fx:id="statusColumn" text="Status" />
-        </columns>
-    </TableView>
-
-    <GridPane hgap="10" vgap="10">
-        <Label text="Name:" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
-        <TextField fx:id="nameField" promptText="Name" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
-
-        <Label text="Date:" GridPane.columnIndex="2" GridPane.rowIndex="0"/>
-        <DatePicker fx:id="datePicker" promptText="Date" GridPane.columnIndex="3" GridPane.rowIndex="0"/>
-
-        <Label text="Start Time:" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
-        <Spinner fx:id="startTimeHourSpinner" promptText="HH" GridPane.columnIndex="1" GridPane.rowIndex="1" min="0" max="23" initialValue="9"/>
-
-        <Label text="End Time:" GridPane.columnIndex="2" GridPane.rowIndex="1"/>
-        <Spinner fx:id="endTimeHourSpinner" promptText="HH" GridPane.columnIndex="3" GridPane.rowIndex="1" min="0" max="23" initialValue="17"/>
-
-        <Label text="Venue Type:" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
-        <ComboBox fx:id="venueTypeFilterComboBox" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
-
-        <Label text="Venue:" GridPane.columnIndex="2" GridPane.rowIndex="2"/>
-        <ComboBox fx:id="venueComboBox" GridPane.columnIndex="3" GridPane.rowIndex="2"/>
-
-        <Label text="Capacity:" GridPane.columnIndex="0" GridPane.rowIndex="3"/>
-        <Spinner fx:id="capacitySpinner" promptText="Capacity" GridPane.columnIndex="1" GridPane.rowIndex="3" min="1" max="1000" initialValue="30"/>
-
-        <Label text="Price (TND):" GridPane.columnIndex="2" GridPane.rowIndex="3"/>
-        <Spinner fx:id="priceSpinner" promptText="Price" GridPane.columnIndex="3" GridPane.rowIndex="3" min="0" max="10000" initialValue="0" amountToStepBy="10"/>
-
-        <Label text="Status:" GridPane.columnIndex="0" GridPane.rowIndex="4"/>
-        <ComboBox fx:id="statusComboBox" GridPane.columnIndex="1" GridPane.rowIndex="4"/>
-
-        <Label text="Description:" GridPane.columnIndex="2" GridPane.rowIndex="4"/>
-        <TextArea fx:id="descriptionField" promptText="Description" wrapText="true" GridPane.columnIndex="3" GridPane.columnSpan="1" GridPane.rowIndex="5"/>
-    </GridPane>
-
-    <HBox spacing="10">
-        <Button text="Add" onAction="#addTeamBuildingEvent" />
-        <Button text="Update" onAction="#updateTeamBuildingEvent" />
-        <Button text="Delete" onAction="#deleteTeamBuildingEvent" />
-        <Button text="Publish" onAction="#publishEvent" style="-fx-background-color: #4CAF50; -fx-text-fill: white;"/>
-        <Button text="Save as Draft" onAction="#saveAsDraft" />
-    </HBox>
-</VBox>
+<BorderPane xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.synapseevent.controller.TeamBuildingController">
+    <top>
+        <VBox style="-fx-background-color: linear-gradient(to right, #059669, #10b981); -fx-padding: 15;" spacing="10">
+            <Label text="Team Building Events Management" style="-fx-text-fill: white; -fx-font-size: 24; -fx-font-weight: bold;" />
+        </VBox>
+    </top>
+    
+    <center>
+        <ScrollPane fitToHeight="true" fitToWidth="true" style="-fx-padding: 0;">
+            <VBox spacing="15" style="-fx-padding: 20;">
+                <Label text="Create/Edit Team Building Event" style="-fx-font-size: 14; -fx-font-weight: bold;" />
+                
+                <Separator />
+                
+                <!-- Basic Information -->
+                <Label text="Basic Information" style="-fx-font-size: 12; -fx-font-weight: bold; -fx-text-fill: #059669;" />
+                <GridPane hgap="10" vgap="10" style="-fx-padding: 10; -fx-border-color: #e5e7eb; -fx-border-radius: 5; -fx-border-width: 1;">
+                    <columnConstraints>
+                        <ColumnConstraints percentWidth="40" />
+                        <ColumnConstraints percentWidth="60" />
+                    </columnConstraints>
+                    
+                    <Label text="Name:" GridPane.rowIndex="0" GridPane.columnIndex="0" />
+                    <TextField fx:id="nameField" promptText="Event name" GridPane.rowIndex="0" GridPane.columnIndex="1" />
+                    
+                    <Label text="Description:" GridPane.rowIndex="1" GridPane.columnIndex="0" />
+                    <TextArea fx:id="descriptionField" wrapText="true" prefRowCount="3" GridPane.rowIndex="1" GridPane.columnIndex="1" />
+                    
+                    <Label text="Status:" GridPane.rowIndex="2" GridPane.columnIndex="0" />
+                    <ComboBox fx:id="statusComboBox" GridPane.rowIndex="2" GridPane.columnIndex="1" />
+                </GridPane>
+                
+                <Separator />
+                
+                <!-- Schedule -->
+                <Label text="Schedule" style="-fx-font-size: 12; -fx-font-weight: bold; -fx-text-fill: #059669;" />
+                <GridPane hgap="10" vgap="10" style="-fx-padding: 10; -fx-border-color: #e5e7eb; -fx-border-radius: 5; -fx-border-width: 1;">
+                    <columnConstraints>
+                        <ColumnConstraints percentWidth="40" />
+                        <ColumnConstraints percentWidth="60" />
+                    </columnConstraints>
+                    
+                    <Label text="Date:" GridPane.rowIndex="0" GridPane.columnIndex="0" />
+                    <DatePicker fx:id="datePicker" GridPane.rowIndex="0" GridPane.columnIndex="1" />
+                    
+                    <Label text="Start Time:" GridPane.rowIndex="1" GridPane.columnIndex="0" />
+                    <Spinner fx:id="startTimeSpinner" GridPane.rowIndex="1" GridPane.columnIndex="1" />
+                    
+                    <Label text="End Time:" GridPane.rowIndex="2" GridPane.columnIndex="0" />
+                    <Spinner fx:id="endTimeSpinner" GridPane.rowIndex="2" GridPane.columnIndex="1" />
+                </GridPane>
+                
+                <Separator />
+                
+                <!-- Action Buttons -->
+                <HBox spacing="10" style="-fx-padding: 10;">
+                    <Button text="Add Event" style="-fx-padding: 8 20; -fx-font-weight: bold;" />
+                    <Button text="Update" style="-fx-padding: 8 20; -fx-font-weight: bold;" />
+                    <Button text="Delete" style="-fx-padding: 8 20; -fx-font-weight: bold;" />
+                    <Button text="Clear" style="-fx-padding: 8 20; -fx-font-weight: bold;" />
+                </HBox>
+                
+                <Region VBox.vgrow="ALWAYS" />
+            </VBox>
+        </ScrollPane>
+    </center>
+</BorderPane>
