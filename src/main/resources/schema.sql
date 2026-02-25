@@ -80,10 +80,16 @@ CREATE TABLE IF NOT EXISTS AnniversaryEvent (
 CREATE TABLE IF NOT EXISTS FormationEvent (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
-    date DATE NOT NULL,
+    date DATE,
+    start_time TIME,
+    end_time TIME,
+    location VARCHAR(255),
+    capacity INT,
+    price DOUBLE,
+    organizer VARCHAR(255),
     description TEXT,
-    status VARCHAR(20) DEFAULT 'draft'
-);
+    status VARCHAR(50)
+    );
 
 -- Create PaddleEvent table
 CREATE TABLE IF NOT EXISTS PaddleEvent (
@@ -123,10 +129,16 @@ CREATE TABLE IF NOT EXISTS PartyingEvent (
 CREATE TABLE IF NOT EXISTS TeamBuildingEvent (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
-    date DATE NOT NULL,
+    date DATE,
+    start_time TIME,
+    end_time TIME,
+    location VARCHAR(255),
+    capacity INT,
+    price DOUBLE,
+    organizer VARCHAR(255),
     description TEXT,
-    status VARCHAR(20) DEFAULT 'draft'
-);
+    status VARCHAR(50)
+    );
 
 -- Create Booking table
 CREATE TABLE IF NOT EXISTS Booking (
