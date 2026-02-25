@@ -81,8 +81,9 @@ public class EventTemplate {
     public String getTemplateDescription() { return templateDescription; }
     public void setTemplateDescription(String templateDescription) { this.templateDescription = templateDescription; }
 
+
     @Override
     public String toString() {
-        return name;
+        return name + " (" + eventType + ")";
     }
 }

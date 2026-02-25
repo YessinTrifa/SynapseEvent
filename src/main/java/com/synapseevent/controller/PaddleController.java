@@ -13,8 +13,11 @@ import javafx.scene.control.cell.PropertyValueFactory;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import com.synapseevent.entities.EventTemplate;
+import java.time.LocalTime;
+import javafx.scene.control.SpinnerValueFactory;
 
-public class PaddleController {
+public class PaddleController implements TemplateAware {
     @FXML private TableView<PaddleEvent> paddleTable;
     @FXML private TableColumn<PaddleEvent, Long> idColumn;
     @FXML private TableColumn<PaddleEvent, String> nameColumn;
@@ -44,6 +47,18 @@ public class PaddleController {
 
     @FXML
     public void initialize() {
+        startTimeHourSpinner.setValueFactory(
+                new javafx.scene.control.SpinnerValueFactory.IntegerSpinnerValueFactory(0, 23, 9)
+        );
+        endTimeHourSpinner.setValueFactory(
+                new javafx.scene.control.SpinnerValueFactory.IntegerSpinnerValueFactory(0, 23, 12)
+        );
+        capacitySpinner.setValueFactory(
+                new javafx.scene.control.SpinnerValueFactory.IntegerSpinnerValueFactory(1, 10000, 20)
+        );
+        priceSpinner.setValueFactory(
+                new javafx.scene.control.SpinnerValueFactory.DoubleSpinnerValueFactory(0, 100000, 0, 1)
+        );
         idColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
         nameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
         dateColumn.setCellValueFactory(cellData -> new SimpleStringProperty(
@@ -281,5 +296,32 @@ public class PaddleController {
         statusComboBox.setValue("draft");
         descriptionField.clear();
         disponibiliteCheckBox.setSelected(true);
+    }
+    @Override
+    public void applyTemplate(EventTemplate t) {
+        if (t == null) return;
+
+        // Time -> your UI uses only HOUR spinners
+        LocalTime st = t.getDefaultStartTime();
+        LocalTime et = t.getDefaultEndTime();
+
+        if (st != null && startTimeHourSpinner.getValueFactory() != null) {
+            startTimeHourSpinner.getValueFactory().setValue(st.getHour());
+        }
+        if (et != null && endTimeHourSpinner.getValueFactory() != null) {
+            endTimeHourSpinner.getValueFactory().setValue(et.getHour());
+        }
+
+        if (t.getDefaultCapacity() != null && capacitySpinner.getValueFactory() != null) {
+            capacitySpinner.getValueFactory().setValue(t.getDefaultCapacity());
+        }
+
+        if (t.getDefaultPrice() != null && priceSpinner.getValueFactory() != null) {
+            priceSpinner.getValueFactory().setValue(t.getDefaultPrice());
+        }
+
+        if (t.getDefaultDescription() != null) {
+            descriptionField.setText(t.getDefaultDescription());
+        }
     }
 }

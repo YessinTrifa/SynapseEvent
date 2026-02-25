@@ -4,15 +4,17 @@ import com.synapseevent.entities.CustomEventRequest;
 import com.synapseevent.entities.User;
 import com.synapseevent.utils.MaConnection;
 
+import java.math.BigDecimal;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.math.BigDecimal;
 
 public class CustomEventRequestService implements IService<CustomEventRequest> {
 
     private final MaConnection db = MaConnection.getInstance();
     private final UserService userService = new UserService();
-
+    private Connection conn = MaConnection.getInstance().getConnection();
     @Override
     public boolean ajouter(CustomEventRequest request) throws SQLException {
         Connection conn = db.requireConnection();
@@ -53,44 +55,43 @@ public class CustomEventRequestService implements IService<CustomEventRequest> {
 
     @Override
     public List<CustomEventRequest> readAll() throws SQLException {
-        Connection conn = db.requireConnection();
-        List<CustomEventRequest> requests = new ArrayList<>();
+        List<CustomEventRequest> list = new ArrayList<>();
+        String sql = "SELECT * FROM custom_event_request"; // use your real table name
 
-        String sql = "SELECT * FROM CustomEventRequest";
+        try (PreparedStatement ps = conn.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
 
-        try (Statement stmt = conn.createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
             while (rs.next()) {
+                CustomEventRequest request = new CustomEventRequest(); // ✅ MUST exist
 
-                Long userId = rs.getLong("user_id");
-                if (rs.wasNull()) userId = null;
+                request.setId(rs.getLong("id"));
+                request.setEventType(rs.getString("event_type"));
+                request.setEventDate(rs.getDate("event_date") != null ? rs.getDate("event_date").toLocalDate() : null);
 
-                Double budget = (Double) rs.getObject("budget");
-                Integer capacity = (Integer) rs.getObject("capacity");
+                // ✅ Budget DECIMAL -> Double safely
+                BigDecimal bd = rs.getBigDecimal("budget");
+                request.setBudget(bd == null ? null : bd.doubleValue());
 
-                CustomEventRequest request = new CustomEventRequest(
-                        rs.getLong("id"),
-                        userId,
-                        rs.getString("event_type"),
-                        rs.getDate("event_date") != null ? rs.getDate("event_date").toLocalDate() : null,
-                        rs.getString("description"),
-                        rs.getString("status"),
-                        rs.getDate("created_date") != null ? rs.getDate("created_date").toLocalDate() : null,
-                        budget,
-                        capacity,
-                        rs.getString("location"),
-                        rs.getString("reason")
-                );
+                request.setCapacity(rs.getInt("capacity"));
+                if (rs.wasNull()) request.setCapacity(null); // only if capacity is Integer in entity
 
-                if (userId != null) {
-                    User user = userService.findbyId(userId);
-                    request.setUser(user);
+                request.setLocation(rs.getString("location"));
+                request.setDescription(rs.getString("description"));
+                request.setReason(rs.getString("reason"));
+                request.setStatus(rs.getString("status"));
+
+                // if you have user_id:
+                long userId = rs.getLong("user_id");
+                if (!rs.wasNull()) {
+                    User u = userService.findbyId(userId); // adapt to your method name
+                    request.setUser(u);
                 }
 
-                requests.add(request);
+                list.add(request);
             }
         }
 
-        return requests;
+        return list;
     }
 
     @Override
