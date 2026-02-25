@@ -8,10 +8,11 @@ import java.util.List;
 import java.sql.SQLException;
 
 public class FormationEventService implements IService<FormationEvent> {
-    private Connection conn = MaConnection.getInstance().getConnection();
+    private final MaConnection db = MaConnection.getInstance();
 
     @Override
     public boolean ajouter(FormationEvent event) throws SQLException {
+        Connection conn = db.requireConnection();
         String sql = "INSERT INTO FormationEvent (name, date, description, status) VALUES (?, ?, ?, ?)";
         try (PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             stmt.setString(1, event.getName());
@@ -32,6 +33,7 @@ public class FormationEventService implements IService<FormationEvent> {
 
     @Override
     public List<FormationEvent> readAll() throws SQLException {
+        Connection conn = db.requireConnection();
         List<FormationEvent> events = new ArrayList<>();
         String sql = "SELECT * FROM FormationEvent";
         try (Statement stmt = conn.createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
@@ -48,6 +50,7 @@ public class FormationEventService implements IService<FormationEvent> {
 
     @Override
     public FormationEvent findbyId(Long id) throws SQLException {
+        Connection conn = db.requireConnection();
         String sql = "SELECT * FROM FormationEvent WHERE id = ?";
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setLong(1, id);
@@ -64,6 +67,7 @@ public class FormationEventService implements IService<FormationEvent> {
 
     @Override
     public boolean modifier(FormationEvent event) throws SQLException {
+        Connection conn = db.requireConnection();
         String sql = "UPDATE FormationEvent SET name = ?, date = ?, description = ?, status = ? WHERE id = ?";
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, event.getName());
@@ -81,6 +85,7 @@ public class FormationEventService implements IService<FormationEvent> {
 
     @Override
     public boolean supprimer(FormationEvent event) throws SQLException {
+        Connection conn = db.requireConnection();
         if (event.getId() != null) {
             String sql = "DELETE FROM FormationEvent WHERE id = ?";
             try (PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -96,6 +101,7 @@ public class FormationEventService implements IService<FormationEvent> {
     }
 
     public List<FormationEvent> getPublishedEvents() throws SQLException {
+        Connection conn = db.requireConnection();
         List<FormationEvent> events = new ArrayList<>();
         String sql = "SELECT * FROM FormationEvent WHERE status = 'published'";
         try (Statement stmt = conn.createStatement(); ResultSet rs = stmt.executeQuery(sql)) {

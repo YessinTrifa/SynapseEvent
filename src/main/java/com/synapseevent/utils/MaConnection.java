@@ -8,25 +8,34 @@ public class MaConnection {
     private static MaConnection instance;
     private Connection connection;
 
+    private final String url = "jdbc:mysql://localhost:3306/synapse_event";
+    private final String user = "root";
+    private final String password = "";
+
     private MaConnection() {
         try {
-            String url = "jdbc:mysql://localhost:3306/synapse_event";
-            String user = "root"; // Change as needed
-            String password = ""; // Change as needed
+            // optional but helpful
+            Class.forName("com.mysql.cj.jdbc.Driver");
             connection = DriverManager.getConnection(url, user, password);
-        } catch (SQLException e) {
-            e.printStackTrace();
+        } catch (Exception e) {
+            connection = null;
+            System.err.println("DB connection failed: " + e.getMessage());
         }
     }
 
     public static MaConnection getInstance() {
-        if (instance == null) {
-            instance = new MaConnection();
-        }
+        if (instance == null) instance = new MaConnection();
         return instance;
     }
 
     public Connection getConnection() {
+        return connection;
+    }
+
+    public Connection requireConnection() throws SQLException {
+        if (connection == null) {
+            throw new SQLException("Database connection unavailable. Check MySQL + credentials + DB name (synapse_event).");
+        }
         return connection;
     }
 

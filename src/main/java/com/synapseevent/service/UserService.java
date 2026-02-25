@@ -12,12 +12,13 @@ import java.sql.SQLException;
 import com.synapseevent.utils.CurrentUser;
 
 public class UserService implements IService<User> {
-    private Connection conn = MaConnection.getInstance().getConnection();
+    private final MaConnection db = MaConnection.getInstance();
     private RoleService roleService = new RoleService();
     private EntrepriseService entrepriseService = new EntrepriseService();
 
     @Override
     public boolean ajouter(User user) throws SQLException {
+        Connection conn = db.requireConnection();
         String hashedPassword = PasswordUtil.hashPassword(user.getPassword());
         String sql = "INSERT INTO Utilisateur (email, password, nom, prenom, phone, address, profile_picture, role_id, enterprise_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
         try (PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
@@ -44,6 +45,7 @@ public class UserService implements IService<User> {
 
     @Override
     public List<User> readAll() throws SQLException {
+        Connection conn = db.requireConnection();
         List<User> users = new ArrayList<>();
         String sql = "SELECT * FROM Utilisateur";
         try (Statement stmt = conn.createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
@@ -62,6 +64,7 @@ public class UserService implements IService<User> {
 
     @Override
     public User findbyId(Long id) throws SQLException {
+        Connection conn = db.requireConnection();
         String sql = "SELECT * FROM Utilisateur WHERE id = ?";
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setLong(1, id);
@@ -79,6 +82,13 @@ public class UserService implements IService<User> {
     }
 
     public User findByEmail(String email) {
+        Connection conn;
+        try {
+            conn = db.requireConnection();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
         String sql = "SELECT * FROM Utilisateur WHERE email = ?";
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, email);
@@ -125,6 +135,7 @@ public class UserService implements IService<User> {
 
     @Override
     public boolean modifier(User user) throws SQLException {
+        Connection conn = db.requireConnection();
         String hashedPassword = user.getPassword() != null && !user.getPassword().isEmpty() ? PasswordUtil.hashPassword(user.getPassword()) : null;
         String sql = "UPDATE Utilisateur SET email = ?, nom = ?, prenom = ?, phone = ?, address = ?, profile_picture = ?, role_id = ?, enterprise_id = ?" + (hashedPassword != null ? ", password = ?" : "") + " WHERE id = ?";
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -151,6 +162,7 @@ public class UserService implements IService<User> {
 
     @Override
     public boolean supprimer(User user) throws SQLException {
+        Connection conn = db.requireConnection();
         if (user.getId() != null) {
             String sql = "DELETE FROM Utilisateur WHERE id = ?";
             try (PreparedStatement stmt = conn.prepareStatement(sql)) {

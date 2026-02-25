@@ -14,3 +14,5 @@ public interface IService<T> {
 
     boolean supprimer(T entity) throws SQLException;
 }
+
+

@@ -10,11 +10,12 @@ import java.util.List;
 import java.sql.SQLException;
 
 public class PartyingEventService implements IService<PartyingEvent> {
-    private Connection conn = MaConnection.getInstance().getConnection();
+    private final MaConnection db = MaConnection.getInstance();
     private VenueService venueService = new VenueService();
 
     @Override
     public boolean ajouter(PartyingEvent event) throws SQLException {
+        Connection conn = db.requireConnection();
         String sql = "INSERT INTO PartyingEvent (name, date, start_time, end_time, venue_id, capacity, price, organizer, description, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         try (PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             stmt.setString(1, event.getName());
@@ -61,6 +62,7 @@ public class PartyingEventService implements IService<PartyingEvent> {
 
     @Override
     public List<PartyingEvent> readAll() throws SQLException {
+        Connection conn = db.requireConnection();
         List<PartyingEvent> events = new ArrayList<>();
         String sql = "SELECT * FROM PartyingEvent";
         try (Statement stmt = conn.createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
@@ -77,6 +79,7 @@ public class PartyingEventService implements IService<PartyingEvent> {
 
     @Override
     public PartyingEvent findbyId(Long id) throws SQLException {
+        Connection conn = db.requireConnection();
         String sql = "SELECT * FROM PartyingEvent WHERE id = ?";
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setLong(1, id);
@@ -93,6 +96,7 @@ public class PartyingEventService implements IService<PartyingEvent> {
 
     @Override
     public boolean modifier(PartyingEvent event) throws SQLException {
+        Connection conn = db.requireConnection();
         String sql = "UPDATE PartyingEvent SET name = ?, date = ?, start_time = ?, end_time = ?, venue_id = ?, capacity = ?, price = ?, organizer = ?, description = ?, status = ? WHERE id = ?";
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, event.getName());
@@ -136,6 +140,7 @@ public class PartyingEventService implements IService<PartyingEvent> {
 
     @Override
     public boolean supprimer(PartyingEvent event) throws SQLException {
+        Connection conn = db.requireConnection();
         if (event.getId() != null) {
             String sql = "DELETE FROM PartyingEvent WHERE id = ?";
             try (PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -151,6 +156,7 @@ public class PartyingEventService implements IService<PartyingEvent> {
     }
 
     public List<PartyingEvent> getPublishedEvents() throws SQLException {
+        Connection conn = db.requireConnection();
         List<PartyingEvent> events = new ArrayList<>();
         String sql = "SELECT * FROM PartyingEvent WHERE status = 'published'";
         try (Statement stmt = conn.createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
@@ -166,6 +172,7 @@ public class PartyingEventService implements IService<PartyingEvent> {
     }
 
     public List<PartyingEvent> getEventsByVenue(Long venueId) throws SQLException {
+        Connection conn = db.requireConnection();
         List<PartyingEvent> events = new ArrayList<>();
         String sql = "SELECT * FROM PartyingEvent WHERE venue_id = ?";
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -183,6 +190,7 @@ public class PartyingEventService implements IService<PartyingEvent> {
     }
 
     public List<PartyingEvent> getEventsByDate(LocalDate date) throws SQLException {
+        Connection conn = db.requireConnection();
         List<PartyingEvent> events = new ArrayList<>();
         String sql = "SELECT * FROM PartyingEvent WHERE date = ?";
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -200,6 +208,7 @@ public class PartyingEventService implements IService<PartyingEvent> {
     }
 
     public List<PartyingEvent> getPublishedEventsByDate(LocalDate date) throws SQLException {
+        Connection conn = db.requireConnection();
         List<PartyingEvent> events = new ArrayList<>();
         String sql = "SELECT * FROM PartyingEvent WHERE status = 'published' AND date = ?";
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -217,6 +226,7 @@ public class PartyingEventService implements IService<PartyingEvent> {
     }
 
     public List<PartyingEvent> getPublishedEventsByVenue(Long venueId) throws SQLException {
+        Connection conn = db.requireConnection();
         List<PartyingEvent> events = new ArrayList<>();
         String sql = "SELECT * FROM PartyingEvent WHERE status = 'published' AND venue_id = ?";
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -234,6 +244,7 @@ public class PartyingEventService implements IService<PartyingEvent> {
     }
 
     private PartyingEvent mapResultSetToEvent(ResultSet rs) throws SQLException {
+        Connection conn = db.requireConnection();
         PartyingEvent event = new PartyingEvent();
         event.setId(rs.getLong("id"));
         event.setName(rs.getString("name"));
@@ -277,3 +288,5 @@ public class PartyingEventService implements IService<PartyingEvent> {
         return event;
     }
 }
+
+

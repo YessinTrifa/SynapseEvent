@@ -8,10 +8,11 @@ import java.util.List;
 import java.sql.SQLException;
 
 public class TeamBuildingEventService implements IService<TeamBuildingEvent> {
-    private Connection conn = MaConnection.getInstance().getConnection();
+    private final MaConnection db = MaConnection.getInstance();
 
     @Override
     public boolean ajouter(TeamBuildingEvent event) throws SQLException {
+        Connection conn = db.requireConnection();
         String sql = "INSERT INTO TeamBuildingEvent (name, date, description, status) VALUES (?, ?, ?, ?)";
         try (PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             stmt.setString(1, event.getName());
@@ -32,6 +33,7 @@ public class TeamBuildingEventService implements IService<TeamBuildingEvent> {
 
     @Override
     public List<TeamBuildingEvent> readAll() throws SQLException {
+        Connection conn = db.requireConnection();
         List<TeamBuildingEvent> events = new ArrayList<>();
         String sql = "SELECT * FROM TeamBuildingEvent";
         try (Statement stmt = conn.createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
@@ -48,6 +50,7 @@ public class TeamBuildingEventService implements IService<TeamBuildingEvent> {
 
     @Override
     public TeamBuildingEvent findbyId(Long id) throws SQLException {
+        Connection conn = db.requireConnection();
         String sql = "SELECT * FROM TeamBuildingEvent WHERE id = ?";
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setLong(1, id);
@@ -64,6 +67,7 @@ public class TeamBuildingEventService implements IService<TeamBuildingEvent> {
 
     @Override
     public boolean modifier(TeamBuildingEvent event) throws SQLException {
+        Connection conn = db.requireConnection();
         String sql = "UPDATE TeamBuildingEvent SET name = ?, date = ?, description = ?, status = ? WHERE id = ?";
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, event.getName());
@@ -81,6 +85,7 @@ public class TeamBuildingEventService implements IService<TeamBuildingEvent> {
 
     @Override
     public boolean supprimer(TeamBuildingEvent event) throws SQLException {
+        Connection conn = db.requireConnection();
         if (event.getId() != null) {
             String sql = "DELETE FROM TeamBuildingEvent WHERE id = ?";
             try (PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -96,6 +101,7 @@ public class TeamBuildingEventService implements IService<TeamBuildingEvent> {
     }
 
     public List<TeamBuildingEvent> getPublishedEvents() throws SQLException {
+        Connection conn = db.requireConnection();
         List<TeamBuildingEvent> events = new ArrayList<>();
         String sql = "SELECT * FROM TeamBuildingEvent WHERE status = 'published'";
         try (Statement stmt = conn.createStatement(); ResultSet rs = stmt.executeQuery(sql)) {

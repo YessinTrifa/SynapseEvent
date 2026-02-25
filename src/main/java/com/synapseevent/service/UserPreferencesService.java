@@ -8,10 +8,11 @@ import java.util.List;
 import java.sql.SQLException;
 
 public class UserPreferencesService implements IService<UserPreferences> {
-    private Connection conn = MaConnection.getInstance().getConnection();
+    private final MaConnection db = MaConnection.getInstance();
 
     @Override
     public boolean ajouter(UserPreferences prefs) throws SQLException {
+        Connection conn = db.requireConnection();
         String sql = "INSERT INTO UserPreferences (user_id, preferred_categories, preferred_locations, max_price, min_rating) VALUES (?, ?, ?, ?, ?)";
         try (PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             stmt.setLong(1, prefs.getUserId());
@@ -33,6 +34,7 @@ public class UserPreferencesService implements IService<UserPreferences> {
 
     @Override
     public List<UserPreferences> readAll() throws SQLException {
+        Connection conn = db.requireConnection();
         List<UserPreferences> prefs = new ArrayList<>();
         String sql = "SELECT * FROM UserPreferences";
         try (Statement stmt = conn.createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
@@ -56,6 +58,7 @@ public class UserPreferencesService implements IService<UserPreferences> {
 
     @Override
     public UserPreferences findbyId(Long id) throws SQLException {
+        Connection conn = db.requireConnection();
         String sql = "SELECT * FROM UserPreferences WHERE id = ?";
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setLong(1, id);
@@ -79,6 +82,7 @@ public class UserPreferencesService implements IService<UserPreferences> {
 
     @Override
     public boolean modifier(UserPreferences prefs) throws SQLException {
+        Connection conn = db.requireConnection();
         String sql = "UPDATE UserPreferences SET preferred_categories = ?, preferred_locations = ?, max_price = ?, min_rating = ? WHERE id = ?";
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, prefs.getPreferredCategories());
@@ -96,6 +100,7 @@ public class UserPreferencesService implements IService<UserPreferences> {
 
     @Override
     public boolean supprimer(UserPreferences prefs) throws SQLException {
+        Connection conn = db.requireConnection();
         if (prefs.getId() != null) {
             String sql = "DELETE FROM UserPreferences WHERE id = ?";
             try (PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -111,6 +116,7 @@ public class UserPreferencesService implements IService<UserPreferences> {
     }
 
     public UserPreferences findByUserId(Long userId) throws SQLException {
+        Connection conn = db.requireConnection();
         String sql = "SELECT * FROM UserPreferences WHERE user_id = ?";
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setLong(1, userId);

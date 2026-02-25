@@ -9,11 +9,12 @@ import java.util.List;
 import java.sql.SQLException;
 
 public class BookingService implements IService<Booking> {
-    private Connection conn = MaConnection.getInstance().getConnection();
+    private final MaConnection db = MaConnection.getInstance();
     private UserService userService = new UserService();
 
     @Override
     public boolean ajouter(Booking booking) throws SQLException {
+        Connection conn = db.requireConnection();
         String sql = "INSERT INTO Booking (user_id, event_type, event_id, booking_date, status) VALUES (?, ?, ?, ?, ?)";
         try (PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             stmt.setLong(1, booking.getUser().getId());
@@ -35,6 +36,7 @@ public class BookingService implements IService<Booking> {
 
     @Override
     public List<Booking> readAll() throws SQLException {
+        Connection conn = db.requireConnection();
         List<Booking> bookings = new ArrayList<>();
         String sql = "SELECT * FROM Booking";
         try (Statement stmt = conn.createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
@@ -52,6 +54,7 @@ public class BookingService implements IService<Booking> {
 
     @Override
     public Booking findbyId(Long id) throws SQLException {
+        Connection conn = db.requireConnection();
         String sql = "SELECT * FROM Booking WHERE id = ?";
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setLong(1, id);
@@ -69,6 +72,7 @@ public class BookingService implements IService<Booking> {
 
     @Override
     public boolean modifier(Booking booking) throws SQLException {
+        Connection conn = db.requireConnection();
         String sql = "UPDATE Booking SET user_id = ?, event_type = ?, event_id = ?, booking_date = ?, status = ? WHERE id = ?";
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setLong(1, booking.getUser().getId());
@@ -87,6 +91,7 @@ public class BookingService implements IService<Booking> {
 
     @Override
     public boolean supprimer(Booking booking) throws SQLException {
+        Connection conn = db.requireConnection();
         if (booking.getId() != null) {
             String sql = "DELETE FROM Booking WHERE id = ?";
             try (PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -102,6 +107,7 @@ public class BookingService implements IService<Booking> {
     }
 
     public List<Booking> getBookingsByUser(User user) throws SQLException {
+        Connection conn = db.requireConnection();
         List<Booking> bookings = new ArrayList<>();
         String sql = "SELECT * FROM Booking WHERE user_id = ?";
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -119,6 +125,7 @@ public class BookingService implements IService<Booking> {
     }
 
     public List<Booking> getBookingsByEvent(String eventType, Long eventId) throws SQLException {
+        Connection conn = db.requireConnection();
         List<Booking> bookings = new ArrayList<>();
         String sql = "SELECT * FROM Booking WHERE event_type = ? AND event_id = ?";
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {

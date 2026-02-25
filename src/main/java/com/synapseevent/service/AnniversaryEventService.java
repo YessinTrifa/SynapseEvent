@@ -8,10 +8,12 @@ import java.util.List;
 import java.sql.SQLException;
 
 public class AnniversaryEventService implements IService<AnniversaryEvent> {
-    private Connection conn = MaConnection.getInstance().getConnection();
+    private final MaConnection db = MaConnection.getInstance();
+
 
     @Override
     public boolean ajouter(AnniversaryEvent event) throws SQLException {
+        Connection conn = db.requireConnection();
         String sql = "INSERT INTO AnniversaryEvent (name, date, start_time, end_time, location, capacity, price, organizer, category, description, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         try (PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             stmt.setString(1, event.getName());
@@ -39,6 +41,7 @@ public class AnniversaryEventService implements IService<AnniversaryEvent> {
 
     @Override
     public List<AnniversaryEvent> readAll() throws SQLException {
+        Connection conn = db.requireConnection();
         List<AnniversaryEvent> events = new ArrayList<>();
         String sql = "SELECT * FROM AnniversaryEvent";
         try (Statement stmt = conn.createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
@@ -68,6 +71,7 @@ public class AnniversaryEventService implements IService<AnniversaryEvent> {
 
     @Override
     public AnniversaryEvent findbyId(Long id) throws SQLException {
+        Connection conn = db.requireConnection();
         String sql = "SELECT * FROM AnniversaryEvent WHERE id = ?";
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setLong(1, id);
@@ -97,6 +101,7 @@ public class AnniversaryEventService implements IService<AnniversaryEvent> {
 
     @Override
     public boolean modifier(AnniversaryEvent event) throws SQLException {
+        Connection conn = db.requireConnection();
         String sql = "UPDATE AnniversaryEvent SET name = ?, date = ?, start_time = ?, end_time = ?, location = ?, capacity = ?, price = ?, organizer = ?, category = ?, description = ?, status = ? WHERE id = ?";
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, event.getName());
@@ -121,6 +126,7 @@ public class AnniversaryEventService implements IService<AnniversaryEvent> {
 
     @Override
     public boolean supprimer(AnniversaryEvent event) throws SQLException {
+        Connection conn = db.requireConnection();
         if (event.getId() != null) {
             String sql = "DELETE FROM AnniversaryEvent WHERE id = ?";
             try (PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -136,6 +142,7 @@ public class AnniversaryEventService implements IService<AnniversaryEvent> {
     }
 
     public List<AnniversaryEvent> getPublishedEvents() throws SQLException {
+        Connection conn = db.requireConnection();
         List<AnniversaryEvent> events = new ArrayList<>();
         String sql = "SELECT * FROM AnniversaryEvent WHERE status = 'published'";
         try (Statement stmt = conn.createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
@@ -164,6 +171,7 @@ public class AnniversaryEventService implements IService<AnniversaryEvent> {
     }
 
     public List<AnniversaryEvent> searchEvents(String keyword, String category, String location, Double maxPrice) throws SQLException {
+        Connection conn = db.requireConnection();
         List<AnniversaryEvent> events = new ArrayList<>();
         StringBuilder sql = new StringBuilder("SELECT * FROM AnniversaryEvent WHERE status = 'published'");
         List<Object> params = new ArrayList<>();

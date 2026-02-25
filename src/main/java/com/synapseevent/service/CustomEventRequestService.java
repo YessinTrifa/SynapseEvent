@@ -9,11 +9,12 @@ import java.util.List;
 import java.sql.SQLException;
 
 public class CustomEventRequestService implements IService<CustomEventRequest> {
-    private Connection conn = MaConnection.getInstance().getConnection();
+    private final MaConnection db = MaConnection.getInstance();
     private UserService userService = new UserService();
 
     @Override
     public boolean ajouter(CustomEventRequest request) throws SQLException {
+        Connection conn = db.requireConnection();
         String sql = "INSERT INTO CustomEventRequest (user_id, event_type, event_date, description, status, created_date, budget, capacity, location, reason) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         try (PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             stmt.setLong(1, request.getUser().getId());
@@ -40,6 +41,7 @@ public class CustomEventRequestService implements IService<CustomEventRequest> {
 
     @Override
     public List<CustomEventRequest> readAll() throws SQLException {
+        Connection conn = db.requireConnection();
         List<CustomEventRequest> requests = new ArrayList<>();
         String sql = "SELECT * FROM CustomEventRequest";
         try (Statement stmt = conn.createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
@@ -69,6 +71,7 @@ public class CustomEventRequestService implements IService<CustomEventRequest> {
 
     @Override
     public CustomEventRequest findbyId(Long id) throws SQLException {
+        Connection conn = db.requireConnection();
         String sql = "SELECT * FROM CustomEventRequest WHERE id = ?";
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setLong(1, id);
@@ -99,6 +102,7 @@ public class CustomEventRequestService implements IService<CustomEventRequest> {
 
     @Override
     public boolean modifier(CustomEventRequest request) throws SQLException {
+        Connection conn = db.requireConnection();
         String sql = "UPDATE CustomEventRequest SET user_id = ?, event_type = ?, event_date = ?, description = ?, status = ?, created_date = ?, budget = ?, capacity = ?, location = ?, reason = ? WHERE id = ?";
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setLong(1, request.getUser().getId());
@@ -122,6 +126,7 @@ public class CustomEventRequestService implements IService<CustomEventRequest> {
 
     @Override
     public boolean supprimer(CustomEventRequest request) throws SQLException {
+        Connection conn = db.requireConnection();
         if (request.getId() != null) {
             String sql = "DELETE FROM CustomEventRequest WHERE id = ?";
             try (PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -137,6 +142,7 @@ public class CustomEventRequestService implements IService<CustomEventRequest> {
     }
 
     public List<CustomEventRequest> getRequestsByUser(User user) throws SQLException {
+        Connection conn = db.requireConnection();
         List<CustomEventRequest> requests = new ArrayList<>();
         String sql = "SELECT * FROM CustomEventRequest WHERE user_id = ?";
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -166,6 +172,7 @@ public class CustomEventRequestService implements IService<CustomEventRequest> {
     }
 
     public boolean updateStatus(Long id, String status, String reason) throws SQLException {
+        Connection conn = db.requireConnection();
         String sql = "UPDATE CustomEventRequest SET status = ?, reason = ? WHERE id = ?";
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, status);
@@ -179,3 +186,5 @@ public class CustomEventRequestService implements IService<CustomEventRequest> {
         }
     }
 }
+
+

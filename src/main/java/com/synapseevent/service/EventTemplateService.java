@@ -8,10 +8,11 @@ import java.util.List;
 import java.sql.SQLException;
 
 public class EventTemplateService implements IService<EventTemplate> {
-    private Connection conn = MaConnection.getInstance().getConnection();
+    private final MaConnection db = MaConnection.getInstance();
 
     @Override
     public boolean ajouter(EventTemplate template) throws SQLException {
+        Connection conn = db.requireConnection();
         String sql = "INSERT INTO EventTemplate (name, event_type, default_start_time, default_end_time, default_capacity, default_price, default_category, default_description, template_description) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
         try (PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             stmt.setString(1, template.getName());
@@ -37,6 +38,7 @@ public class EventTemplateService implements IService<EventTemplate> {
 
     @Override
     public List<EventTemplate> readAll() throws SQLException {
+        Connection conn = db.requireConnection();
         List<EventTemplate> templates = new ArrayList<>();
         String sql = "SELECT * FROM EventTemplate";
         try (Statement stmt = conn.createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
@@ -64,6 +66,7 @@ public class EventTemplateService implements IService<EventTemplate> {
 
     @Override
     public EventTemplate findbyId(Long id) throws SQLException {
+        Connection conn = db.requireConnection();
         String sql = "SELECT * FROM EventTemplate WHERE id = ?";
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setLong(1, id);
@@ -91,6 +94,7 @@ public class EventTemplateService implements IService<EventTemplate> {
 
     @Override
     public boolean modifier(EventTemplate template) throws SQLException {
+        Connection conn = db.requireConnection();
         String sql = "UPDATE EventTemplate SET name = ?, event_type = ?, default_start_time = ?, default_end_time = ?, default_capacity = ?, default_price = ?, default_category = ?, default_description = ?, template_description = ? WHERE id = ?";
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, template.getName());
@@ -113,6 +117,7 @@ public class EventTemplateService implements IService<EventTemplate> {
 
     @Override
     public boolean supprimer(EventTemplate template) throws SQLException {
+        Connection conn = db.requireConnection();
         if (template.getId() != null) {
             String sql = "DELETE FROM EventTemplate WHERE id = ?";
             try (PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -128,6 +133,7 @@ public class EventTemplateService implements IService<EventTemplate> {
     }
 
     public List<EventTemplate> getTemplatesByType(String eventType) throws SQLException {
+        Connection conn = db.requireConnection();
         List<EventTemplate> templates = new ArrayList<>();
         String sql = "SELECT * FROM EventTemplate WHERE event_type = ?";
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {

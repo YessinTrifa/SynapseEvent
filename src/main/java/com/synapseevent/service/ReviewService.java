@@ -8,10 +8,11 @@ import java.util.List;
 import java.sql.SQLException;
 
 public class ReviewService implements IService<Review> {
-    private Connection conn = MaConnection.getInstance().getConnection();
+    private final MaConnection db = MaConnection.getInstance();
 
     @Override
     public boolean ajouter(Review review) throws SQLException {
+        Connection conn = db.requireConnection();
         String sql = "INSERT INTO Review (user_id, event_type, event_id, rating, comment, created_at) VALUES (?, ?, ?, ?, ?, ?)";
         try (PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             stmt.setLong(1, review.getUserId());
@@ -34,6 +35,7 @@ public class ReviewService implements IService<Review> {
 
     @Override
     public List<Review> readAll() throws SQLException {
+        Connection conn = db.requireConnection();
         List<Review> reviews = new ArrayList<>();
         String sql = "SELECT * FROM Review";
         try (Statement stmt = conn.createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
@@ -58,6 +60,7 @@ public class ReviewService implements IService<Review> {
 
     @Override
     public Review findbyId(Long id) throws SQLException {
+        Connection conn = db.requireConnection();
         String sql = "SELECT * FROM Review WHERE id = ?";
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setLong(1, id);
@@ -82,6 +85,7 @@ public class ReviewService implements IService<Review> {
 
     @Override
     public boolean modifier(Review review) throws SQLException {
+        Connection conn = db.requireConnection();
         String sql = "UPDATE Review SET rating = ?, comment = ? WHERE id = ?";
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, review.getRating());
@@ -97,6 +101,7 @@ public class ReviewService implements IService<Review> {
 
     @Override
     public boolean supprimer(Review review) throws SQLException {
+        Connection conn = db.requireConnection();
         if (review.getId() != null) {
             String sql = "DELETE FROM Review WHERE id = ?";
             try (PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -112,6 +117,7 @@ public class ReviewService implements IService<Review> {
     }
 
     public List<Review> getReviewsByEvent(String eventType, Long eventId) throws SQLException {
+        Connection conn = db.requireConnection();
         List<Review> reviews = new ArrayList<>();
         String sql = "SELECT * FROM Review WHERE event_type = ? AND event_id = ?";
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -138,6 +144,7 @@ public class ReviewService implements IService<Review> {
     }
 
     public double getAverageRating(String eventType, Long eventId) throws SQLException {
+        Connection conn = db.requireConnection();
         String sql = "SELECT AVG(rating) as avg_rating FROM Review WHERE event_type = ? AND event_id = ?";
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, eventType);
