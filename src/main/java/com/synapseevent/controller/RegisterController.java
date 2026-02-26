@@ -39,6 +39,20 @@ public class RegisterController {
     private TextField addressField;
     @FXML
     private Label messageLabel;
+    @FXML
+    private Label nomError;
+    @FXML
+    private Label prenomError;
+    @FXML
+    private Label emailError;
+    @FXML
+    private Label passwordError;
+    @FXML
+    private Label confirmPasswordError;
+    @FXML
+    private Label phoneError;
+    @FXML
+    private Label siretError;
     
     // Enterprise fields
     @FXML
@@ -113,6 +127,13 @@ public class RegisterController {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        nomField.textProperty().addListener((obs, old, newVal) -> clearError(nomError, nomField));
+        prenomField.textProperty().addListener((obs, old, newVal) -> clearError(prenomError, prenomField));
+        emailField.textProperty().addListener((obs, old, newVal) -> clearError(emailError, emailField));
+        passwordField.textProperty().addListener((obs, old, newVal) -> clearError(passwordError, passwordField));
+        confirmPasswordField.textProperty().addListener((obs, old, newVal) -> clearError(confirmPasswordError, confirmPasswordField));
+        phoneField.textProperty().addListener((obs, old, newVal) -> clearError(phoneError, phoneField));
+        entrepriseSiretField.textProperty().addListener((obs, old, newVal) -> clearError(siretError, entrepriseSiretField));
     }
     
     @FXML
@@ -139,27 +160,48 @@ public class RegisterController {
         String phone = phoneField.getText().trim();
         String address = addressField.getText().trim();
 
-        // Validate required fields
-        if (nom.isEmpty() || prenom.isEmpty() || email.isEmpty() || password.isEmpty()) {
-            messageLabel.setText("Please fill in all required fields");
-            return;
+        boolean hasError = false;
+
+    // Nom: letters only, min 2 chars
+        if (nom.isEmpty() || nom.length() < 2 || !nom.matches("[a-zA-ZÀ-ÿ\\s]+")) {
+            showError(nomError, nomField, "Last name must be at least 2 letters, no numbers.");
+            hasError = true;
         }
 
-        // Validate password match
+    // Prenom: letters only, min 2 chars
+        if (prenom.isEmpty() || prenom.length() < 2 || !prenom.matches("[a-zA-ZÀ-ÿ\\s]+")) {
+            showError(prenomError, prenomField, "First name must be at least 2 letters, no numbers.");
+            hasError = true;
+        }
+
+    // Email: proper format
+        if (!email.matches("^[a-zA-Z0-9._%+\\-]+@[a-zA-Z0-9.\\-]+\\.[a-zA-Z]{2,}$")) {
+            showError(emailError, emailField, "Please enter a valid email address.");
+            hasError = true;
+        }
+
+    // Password: min 8 chars, 1 uppercase, 1 digit
+        if (!password.matches("^(?=.*[A-Z])(?=.*\\d).{8,}$")) {
+            showError(passwordError, passwordField, "Min 8 characters, 1 uppercase letter, 1 number.");
+            hasError = true;
+        }
+
+    // Confirm password
         if (!password.equals(confirmPassword)) {
-            messageLabel.setText("Passwords do not match");
-            return;
+            showError(confirmPasswordError, confirmPasswordField, "Passwords do not match.");
+            hasError = true;
         }
 
-        // Validate email format
-        if (!email.contains("@") || !email.contains(".")) {
-            messageLabel.setText("Please enter a valid email address");
-            return;
+    // Phone: optional but if filled, must be valid
+        if (!phone.isEmpty() && !phone.matches("^[+0-9\\s]{8,15}$")) {
+            showError(phoneError, phoneField, "Phone must be 8-15 digits.");
+            hasError = true;
         }
 
-        // Check if email already exists
+        if (hasError) return;
+        //mail uniqueness
         if (userService.findByEmail(email) != null) {
-            messageLabel.setText("Email already registered");
+            showError(emailError, emailField, "This email is already registered.");
             return;
         }
 
@@ -177,10 +219,18 @@ public class RegisterController {
                 // Create new enterprise
                 String entrepriseName = entrepriseNameField.getText().trim();
                 String entrepriseSiret = entrepriseSiretField.getText().trim();
-                
+
                 if (entrepriseName.isEmpty() || entrepriseSiret.isEmpty()) {
-                    messageLabel.setText("Please fill in enterprise name and SIRET");
+                    if (entrepriseName.isEmpty()) {
+                        messageLabel.setText("Enterprise name is required.");
+                        return;
+                    }
+                    if (!entrepriseSiret.matches("^\\d{14}$")) {
+                        showError(siretError, entrepriseSiretField, "SIRET must be exactly 14 digits.");
+                        return;
+                    }
                     return;
+
                 }
                 
                 enterprise = new Entreprise();
@@ -222,8 +272,8 @@ public class RegisterController {
             boolean success = userService.ajouter(newUser);
 
             if (success) {
-                messageLabel.setText("Registration successful! Please login.");
-                messageLabel.setStyle("-fx-text-fill: green;");
+                messageLabel.setText("Registration successful! Redirecting to login...");
+                messageLabel.setStyle("-fx-text-fill: #4ade80; -fx-font-size: 13; -fx-font-weight: 700;");
                 // Optionally redirect to login after a delay
                 new Thread(() -> {
                     try {
@@ -252,5 +302,20 @@ public class RegisterController {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    //control de saisie errors
+    private void showError(Label errorLabel, TextField field, String message) {
+        errorLabel.setText(message);
+        errorLabel.setVisible(true);
+        errorLabel.setManaged(true);
+        field.setStyle(field.getStyle() + "; -fx-border-color: #ff6b6b; -fx-border-width: 2;");
+    }
+
+    private void clearError(Label errorLabel, TextField field) {
+        errorLabel.setVisible(false);
+        errorLabel.setManaged(false);
+        // Reset to original style
+        field.setStyle("-fx-background-color: rgba(255,255,255,0.95); -fx-background-radius: 12; -fx-border-color: rgba(255,255,255,0.18); -fx-padding: 10 12; -fx-font-size: 12; -fx-border-radius: 12;");
     }
 }
