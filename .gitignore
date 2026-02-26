@@ -66,3 +66,17 @@ build/
 
 # Stakpak session files
 .stakpak/session*
+
+# IntelliJ
+.idea/
+*.iml
+
+# Maven
+target/
+
+# Database
+*.db
+
+# OS
+.DS_Store
+Thumbs.db
