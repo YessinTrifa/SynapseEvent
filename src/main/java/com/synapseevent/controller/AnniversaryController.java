@@ -1,8 +1,10 @@
 package com.synapseevent.controller;
 
 import com.synapseevent.entities.AnniversaryEvent;
+import com.synapseevent.entities.EventInstance;
 import com.synapseevent.entities.Venue;
 import com.synapseevent.service.AnniversaryEventService;
+import com.synapseevent.service.EventInstanceService;
 import com.synapseevent.service.VenueService;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -38,6 +40,7 @@ public class AnniversaryController {
 
     private AnniversaryEventService anniversaryEventService = new AnniversaryEventService();
     private VenueService venueService = new VenueService();
+    private EventInstanceService eventInstanceService = new EventInstanceService();
 
     @FXML
     public void initialize() {
@@ -130,6 +133,13 @@ public class AnniversaryController {
                 location, capacity, price, "admin@synapse.com", null, description, status);
             try {
                 anniversaryEventService.ajouter(event);
+                EventInstance ei = new EventInstance(
+                        event.getId(),   // <-- same ID
+                        name, date, startTime, endTime,
+                        location, capacity, price,
+                        "admin@synapse.com", description, status, "TeamBuilding"
+                );
+                eventInstanceService.ajouter(ei);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -157,6 +167,19 @@ public class AnniversaryController {
 
             try {
                 anniversaryEventService.modifier(selected);
+                EventInstance ei = eventInstanceService.findbyId(selected.getId());
+                if (ei != null) {
+                    ei.setName(selected.getName());
+                    ei.setDate(selected.getDate());
+                    ei.setStartTime(selected.getStartTime());
+                    ei.setEndTime(selected.getEndTime());
+                    ei.setLocation(selected.getLocation());
+                    ei.setCapacity(selected.getCapacity());
+                    ei.setPrice(selected.getPrice());
+                    ei.setDescription(selected.getDescription());
+                    ei.setStatus(selected.getStatus());
+                    eventInstanceService.modifier(ei);
+                }
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -169,6 +192,9 @@ public class AnniversaryController {
         AnniversaryEvent selected = anniversaryTable.getSelectionModel().getSelectedItem();
         if (selected != null) {
             try {
+                anniversaryEventService.supprimer(selected);
+                EventInstance ei = eventInstanceService.findbyId(selected.getId());
+                if (ei != null) eventInstanceService.supprimer(ei);
                 anniversaryEventService.supprimer(selected);
             } catch (Exception e) {
                 e.printStackTrace();
@@ -184,6 +210,11 @@ public class AnniversaryController {
             selected.setStatus("published");
             try {
                 anniversaryEventService.modifier(selected);
+                EventInstance ei = eventInstanceService.findbyId(selected.getId());
+                if (ei != null) {
+                    ei.setStatus("published"); // or "draft"
+                    eventInstanceService.modifier(ei);
+                }
                 loadData();
             } catch (Exception e) {
                 e.printStackTrace();
@@ -198,6 +229,11 @@ public class AnniversaryController {
             selected.setStatus("draft");
             try {
                 anniversaryEventService.modifier(selected);
+                EventInstance ei = eventInstanceService.findbyId(selected.getId());
+                if (ei != null) {
+                    ei.setStatus("draft");
+                    eventInstanceService.modifier(ei);
+                }
                 loadData();
             } catch (Exception e) {
                 e.printStackTrace();

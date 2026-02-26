@@ -1,5 +1,6 @@
 package com.synapseevent.service;
 
+import com.synapseevent.entities.EventInstance;
 import com.synapseevent.entities.TeamBuildingEvent;
 import com.synapseevent.utils.MaConnection;
 
@@ -44,6 +45,25 @@ public class TeamBuildingEventService implements IService<TeamBuildingEvent> {
             }
 
             return res > 0;
+        }
+    }
+    public boolean ajouterWithId(EventInstance ei) throws SQLException {
+        Connection conn = db.requireConnection();
+        String sql = "INSERT INTO event_instance (id, name, date, start_time, end_time, location, capacity, price, organizer, description, status, type) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setLong(1, ei.getId());
+            stmt.setString(2, ei.getName());
+            stmt.setDate(3, java.sql.Date.valueOf(ei.getDate()));
+            stmt.setTime(4, ei.getStartTime() != null ? java.sql.Time.valueOf(ei.getStartTime()) : null);
+            stmt.setTime(5, ei.getEndTime() != null ? java.sql.Time.valueOf(ei.getEndTime()) : null);
+            stmt.setString(6, ei.getLocation());
+            if (ei.getCapacity() != null) stmt.setInt(7, ei.getCapacity()); else stmt.setNull(7, Types.INTEGER);
+            if (ei.getPrice() != null) stmt.setDouble(8, ei.getPrice()); else stmt.setNull(8, Types.DOUBLE);
+            stmt.setString(9, ei.getOrganizer());
+            stmt.setString(10, ei.getDescription());
+            stmt.setString(11, ei.getStatus());
+            stmt.setString(12, ei.getType());
+            return stmt.executeUpdate() > 0;
         }
     }
 

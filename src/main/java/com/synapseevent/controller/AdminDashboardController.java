@@ -78,6 +78,7 @@ public class AdminDashboardController {
     @FXML private TableColumn<EventInstance, String> eventTypeColumn;
     @FXML private TableColumn<EventInstance, Void> eventActionColumn;
     @FXML private ComboBox<String> eventTypeFilter;
+    @FXML private TabPane tabPane;
 
     private UserService userService = new UserService();
     private BookingService bookingService = new BookingService();

@@ -1,7 +1,9 @@
 package com.synapseevent.controller;
 
+import com.synapseevent.entities.EventInstance;
 import com.synapseevent.entities.TeamBuildingEvent;
 import com.synapseevent.entities.Venue;
+import com.synapseevent.service.EventInstanceService;
 import com.synapseevent.service.TeamBuildingEventService;
 import com.synapseevent.service.VenueService;
 import javafx.beans.property.SimpleStringProperty;
@@ -40,6 +42,7 @@ public class TeamBuildingController implements TemplateAware{
 
     private TeamBuildingEventService teamBuildingEventService = new TeamBuildingEventService();
     private VenueService venueService = new VenueService();
+    private EventInstanceService eventInstanceService = new EventInstanceService();
 
     @FXML
     public void initialize() {
@@ -131,6 +134,13 @@ public class TeamBuildingController implements TemplateAware{
                 location, capacity, price, "admin@synapse.com", description, status);
             try {
                 teamBuildingEventService.ajouter(event);
+                EventInstance ei = new EventInstance(
+                        event.getId(),   // <-- same ID
+                        name, date, startTime, endTime,
+                        location, capacity, price,
+                        "admin@techcorp.com", description, status, "TeamBuilding"
+                );
+                eventInstanceService.ajouter(ei);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -158,6 +168,19 @@ public class TeamBuildingController implements TemplateAware{
 
             try {
                 teamBuildingEventService.modifier(selected);
+                EventInstance ei = eventInstanceService.findbyId(selected.getId());
+                if (ei != null) {
+                    ei.setName(selected.getName());
+                    ei.setDate(selected.getDate());
+                    ei.setStartTime(selected.getStartTime());
+                    ei.setEndTime(selected.getEndTime());
+                    ei.setLocation(selected.getLocation());
+                    ei.setCapacity(selected.getCapacity());
+                    ei.setPrice(selected.getPrice());
+                    ei.setDescription(selected.getDescription());
+                    ei.setStatus(selected.getStatus());
+                    eventInstanceService.modifier(ei);
+                }
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -170,6 +193,8 @@ public class TeamBuildingController implements TemplateAware{
         TeamBuildingEvent selected = teamBuildingTable.getSelectionModel().getSelectedItem();
         if (selected != null) {
             try {
+                EventInstance ei = eventInstanceService.findbyId(selected.getId());
+                if (ei != null) eventInstanceService.supprimer(ei);
                 teamBuildingEventService.supprimer(selected);
             } catch (Exception e) {
                 e.printStackTrace();
@@ -185,6 +210,11 @@ public class TeamBuildingController implements TemplateAware{
             selected.setStatus("published");
             try {
                 teamBuildingEventService.modifier(selected);
+                EventInstance ei = eventInstanceService.findbyId(selected.getId());
+                if (ei != null) {
+                    ei.setStatus("published");
+                    eventInstanceService.modifier(ei);
+                }
                 loadData();
             } catch (Exception e) {
                 e.printStackTrace();
@@ -199,6 +229,11 @@ public class TeamBuildingController implements TemplateAware{
             selected.setStatus("draft");
             try {
                 teamBuildingEventService.modifier(selected);
+                EventInstance ei = eventInstanceService.findbyId(selected.getId());
+                if (ei != null) {
+                    ei.setStatus("draft");
+                    eventInstanceService.modifier(ei);
+                }
                 loadData();
             } catch (Exception e) {
                 e.printStackTrace();
