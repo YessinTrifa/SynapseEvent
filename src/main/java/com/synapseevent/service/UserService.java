@@ -166,7 +166,14 @@ public class UserService implements IService<User> {
             stmt.setLong(i++, user.getEnterpriseId());
 
             if (updatePassword) {
-                stmt.setString(i++, PasswordUtil.hashPassword(user.getPassword()));
+                String pwd = user.getPassword().trim();
+
+                // If it's already a BCrypt hash, don't hash again
+                if (pwd.startsWith("$2a$") || pwd.startsWith("$2b$") || pwd.startsWith("$2y$")) {
+                    stmt.setString(i++, pwd);
+                } else {
+                    stmt.setString(i++, PasswordUtil.hashPassword(pwd));
+                }
             }
 
             stmt.setLong(i, user.getId());
