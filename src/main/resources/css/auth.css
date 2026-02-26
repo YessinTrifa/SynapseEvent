@@ -1,0 +1,423 @@
+.root{
+    /* “Web app” background: subtle, not loud */
+    -fx-background-color: radial-gradient(center 20% 15%, radius 90%, #1b2b4a 0%, #0b1220 55%, #070b14 100%);
+    -fx-font-family: "Segoe UI", "Inter", "System";
+}
+
+/* This is the web “container” */
+.shell{
+    -fx-padding: 64;
+    -fx-alignment: center;
+    -fx-max-width: 1100;
+}
+
+/* Left content */
+.brand-title{
+    -fx-font-size: 40px;
+    -fx-font-weight: 800;
+    -fx-text-fill: white;
+}
+
+.brand-subtitle{
+    -fx-font-size: 13px;
+    -fx-text-fill: rgba(255,255,255,0.70);
+    -fx-line-spacing: 2px;
+}
+
+.hero-line{
+    -fx-font-size: 13px;
+    -fx-text-fill: rgba(255,255,255,0.75);
+}
+
+.muted{
+    -fx-text-fill: rgba(255,255,255,0.55);
+    -fx-font-size: 12px;
+}
+
+/* Card */
+.card{
+    -fx-padding: 28;
+    -fx-background-color: rgba(255,255,255,0.07);
+    -fx-background-radius: 18;
+    -fx-border-radius: 18;
+    -fx-border-color: rgba(255,255,255,0.12);
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.35), 30, 0, 0, 14);
+}
+
+.card-title{
+    -fx-font-size: 20px;
+    -fx-font-weight: 800;
+    -fx-text-fill: white;
+}
+
+.card-subtitle{
+    -fx-font-size: 12px;
+    -fx-text-fill: rgba(255,255,255,0.65);
+}
+
+.field-label{
+    -fx-font-size: 12px;
+    -fx-text-fill: rgba(255,255,255,0.72);
+}
+
+.field{
+    -fx-background-color: rgba(255,255,255,0.10);
+    -fx-background-radius: 12;
+    -fx-border-radius: 12;
+    -fx-border-color: rgba(255,255,255,0.14);
+    -fx-text-fill: white;
+    -fx-prompt-text-fill: rgba(255,255,255,0.45);
+    -fx-padding: 12 12;
+    -fx-font-size: 13px;
+}
+
+.field:focused{
+    -fx-border-color: rgba(124,58,237,0.85); /* violet focus */
+    -fx-background-color: rgba(255,255,255,0.12);
+}
+
+/* Buttons */
+
+.button {
+    -fx-background-insets: 0;
+    -fx-border-insets: 0;
+    -fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
+}
+
+/* Primary */
+.button.btn-primary {
+    -fx-background-radius: 12;
+    -fx-padding: 12 14;
+    -fx-font-size: 13px;
+    -fx-font-weight: 800;
+    -fx-text-fill: white;
+
+    -fx-background-color: linear-gradient(to right, #7c3aed, #4f46e5);
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.25), 16, 0, 0, 8);
+    -fx-cursor: hand;
+}
+
+.button.btn-primary:hover {
+    -fx-background-color: linear-gradient(to right, #8b5cf6, #6366f1);
+}
+
+.button.btn-primary:pressed {
+    -fx-translate-y: 1;
+}
+
+/* Ghost / Secondary (FIXED) */
+.button.btn-ghost {
+    -fx-background-radius: 12;
+    -fx-padding: 12 14;
+    -fx-font-size: 13px;
+    -fx-font-weight: 800;
+
+    -fx-text-fill: rgba(255,255,255,0.92);
+
+    /* IMPORTANT: force non-white background */
+    -fx-background-color: rgba(255,255,255,0.06);
+    -fx-background-insets: 0;
+
+    -fx-border-color: rgba(255,255,255,0.18);
+    -fx-border-width: 1;
+    -fx-border-radius: 12;
+
+    -fx-cursor: hand;
+}
+
+.button.btn-ghost:hover {
+    -fx-background-color: rgba(255,255,255,0.10);
+    -fx-border-color: rgba(255,255,255,0.28);
+}
+
+.button.btn-ghost:pressed {
+    -fx-translate-y: 1;
+}
+.link{
+    -fx-text-fill: #a5b4fc;
+    -fx-font-weight: 700;
+    -fx-underline: false;
+}
+.link:hover{ -fx-underline: true; }
+
+/* --- Register extras (web clean) --- */
+
+.scroll-clean {
+    -fx-background-color: transparent;
+    -fx-padding: 0;
+}
+
+.scroll-clean .viewport {
+    -fx-background-color: transparent;
+}
+
+.form-body{
+    -fx-padding: 2 2 6 2;
+}
+
+/* Section inside card */
+.section{
+    -fx-padding: 14;
+    -fx-background-color: rgba(255,255,255,0.05);
+    -fx-background-radius: 14;
+    -fx-border-radius: 14;
+    -fx-border-color: rgba(255,255,255,0.10);
+}
+
+.section-title{
+    -fx-font-size: 13px;
+    -fx-font-weight: 800;
+    -fx-text-fill: rgba(255,255,255,0.85);
+}
+
+/* Errors */
+.error{
+    -fx-text-fill: #ff6b6b;
+    -fx-font-size: 11px;
+}
+
+/* ComboBox look like fields */
+.combo-web {
+    -fx-background-color: rgba(255,255,255,0.10);
+    -fx-background-radius: 12;
+    -fx-border-radius: 12;
+    -fx-border-color: rgba(255,255,255,0.14);
+    -fx-padding: 6 10;
+}
+/* Make ComboBox feel like a premium web input */
+.combo-web:focused {
+    -fx-border-color: rgba(124,58,237,0.85);
+    -fx-background-color: rgba(255,255,255,0.12);
+}
+
+.combo-web .arrow-button {
+    -fx-background-color: transparent;
+    -fx-background-radius: 12;
+    -fx-padding: 0 10 0 8;
+}
+
+.combo-web .arrow {
+    -fx-background-color: rgba(255,255,255,0.70);
+}
+
+.combo-web .list-cell {
+    -fx-background-color: transparent;
+    -fx-text-fill: white;
+    -fx-padding: 10 12;
+    -fx-font-size: 13px;
+}
+
+/* Dropdown popup */
+.combo-box-popup .list-view {
+    -fx-background-color: rgba(15,23,42,0.98);
+    -fx-background-radius: 12;
+    -fx-border-radius: 12;
+    -fx-border-color: rgba(255,255,255,0.14);
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.45), 22, 0, 0, 10);
+}
+
+.combo-box-popup .list-view .list-cell:hover {
+    -fx-background-color: rgba(124,58,237,0.22);
+}
+
+.combo-box-popup .list-view .list-cell:selected {
+    -fx-background-color: rgba(124,58,237,0.35);
+    -fx-text-fill: white;
+}
+
+/* Radio web style */
+.radio-web{
+    -fx-text-fill: rgba(255,255,255,0.85);
+    -fx-font-size: 12px;
+    -fx-font-weight: 700;
+}
+
+/* Back to login */
+.button.btn-link{
+    -fx-background-color: transparent;
+    -fx-text-fill: #a5b4fc;
+    -fx-font-weight: 800;
+    -fx-underline: false;
+    -fx-cursor: hand;
+}
+.button.btn-link:hover{ -fx-underline: true; }
+/* =====================
+   Landing (web)
+   ===================== */
+
+.page{
+    -fx-alignment: top-center;
+}
+
+.nav{
+    -fx-padding: 8 6;
+    -fx-spacing: 14;
+}
+
+.nav-title{
+    -fx-font-size: 18px;
+    -fx-font-weight: 900;
+    -fx-text-fill: white;
+}
+
+.nav-link{
+    -fx-text-fill: rgba(255,255,255,0.75);
+    -fx-font-weight: 700;
+    -fx-underline: false;
+}
+.nav-link:hover{ -fx-text-fill: rgba(255,255,255,0.95); }
+
+.hero-web{
+    -fx-padding: 6 0 0 0;
+}
+
+.hero-kicker{
+    -fx-text-fill: rgba(165,180,252,0.95);
+    -fx-font-weight: 800;
+    -fx-font-size: 12px;
+}
+
+.hero-title{
+    -fx-font-size: 34px;
+    -fx-font-weight: 900;
+    -fx-text-fill: white;
+    -fx-line-spacing: 2px;
+}
+
+.hero-subtitle{
+    -fx-font-size: 13px;
+    -fx-text-fill: rgba(255,255,255,0.72);
+}
+
+.pill{
+    -fx-padding: 6 10;
+    -fx-background-radius: 999;
+    -fx-background-color: rgba(255,255,255,0.06);
+    -fx-border-color: rgba(255,255,255,0.10);
+    -fx-border-radius: 999;
+    -fx-text-fill: rgba(255,255,255,0.78);
+    -fx-font-size: 11px;
+    -fx-font-weight: 700;
+}
+
+.section-head{
+    -fx-font-size: 18px;
+    -fx-font-weight: 900;
+    -fx-text-fill: white;
+}
+
+.section-subhead{
+    -fx-font-size: 12px;
+    -fx-text-fill: rgba(255,255,255,0.70);
+}
+
+.feature-wrap{
+    -fx-padding: 4 0 0 0;
+}
+
+.feature-card{
+    -fx-padding: 18;
+    -fx-spacing: 8;
+    -fx-background-color: rgba(255,255,255,0.06);
+    -fx-background-radius: 16;
+    -fx-border-radius: 16;
+    -fx-border-color: rgba(255,255,255,0.10);
+}
+
+.feature-icon{ -fx-font-size: 22px; }
+
+.feature-title{
+    -fx-font-size: 13px;
+    -fx-font-weight: 900;
+    -fx-text-fill: rgba(255,255,255,0.92);
+}
+
+.feature-text{
+    -fx-font-size: 12px;
+    -fx-text-fill: rgba(255,255,255,0.68);
+}
+/* === Landing polish (template-like) === */
+
+.preview{
+    -fx-padding: 22;
+    -fx-spacing: 12;
+    -fx-background-color: rgba(255,255,255,0.05);
+    -fx-background-radius: 18;
+    -fx-border-radius: 18;
+    -fx-border-color: rgba(255,255,255,0.10);
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.35), 30, 0.25, 0, 10);
+}
+
+.preview-title{
+    -fx-font-size: 18px;
+    -fx-font-weight: 900;
+    -fx-text-fill: rgba(255,255,255,0.92);
+}
+
+.preview-subtitle{
+    -fx-font-size: 12px;
+    -fx-text-fill: rgba(255,255,255,0.70);
+}
+
+.preview-box{
+    -fx-padding: 14;
+    -fx-background-color: rgba(255,255,255,0.04);
+    -fx-background-radius: 14;
+    -fx-border-radius: 14;
+    -fx-border-color: rgba(255,255,255,0.08);
+}
+
+.preview-kpi{
+    -fx-font-size: 12px;
+    -fx-font-weight: 700;
+    -fx-text-fill: rgba(255,255,255,0.78);
+}
+
+.badge{
+    -fx-padding: 6 10;
+    -fx-background-radius: 999;
+    -fx-background-color: rgba(165,180,252,0.10);
+    -fx-border-color: rgba(165,180,252,0.20);
+    -fx-border-radius: 999;
+    -fx-text-fill: rgba(255,255,255,0.80);
+    -fx-font-size: 11px;
+    -fx-font-weight: 800;
+}
+.web-header{
+    -fx-padding: 20 26;
+    -fx-background-color: rgba(10,14,24,0.35);
+    -fx-border-color: rgba(255,255,255,0.06);
+    -fx-border-width: 0 0 1 0;
+}
+
+.web-logo-text{
+    -fx-font-size: 15px;
+    -fx-font-weight: 900;
+    -fx-text-fill: rgba(255,255,255,0.92);
+}
+
+.hero-wrap{
+    -fx-padding: 80 26 56 26;
+    -fx-max-width: 1150;
+    -fx-alignment: CENTER;
+}
+
+.hero-left{
+    -fx-max-width: 520;
+    -fx-alignment: CENTER_LEFT;
+}
+
+.hero-illustration{
+    -fx-opacity: 0.95;
+}
+
+.btn-ghost{
+    -fx-background-color: transparent;
+    -fx-border-color: rgba(255,255,255,0.14);
+    -fx-border-radius: 12;
+    -fx-background-radius: 12;
+    -fx-text-fill: rgba(255,255,255,0.85);
+    -fx-font-weight: 800;
+    -fx-padding: 10 16;
+}

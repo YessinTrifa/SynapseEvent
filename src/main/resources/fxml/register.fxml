@@ -1,94 +1,147 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.ComboBox?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.PasswordField?>
-<?import javafx.scene.control.RadioButton?>
-<?import javafx.scene.control.ScrollPane?>
-<?import javafx.scene.control.TextField?>
-<?import javafx.scene.control.ToggleGroup?>
-<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.VBox?>
-<?import javafx.scene.paint.Color?>
-<?import javafx.scene.paint.LinearGradient?>
-<?import javafx.scene.paint.Stop?>
 
-<StackPane style="-fx-background-color: linear-gradient(to bottom right, #0f172a, #1e293b);"
-           xmlns="http://javafx.com/javafx/17"
-           xmlns:fx="http://javafx.com/fxml/1"
-           fx:controller="com.synapseevent.controller.RegisterController">
-    <children>
-      <ScrollPane fitToWidth="true" style="-fx-background-color: transparent; -fx-border-color: transparent; -fx-padding: 0;">
-         <content>
-            <StackPane alignment="TOP_CENTER" prefHeight="836.0" prefWidth="600.0" style="-fx-background-color: transparent;">
-               <children>
-                  <VBox alignment="CENTER" maxWidth="600.0" prefWidth="600.0" spacing="12.0" style="-fx-padding: 20; -fx-background-color: linear-gradient(to bottom, #0f172a, #111827); -fx-background-radius: 18; -fx-border-radius: 18; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.35), 24, 0, 0, 10);">
-                      <Label style="-fx-font-size: 26; -fx-font-weight: 800;;" text="Create New Account">
-                        <textFill>
-                           <LinearGradient endX="1.0" endY="1.0">
-                              <stops>
-                                 <Stop>
-                                    <color>
-                                       <Color red="0.24475634098052979" green="0.6200493574142456" blue="0.7684210538864136" />
-                                    </color>
-                                 </Stop>
-                                 <Stop offset="1.0">
-                                    <color>
-                                       <Color red="1.0" green="1.0" blue="1.0" />
-                                    </color>
-                                 </Stop>
-                              </stops>
-                           </LinearGradient>
-                        </textFill>
-                     </Label>
+<BorderPane styleClass="root" stylesheets="@../css/auth.css"
+            xmlns="http://javafx.com/javafx/25"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.synapseevent.controller.RegisterController">
 
-                      <TextField fx:id="nomField" maxWidth="561.0" prefHeight="40.0" prefWidth="561.0" promptText="Last Name" style="-fx-background-radius: 12;; -fx-border-radius: 12;; -fx-border-color: rgba(255,255,255,0.18);; -fx-background-color: rgba(255,255,255,0.95);; -fx-padding: 10 12;; -fx-font-size: 12;;" />
-                      <Label fx:id="nomError" style="-fx-text-fill: #ff6b6b; -fx-font-size: 11;" visible="false" managed="false" />
-                      <TextField fx:id="prenomField" promptText="First Name" style="-fx-background-color: rgba(255,255,255,0.95); -fx-background-radius: 12; -fx-border-color: rgba(255,255,255,0.18); -fx-padding: 10 12; -fx-font-size: 12; -fx-border-radius: 12;;" />
-                      <Label fx:id="prenomError" style="-fx-text-fill: #ff6b6b; -fx-font-size: 11;" visible="false" managed="false" />
-                      <TextField fx:id="emailField" promptText="Email" style="-fx-background-color: rgba(255,255,255,0.95); -fx-border-color: rgba(255,255,255,0.18); -fx-padding: 10 12; -fx-font-size: 12; -fx-border-radius: 12; -fx-background-radius: 12;;" />
-                      <Label fx:id="emailError" style="-fx-text-fill: #ff6b6b; -fx-font-size: 11;" visible="false" managed="false" />
-                      <PasswordField fx:id="passwordField" promptText="Password" style="-fx-background-radius: 12;; -fx-border-radius: 12;; -fx-padding: 10 12;; -fx-font-size: 12;; -fx-border-color: rgba(255,255,255,0.18);; -fx-background-color: rgba(255,255,255,0.95);;" />
-                      <Label fx:id="passwordError" style="-fx-text-fill: #ff6b6b; -fx-font-size: 11;" visible="false" managed="false" />
-                      <PasswordField fx:id="confirmPasswordField" promptText="Confirm Password" style="-fx-background-radius: 12;; -fx-border-radius: 12;; -fx-padding: 10 12;; -fx-font-size: 12;; -fx-border-color: rgba(255,255,255,0.18);; -fx-background-color: rgba(255,255,255,0.95);;" />
-                      <Label fx:id="confirmPasswordError" style="-fx-text-fill: #ff6b6b; -fx-font-size: 11;" visible="false" managed="false" />
-                      <TextField fx:id="phoneField" promptText="Phone (optional)" style="-fx-background-color: rgba(255,255,255,0.95); -fx-border-color: rgba(255,255,255,0.18); -fx-border-radius: 12; -fx-background-radius: 12; -fx-padding: 10 12; -fx-font-size: 12;" />
-                      <Label fx:id="phoneError" style="-fx-text-fill: #ff6b6b; -fx-font-size: 11;" visible="false" managed="false" />
-                      <TextField fx:id="addressField" promptText="Address (optional)" style="-fx-border-color: rgba(255,255,255,0.18);; -fx-background-color: rgba(255,255,255,0.95);; -fx-font-size: 12;; -fx-border-radius: 12;; -fx-background-radius: 12;; -fx-padding: 10 12;;" />
-                                        <!-- Enterprise Section -->
-                      <Label style="-fx-font-size: 14; -fx-font-weight: 700;; -fx-text-fill: rgba(255,255,255,0.75);;" text="Enterprise Information" textFill="WHITE" />
-                     <VBox alignment="CENTER" prefHeight="152.0" prefWidth="549.0" spacing="10.0" style="-fx-background-color: rgba(255,255,255,0.06); -fx-background-radius: 14;; -fx-border-radius: 14;; -fx-border-color: rgba(255,255,255,0.10);; -fx-padding: 14;;">
-                        <children>
-                            
-                                              <RadioButton fx:id="existingEnterpriseRadio" onAction="#onExistingEnterpriseSelected" selected="true" text="Select Existing Enterprise" textFill="#fafafa">
-                                <toggleGroup>
-                                    <ToggleGroup fx:id="enterpriseToggle" />
-                                </toggleGroup>
-                            </RadioButton>
-                            
-                                              <ComboBox fx:id="entrepriseCombo" maxWidth="260.0" prefHeight="40.0" promptText="Select Enterprise" style="-fx-border-radius: 12;; -fx-background-radius: 12;; -fx-border-color: rgba(255,255,255,0.18);; -fx-background-color: rgba(255,255,255,0.95);;" />
-                        </children>
-                     </VBox>
-                      
-                                        <RadioButton fx:id="newEnterpriseRadio" onAction="#onNewEnterpriseSelected" text="Create New Enterprise" textFill="WHITE" toggleGroup="$enterpriseToggle" />
-                      
-                                        <TextField fx:id="entrepriseNameField" promptText="Enterprise Name" visible="false" />
-                                        <Label fx:id="siretError" style="-fx-text-fill: #ff6b6b; -fx-font-size: 11;" visible="false" managed="false" />
-                      
-                                        <Button defaultButton="true" onAction="#registerUser" prefHeight="42.0" prefWidth="220.0" style="-fx-background-color: #010048; -fx-text-fill: white;; -fx-font-weight: 800;; -fx-background-radius: 12;;" text="Register" />
-                      <TextField fx:id="entrepriseSiretField" promptText="SIRET Number" visible="false" />
-                      <Button onAction="#goToLogin" style="-fx-background-color: transparent; -fx-text-fill: #60a5fa;; -fx-font-weight: 700;; -fx-underline: true;;" text="Back to Login" textFill="WHITE" />
-                      
-                                        <Label fx:id="messageLabel" />
-                     <padding>
-                        <Insets bottom="26.0" left="26.0" right="26.0" top="26.0" />
-                     </padding>
-                  </VBox>
-               </children>
-            </StackPane>
-         </content>
-      </ScrollPane>
-   </children>
-</StackPane>
+    <center>
+        <StackPane alignment="CENTER">
+        <HBox maxWidth="1100" spacing="40" styleClass="shell" BorderPane.alignment="CENTER">
+            <padding>
+                <Insets top="60" right="60" bottom="60" left="60"/>
+            </padding>
+
+            <!-- LEFT: hero -->
+            <VBox spacing="14" styleClass="hero" HBox.hgrow="ALWAYS">
+                <Label styleClass="brand-title" text="SynapseEvent"/>
+                <Label styleClass="brand-subtitle"
+                       text="Create an account to manage events, guests, tickets and teams in one place."
+                       wrapText="true"/>
+
+                <VBox spacing="10" styleClass="hero-bullets">
+                    <Label styleClass="hero-line" text="Faster event creation &amp; tracking"/>
+                    <Label styleClass="hero-line" text="Your guests &amp; tickets stay synced"/>
+                    <Label styleClass="hero-line" text="Work with your team in one place"/>
+                </VBox>
+
+                <Region VBox.vgrow="ALWAYS"/>
+                <Label styleClass="muted" text="© SynapseEvent"/>
+            </VBox>
+
+            <!-- RIGHT: register card -->
+            <VBox maxWidth="560" minWidth="380" spacing="16" styleClass="card">
+                <Label styleClass="card-title" text="Create account"/>
+                <Label styleClass="card-subtitle" text="Fill the details below to get started."/>
+
+
+                        <VBox spacing="16" styleClass="form-body">
+
+                            <!-- GRID: web-like two columns -->
+                            <GridPane hgap="14" vgap="12">
+                                <columnConstraints>
+                                    <ColumnConstraints percentWidth="50" hgrow="ALWAYS"/>
+                                    <ColumnConstraints percentWidth="50" hgrow="ALWAYS"/>
+                                </columnConstraints>
+
+                                <!-- Last / First -->
+                                <VBox spacing="6" GridPane.columnIndex="0" GridPane.rowIndex="0">
+                                    <Label styleClass="field-label" text="Last name"/>
+                                    <TextField fx:id="nomField" promptText="Last Name" styleClass="field" maxWidth="1e9"/>
+                                    <Label fx:id="nomError" styleClass="error" visible="false" managed="false"/>
+                                </VBox>
+
+                                <VBox spacing="6" GridPane.columnIndex="1" GridPane.rowIndex="0">
+                                    <Label styleClass="field-label" text="First name"/>
+                                    <TextField fx:id="prenomField" promptText="Name" styleClass="field" maxWidth="1e9"/>
+                                    <Label fx:id="prenomError" styleClass="error" visible="false" managed="false"/>
+                                </VBox>
+
+                                <!-- Email (full width) -->
+                                <VBox spacing="6" GridPane.columnSpan="2" GridPane.columnIndex="0" GridPane.rowIndex="1">
+                                    <Label styleClass="field-label" text="Email"/>
+                                    <TextField fx:id="emailField" promptText="name@example.com" styleClass="field" maxWidth="1e9"/>
+                                    <Label fx:id="emailError" styleClass="error" visible="false" managed="false"/>
+                                </VBox>
+
+                                <!-- Passwords -->
+                                <VBox spacing="6" GridPane.columnIndex="0" GridPane.rowIndex="2">
+                                    <Label styleClass="field-label" text="Password"/>
+                                    <PasswordField fx:id="passwordField" promptText="••••••••" styleClass="field" maxWidth="1e9"/>
+                                    <Label fx:id="passwordError" styleClass="error" visible="false" managed="false"/>
+                                </VBox>
+
+                                <VBox spacing="6" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                                    <Label styleClass="field-label" text="Confirm password"/>
+                                    <PasswordField fx:id="confirmPasswordField" promptText="••••••••" styleClass="field" maxWidth="1e9"/>
+                                    <Label fx:id="confirmPasswordError" styleClass="error" visible="false" managed="false"/>
+                                </VBox>
+
+                                <!-- Phone / Address -->
+                                <VBox spacing="6" GridPane.columnIndex="0" GridPane.rowIndex="3">
+                                    <Label styleClass="field-label" text="Phone (optional)"/>
+                                    <TextField fx:id="phoneField" promptText="+216 ..." styleClass="field" maxWidth="1e9"/>
+                                    <Label fx:id="phoneError" styleClass="error" visible="false" managed="false"/>
+                                </VBox>
+
+                                <VBox spacing="6" GridPane.columnIndex="1" GridPane.rowIndex="3">
+                                    <Label styleClass="field-label" text="Address (optional)"/>
+                                    <TextField fx:id="addressField" promptText="City, Street..." styleClass="field" maxWidth="1e9"/>
+                                </VBox>
+                            </GridPane>
+
+                            <!-- Enterprise section -->
+                            <!-- Enterprise section (clean) -->
+                            <VBox spacing="10" styleClass="section">
+                                <Label styleClass="section-title" text="Enterprise"/>
+
+
+                                <!-- Existing enterprise -->
+                                <VBox spacing="6" fx:id="existingEnterpriseBox">
+                                    <Label styleClass="field-label" text="Select enterprise"/>
+                                    <ComboBox fx:id="entrepriseCombo"
+                                              promptText="Select enterprise"
+                                              styleClass="field combo-web"
+                                              maxWidth="1e9"/>
+                                </VBox>
+
+                                <!-- New enterprise -->
+                                <VBox spacing="12" fx:id="newEnterpriseBox" visible="false" managed="false">
+                                    <VBox spacing="6">
+                                        <Label styleClass="field-label" text="Enterprise name"/>
+                                        <TextField fx:id="entrepriseNameField" promptText="Enterprise name" styleClass="field" maxWidth="1e9"/>
+                                    </VBox>
+
+                                    <VBox spacing="6">
+                                        <Label styleClass="field-label" text="SIRET number"/>
+                                        <TextField fx:id="entrepriseSiretField" promptText="14 digits" styleClass="field" maxWidth="1e9"/>
+                                        <Label fx:id="siretError" styleClass="error" visible="false" managed="false"/>
+                                    </VBox>
+                                </VBox>
+                            </VBox>
+
+                            <Label fx:id="messageLabel" styleClass="muted"/>
+
+                            <VBox spacing="10">
+                                <Button text="Create account" defaultButton="true"
+                                        onAction="#registerUser"
+                                        styleClass="btn-primary" maxWidth="1e9"/>
+                                <Button text="Back to login"
+                                        onAction="#goToLogin"
+                                        styleClass="btn-link" maxWidth="1e9"/>
+                            </VBox>
+
+                        </VBox>
+            </VBox>
+        </HBox>
+        </StackPane>
+    </center>
+</BorderPane>
