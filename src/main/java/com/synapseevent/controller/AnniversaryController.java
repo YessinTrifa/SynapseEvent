@@ -10,7 +10,7 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
-
+import javafx.scene.control.SpinnerValueFactory;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
@@ -41,6 +41,18 @@ public class AnniversaryController {
 
     @FXML
     public void initialize() {
+        startTimeHourSpinner.setValueFactory(
+                new SpinnerValueFactory.IntegerSpinnerValueFactory(0, 23, 14)
+        );
+        endTimeHourSpinner.setValueFactory(
+                new SpinnerValueFactory.IntegerSpinnerValueFactory(0, 23, 22)
+        );
+        capacitySpinner.setValueFactory(
+                new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 10000, 40)
+        );
+        priceSpinner.setValueFactory(
+                new SpinnerValueFactory.DoubleSpinnerValueFactory(0, 100000, 0.0, 1)
+        );
         idColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
         nameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
         dateColumn.setCellValueFactory(cellData -> new SimpleStringProperty(
@@ -227,6 +239,7 @@ public class AnniversaryController {
         }
     }
 
+    @FXML
     private void clearFields() {
         nameField.clear();
         datePicker.setValue(null);

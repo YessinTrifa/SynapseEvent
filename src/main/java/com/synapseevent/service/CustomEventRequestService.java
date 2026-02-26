@@ -8,18 +8,17 @@ import java.math.BigDecimal;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.math.BigDecimal;
+
 
 public class CustomEventRequestService implements IService<CustomEventRequest> {
 
     private final MaConnection db = MaConnection.getInstance();
     private final UserService userService = new UserService();
-    private Connection conn = MaConnection.getInstance().getConnection();
     @Override
     public boolean ajouter(CustomEventRequest request) throws SQLException {
         Connection conn = db.requireConnection();
 
-        String sql = "INSERT INTO CustomEventRequest " +
+        String sql = "INSERT INTO customeventrequest " +
                 "(user_id, event_type, event_date, description, status, created_date, budget, capacity, location, reason) " +
                 "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
@@ -56,7 +55,8 @@ public class CustomEventRequestService implements IService<CustomEventRequest> {
     @Override
     public List<CustomEventRequest> readAll() throws SQLException {
         List<CustomEventRequest> list = new ArrayList<>();
-        String sql = "SELECT * FROM custom_event_request"; // use your real table name
+        String sql = "SELECT * FROM customeventrequest";
+        Connection conn = db.requireConnection();
 
         try (PreparedStatement ps = conn.prepareStatement(sql);
              ResultSet rs = ps.executeQuery()) {
@@ -68,12 +68,13 @@ public class CustomEventRequestService implements IService<CustomEventRequest> {
                 request.setEventType(rs.getString("event_type"));
                 request.setEventDate(rs.getDate("event_date") != null ? rs.getDate("event_date").toLocalDate() : null);
 
-                // ✅ Budget DECIMAL -> Double safely
+
                 BigDecimal bd = rs.getBigDecimal("budget");
                 request.setBudget(bd == null ? null : bd.doubleValue());
 
-                request.setCapacity(rs.getInt("capacity"));
-                if (rs.wasNull()) request.setCapacity(null); // only if capacity is Integer in entity
+                Integer cap = (Integer) rs.getObject("capacity");
+                request.setCapacity(cap);
+
 
                 request.setLocation(rs.getString("location"));
                 request.setDescription(rs.getString("description"));
@@ -98,7 +99,7 @@ public class CustomEventRequestService implements IService<CustomEventRequest> {
     public CustomEventRequest findbyId(Long id) throws SQLException {
         Connection conn = db.requireConnection();
 
-        String sql = "SELECT * FROM CustomEventRequest WHERE id = ?";
+        String sql = "SELECT * FROM customeventrequest WHERE id = ?";
 
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setLong(1, id);
@@ -140,7 +141,7 @@ public class CustomEventRequestService implements IService<CustomEventRequest> {
     public boolean modifier(CustomEventRequest request) throws SQLException {
         Connection conn = db.requireConnection();
 
-        String sql = "UPDATE CustomEventRequest SET user_id = ?, event_type = ?, event_date = ?, description = ?, " +
+        String sql = "UPDATE customeventrequest SET user_id = ?, event_type = ?, event_date = ?, description = ?, " +
                 "status = ?, created_date = ?, budget = ?, capacity = ?, location = ?, reason = ? WHERE id = ?";
 
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -155,8 +156,8 @@ public class CustomEventRequestService implements IService<CustomEventRequest> {
             stmt.setString(5, request.getStatus());
             stmt.setDate(6, request.getCreatedDate() != null ? Date.valueOf(request.getCreatedDate()) : null);
 
-            if (request.getBudget() == null) stmt.setNull(7, Types.DOUBLE);
-            else stmt.setDouble(7, request.getBudget());
+            if (request.getBudget() == null) stmt.setNull(7, Types.DECIMAL);
+            else stmt.setBigDecimal(7, BigDecimal.valueOf(request.getBudget()));
 
             if (request.getCapacity() == null) stmt.setNull(8, Types.INTEGER);
             else stmt.setInt(8, request.getCapacity());
@@ -175,7 +176,7 @@ public class CustomEventRequestService implements IService<CustomEventRequest> {
         Connection conn = db.requireConnection();
         if (request == null || request.getId() == null) return false;
 
-        String sql = "DELETE FROM CustomEventRequest WHERE id = ?";
+        String sql = "DELETE FROM customeventrequest WHERE id = ?";
 
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setLong(1, request.getId());
@@ -188,7 +189,7 @@ public class CustomEventRequestService implements IService<CustomEventRequest> {
         Connection conn = db.requireConnection();
         List<CustomEventRequest> requests = new ArrayList<>();
 
-        String sql = "SELECT * FROM CustomEventRequest WHERE user_id = ?";
+        String sql = "SELECT * FROM customeventrequest WHERE user_id = ?";
 
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setLong(1, userId);
@@ -232,7 +233,7 @@ public class CustomEventRequestService implements IService<CustomEventRequest> {
     public boolean updateStatus(Long id, String status, String reason) throws SQLException {
         Connection conn = db.requireConnection();
 
-        String sql = "UPDATE CustomEventRequest SET status = ?, reason = ? WHERE id = ?";
+        String sql = "UPDATE customeventrequest SET status = ?, reason = ? WHERE id = ?";
 
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, status);

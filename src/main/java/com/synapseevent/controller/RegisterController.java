@@ -6,6 +6,7 @@ import com.synapseevent.entities.User;
 import com.synapseevent.service.EntrepriseService;
 import com.synapseevent.service.RoleService;
 import com.synapseevent.service.UserService;
+import com.synapseevent.utils.MaConnection;
 import com.synapseevent.utils.PasswordUtil;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
@@ -62,9 +63,10 @@ public class RegisterController {
     
     private void initializeDefaultData() {
         // Create default roles if not exist (use INSERT IGNORE to avoid duplicates)
-        Connection conn = null;
+        Connection conn = MaConnection.getInstance().getConnection();
         try {
-            conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/synapse_event", "root", "");
+
+            if (conn == null) return;
             
             // Insert roles only if they don't exist
             String[] roleNames = {"Admin", "User", "Manager"};
@@ -100,10 +102,6 @@ public class RegisterController {
             
         } catch (Exception e) {
             e.printStackTrace();
-        } finally {
-            if (conn != null) {
-                try { conn.close(); } catch (Exception e) {}
-            }
         }
     }
     

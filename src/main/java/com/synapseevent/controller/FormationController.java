@@ -15,7 +15,6 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import com.synapseevent.entities.EventTemplate;
-import java.time.LocalTime;
 import javafx.scene.control.SpinnerValueFactory;
 
 public class FormationController implements TemplateAware{

@@ -15,7 +15,7 @@ import java.time.LocalTime;
 import javafx.scene.control.SpinnerValueFactory;
 
 import java.time.LocalDate;
-import java.time.LocalTime;
+
 
 public class TeamBuildingController implements TemplateAware{
     @FXML private TableView<TeamBuildingEvent> teamBuildingTable;

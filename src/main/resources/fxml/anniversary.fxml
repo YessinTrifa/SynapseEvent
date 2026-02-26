@@ -10,68 +10,106 @@
             <Label text="Anniversary Events Management" style="-fx-text-fill: white; -fx-font-size: 24; -fx-font-weight: bold;" />
         </VBox>
     </top>
-    
-    <center>
-        <ScrollPane fitToHeight="true" fitToWidth="true" style="-fx-padding: 0;">
-            <VBox spacing="15" style="-fx-padding: 20;">
-                <Label text="Create/Edit Anniversary Event" style="-fx-font-size: 14; -fx-font-weight: bold;" />
-                
-                <Separator />
-                
-                <!-- Basic Information -->
-                <Label text="Basic Information" style="-fx-font-size: 12; -fx-font-weight: bold; -fx-text-fill: #7c3aed;" />
-                <GridPane hgap="10" vgap="10" style="-fx-padding: 10; -fx-border-color: #e5e7eb; -fx-border-radius: 5; -fx-border-width: 1;">
-                    <columnConstraints>
-                        <ColumnConstraints percentWidth="40" />
-                        <ColumnConstraints percentWidth="60" />
-                    </columnConstraints>
-                    <Label text="Capacity:" GridPane.rowIndex="3" GridPane.columnIndex="0" />
-                    <Spinner fx:id="capacitySpinner" GridPane.rowIndex="3" GridPane.columnIndex="1" />
 
-                    <Label text="Price:" GridPane.rowIndex="4" GridPane.columnIndex="0" />
-                    <Spinner fx:id="priceSpinner" GridPane.rowIndex="4" GridPane.columnIndex="1" />
-                    <Label text="Name:" GridPane.rowIndex="0" GridPane.columnIndex="0" />
-                    <TextField fx:id="nameField" promptText="Event name" GridPane.rowIndex="0" GridPane.columnIndex="1" />
-                    
-                    <Label text="Description:" GridPane.rowIndex="1" GridPane.columnIndex="0" />
-                    <TextArea fx:id="descriptionField" wrapText="true" prefRowCount="3" GridPane.rowIndex="1" GridPane.columnIndex="1" />
-                    
-                    <Label text="Status:" GridPane.rowIndex="2" GridPane.columnIndex="0" />
-                    <ComboBox fx:id="statusComboBox" GridPane.rowIndex="2" GridPane.columnIndex="1" />
-                </GridPane>
-                
-                <Separator />
-                
-                <!-- Schedule -->
-                <Label text="Schedule" style="-fx-font-size: 12; -fx-font-weight: bold; -fx-text-fill: #7c3aed;" />
-                <GridPane hgap="10" vgap="10" style="-fx-padding: 10; -fx-border-color: #e5e7eb; -fx-border-radius: 5; -fx-border-width: 1;">
-                    <columnConstraints>
-                        <ColumnConstraints percentWidth="40" />
-                        <ColumnConstraints percentWidth="60" />
-                    </columnConstraints>
-                    
-                    <Label text="Date:" GridPane.rowIndex="0" GridPane.columnIndex="0" />
-                    <DatePicker fx:id="datePicker" GridPane.rowIndex="0" GridPane.columnIndex="1" />
-                    
-                    <Label text="Start Time:" GridPane.rowIndex="1" GridPane.columnIndex="0" />
-                    <Spinner fx:id="startTimeHourSpinner" GridPane.rowIndex="1" GridPane.columnIndex="1" />
-                    
-                    <Label text="End Time:" GridPane.rowIndex="2" GridPane.columnIndex="0" />
-                    <Spinner fx:id="endTimeHourSpinner" GridPane.rowIndex="2" GridPane.columnIndex="1" />
-                </GridPane>
-                
-                <Separator />
-                
-                <!-- Action Buttons -->
-                <HBox spacing="10" style="-fx-padding: 10;">
-                    <Button text="Add Event" style="-fx-padding: 8 20; -fx-font-weight: bold;" />
-                    <Button text="Update" style="-fx-padding: 8 20; -fx-font-weight: bold;" />
-                    <Button text="Delete" style="-fx-padding: 8 20; -fx-font-weight: bold;" />
-                    <Button text="Clear" style="-fx-padding: 8 20; -fx-font-weight: bold;" />
-                </HBox>
-                
-                <Region VBox.vgrow="ALWAYS" />
+    <center>
+        <SplitPane orientation="VERTICAL">
+            <!-- Top: Form -->
+            <ScrollPane fitToWidth="true">
+                <VBox spacing="15" style="-fx-padding: 20;">
+                    <Label text="Create/Edit Anniversary Event" style="-fx-font-size: 14; -fx-font-weight: bold;" />
+                    <Separator />
+
+                    <!-- Basic Information -->
+                    <Label text="Basic Information" style="-fx-font-size: 12; -fx-font-weight: bold; -fx-text-fill: #7c3aed;" />
+                    <GridPane hgap="10" vgap="10" style="-fx-padding: 10; -fx-border-color: #e5e7eb; -fx-border-radius: 5; -fx-border-width: 1;">
+                        <columnConstraints>
+                            <ColumnConstraints percentWidth="30" />
+                            <ColumnConstraints percentWidth="70" />
+                        </columnConstraints>
+
+                        <Label text="Name:" GridPane.rowIndex="0" GridPane.columnIndex="0" />
+                        <TextField fx:id="nameField" promptText="Event name" GridPane.rowIndex="0" GridPane.columnIndex="1" />
+
+                        <Label text="Description:" GridPane.rowIndex="1" GridPane.columnIndex="0" />
+                        <TextArea fx:id="descriptionField" wrapText="true" prefRowCount="3" GridPane.rowIndex="1" GridPane.columnIndex="1" />
+
+                        <Label text="Status:" GridPane.rowIndex="2" GridPane.columnIndex="0" />
+                        <ComboBox fx:id="statusComboBox" GridPane.rowIndex="2" GridPane.columnIndex="1" />
+
+                        <Label text="Capacity:" GridPane.rowIndex="3" GridPane.columnIndex="0" />
+                        <Spinner fx:id="capacitySpinner" GridPane.rowIndex="3" GridPane.columnIndex="1" />
+
+                        <Label text="Price:" GridPane.rowIndex="4" GridPane.columnIndex="0" />
+                        <Spinner fx:id="priceSpinner" GridPane.rowIndex="4" GridPane.columnIndex="1" />
+                    </GridPane>
+
+                    <Separator />
+
+                    <!-- Schedule -->
+                    <Label text="Schedule" style="-fx-font-size: 12; -fx-font-weight: bold; -fx-text-fill: #7c3aed;" />
+                    <GridPane hgap="10" vgap="10" style="-fx-padding: 10; -fx-border-color: #e5e7eb; -fx-border-radius: 5; -fx-border-width: 1;">
+                        <columnConstraints>
+                            <ColumnConstraints percentWidth="30" />
+                            <ColumnConstraints percentWidth="70" />
+                        </columnConstraints>
+
+                        <Label text="Date:" GridPane.rowIndex="0" GridPane.columnIndex="0" />
+                        <DatePicker fx:id="datePicker" GridPane.rowIndex="0" GridPane.columnIndex="1" />
+
+                        <Label text="Start Hour:" GridPane.rowIndex="1" GridPane.columnIndex="0" />
+                        <Spinner fx:id="startTimeHourSpinner" GridPane.rowIndex="1" GridPane.columnIndex="1" />
+
+                        <Label text="End Hour:" GridPane.rowIndex="2" GridPane.columnIndex="0" />
+                        <Spinner fx:id="endTimeHourSpinner" GridPane.rowIndex="2" GridPane.columnIndex="1" />
+                    </GridPane>
+
+                    <Separator />
+
+                    <!-- Venue -->
+                    <Label text="Venue" style="-fx-font-size: 12; -fx-font-weight: bold; -fx-text-fill: #7c3aed;" />
+                    <GridPane hgap="10" vgap="10" style="-fx-padding: 10; -fx-border-color: #e5e7eb; -fx-border-radius: 5; -fx-border-width: 1;">
+                        <columnConstraints>
+                            <ColumnConstraints percentWidth="30" />
+                            <ColumnConstraints percentWidth="70" />
+                        </columnConstraints>
+
+                        <Label text="Filter by Type:" GridPane.rowIndex="0" GridPane.columnIndex="0" />
+                        <ComboBox fx:id="venueTypeFilterComboBox" GridPane.rowIndex="0" GridPane.columnIndex="1" />
+
+                        <Label text="Venue:" GridPane.rowIndex="1" GridPane.columnIndex="0" />
+                        <ComboBox fx:id="venueComboBox" GridPane.rowIndex="1" GridPane.columnIndex="1" />
+                    </GridPane>
+
+                    <Separator />
+
+                    <!-- Action Buttons -->
+                    <HBox spacing="10" style="-fx-padding: 10;">
+                        <Button text="Add Event" onAction="#addAnniversaryEvent" style="-fx-padding: 8 20; -fx-font-weight: bold; -fx-background-color: #7c3aed; -fx-text-fill: white;" />
+                        <Button text="Update" onAction="#updateAnniversaryEvent" style="-fx-padding: 8 20; -fx-font-weight: bold;" />
+                        <Button text="Delete" onAction="#deleteAnniversaryEvent" style="-fx-padding: 8 20; -fx-font-weight: bold; -fx-background-color: #ef4444; -fx-text-fill: white;" />
+                        <Button text="Publish" onAction="#publishEvent" style="-fx-padding: 8 20; -fx-font-weight: bold; -fx-background-color: #22c55e; -fx-text-fill: white;" />
+                        <Button text="Save as Draft" onAction="#saveAsDraft" style="-fx-padding: 8 20; -fx-font-weight: bold;" />
+                        <Button text="Clear" onAction="#clearFields" style="-fx-padding: 8 20;" />
+                    </HBox>
+                </VBox>
+            </ScrollPane>
+
+            <!-- Bottom: Table -->
+            <VBox spacing="5" style="-fx-padding: 10;">
+                <Label text="Anniversary Events" style="-fx-font-size: 13; -fx-font-weight: bold;" />
+                <TableView fx:id="anniversaryTable" onMouseClicked="#selectAnniversaryEvent" VBox.vgrow="ALWAYS">
+                    <columns>
+                        <TableColumn fx:id="idColumn" text="ID" prefWidth="50" />
+                        <TableColumn fx:id="nameColumn" text="Name" prefWidth="180" />
+                        <TableColumn fx:id="dateColumn" text="Date" prefWidth="100" />
+                        <TableColumn fx:id="descriptionColumn" text="Description" prefWidth="200" />
+                        <TableColumn fx:id="locationColumn" text="Location" prefWidth="130" />
+                        <TableColumn fx:id="capacityColumn" text="Capacity" prefWidth="80" />
+                        <TableColumn fx:id="priceColumn" text="Price" prefWidth="80" />
+                        <TableColumn fx:id="statusColumn" text="Status" prefWidth="80" />
+                    </columns>
+                </TableView>
             </VBox>
-        </ScrollPane>
+        </SplitPane>
     </center>
 </BorderPane>

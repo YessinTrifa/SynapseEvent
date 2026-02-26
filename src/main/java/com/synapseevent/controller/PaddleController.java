@@ -14,7 +14,6 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import com.synapseevent.entities.EventTemplate;
-import java.time.LocalTime;
 import javafx.scene.control.SpinnerValueFactory;
 
 public class PaddleController implements TemplateAware {
@@ -58,6 +57,9 @@ public class PaddleController implements TemplateAware {
         );
         priceSpinner.setValueFactory(
                 new javafx.scene.control.SpinnerValueFactory.DoubleSpinnerValueFactory(0, 100000, 0, 1)
+        );
+        reservationSpinner.setValueFactory(
+                new javafx.scene.control.SpinnerValueFactory.IntegerSpinnerValueFactory(0, 10000, 0)
         );
         idColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
         nameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
