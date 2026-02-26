@@ -17,6 +17,7 @@ DROP TABLE IF EXISTS event_instance;
 DROP TABLE IF EXISTS Utilisateur;
 DROP TABLE IF EXISTS Enterprise;
 DROP TABLE IF EXISTS Role;
+DROP TABLE IF EXISTS CustomEventType;
 
 -- Create Role table
 CREATE TABLE IF NOT EXISTS Role (
@@ -58,6 +59,12 @@ CREATE TABLE IF NOT EXISTS Venue (
     rating DECIMAL(2,1) DEFAULT 0,
     description TEXT,
     amenities TEXT
+);
+CREATE TABLE IF NOT EXISTS CustomEventType (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(255) NOT NULL UNIQUE,
+    description TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 -- Create AnniversaryEvent table

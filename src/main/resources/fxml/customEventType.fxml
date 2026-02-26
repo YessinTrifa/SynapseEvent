@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.synapseevent.controller.CustomEventTypeController"
+      spacing="10" style="-fx-padding: 20;">
+
+    <Label fx:id="typeTitleLabel" text="Custom Event" style="-fx-font-size: 20; -fx-font-weight: bold;"/>
+
+    <TableView fx:id="eventTable" prefHeight="300">
+        <columns>
+            <TableColumn fx:id="idColumn" text="ID" prefWidth="50"/>
+            <TableColumn fx:id="nameColumn" text="Name" prefWidth="150"/>
+            <TableColumn fx:id="dateColumn" text="Date" prefWidth="100"/>
+            <TableColumn fx:id="locationColumn" text="Location" prefWidth="150"/>
+            <TableColumn fx:id="capacityColumn" text="Capacity" prefWidth="80"/>
+            <TableColumn fx:id="priceColumn" text="Price" prefWidth="80"/>
+            <TableColumn fx:id="statusColumn" text="Status" prefWidth="100"/>
+            <TableColumn fx:id="descriptionColumn" text="Description" prefWidth="200"/>
+        </columns>
+    </TableView>
+
+    <GridPane hgap="10" vgap="10">
+        <Label text="Name:" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+        <TextField fx:id="nameField" promptText="Event Name"
+                   GridPane.columnIndex="1" GridPane.rowIndex="0"/>
+
+        <Label text="Date:" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+        <DatePicker fx:id="datePicker"
+                    GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+
+        <Label text="Start Hour:" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
+        <Spinner fx:id="startTimeHourSpinner"
+                 GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+
+        <Label text="End Hour:" GridPane.columnIndex="0" GridPane.rowIndex="3"/>
+        <Spinner fx:id="endTimeHourSpinner"
+                 GridPane.columnIndex="1" GridPane.rowIndex="3"/>
+
+        <Label text="Location:" GridPane.columnIndex="0" GridPane.rowIndex="4"/>
+        <TextField fx:id="locationField" promptText="Location"
+                   GridPane.columnIndex="1" GridPane.rowIndex="4"/>
+
+        <Label text="Capacity:" GridPane.columnIndex="0" GridPane.rowIndex="5"/>
+        <Spinner fx:id="capacitySpinner"
+                 GridPane.columnIndex="1" GridPane.rowIndex="5"/>
+
+        <Label text="Price:" GridPane.columnIndex="0" GridPane.rowIndex="6"/>
+        <Spinner fx:id="priceSpinner"
+                 GridPane.columnIndex="1" GridPane.rowIndex="6"/>
+
+        <Label text="Status:" GridPane.columnIndex="0" GridPane.rowIndex="7"/>
+        <ComboBox fx:id="statusComboBox"
+                  GridPane.columnIndex="1" GridPane.rowIndex="7"/>
+
+        <Label text="Description:" GridPane.columnIndex="0" GridPane.rowIndex="8"/>
+        <TextArea fx:id="descriptionField" promptText="Description" prefRowCount="3"
+                  GridPane.columnIndex="1" GridPane.rowIndex="8"/>
+    </GridPane>
+
+    <HBox spacing="10">
+        <Button text="Add" onAction="#addEvent"/>
+        <Button text="Update" onAction="#updateEvent"/>
+        <Button text="Delete" onAction="#deleteEvent"/>
+        <Button text="Clear" onAction="#clearFields"/>
+        <Button text="Select" onAction="#selectEvent"/>
+    </HBox>
+
+</VBox>

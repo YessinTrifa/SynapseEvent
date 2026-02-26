@@ -16,7 +16,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
-
+import com.synapseevent.service.CustomEventTypeService;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -88,6 +88,7 @@ public class AdminDashboardController {
     private RoleService roleService = new RoleService();
     private List<EventInstance> allEvents = new ArrayList<>();
     private final EventTemplateService templateService = new EventTemplateService();
+    private final CustomEventTypeService customEventTypeService = new CustomEventTypeService();
 
     @FXML
     public void initialize() {
@@ -551,6 +552,19 @@ public class AdminDashboardController {
     private void setupEventTypeFilter() {
         eventTypeFilter.getItems().add("All");
         eventTypeFilter.getItems().addAll("Formation", "Paddle", "Partying", "TeamBuilding", "Anniversary");
+
+        // Load any custom types saved in the DB
+        try {
+            java.util.List<com.synapseevent.entities.CustomEventType> customTypes = customEventTypeService.readAll();
+            for (com.synapseevent.entities.CustomEventType ct : customTypes) {
+                if (!eventTypeFilter.getItems().contains(ct.getName())) {
+                    eventTypeFilter.getItems().add(ct.getName());
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
         eventTypeFilter.setValue("All");
     }
 
@@ -1096,39 +1110,64 @@ public class AdminDashboardController {
 
     @FXML
     private void createEvent() {
-        // Show a dialog to select event type
-        ChoiceDialog<String> dialog = new ChoiceDialog<>("Formation", "Formation", "Paddle", "Partying", "TeamBuilding", "Anniversary", "Create New Type");
+        java.util.List<String> eventTypes = new java.util.ArrayList<>(
+                java.util.Arrays.asList("Formation", "Paddle", "Partying", "TeamBuilding", "Anniversary")
+        );
+        try {
+            customEventTypeService.readAll().forEach(ct -> eventTypes.add(ct.getName()));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        eventTypes.add("Create New Type");
+
+        ChoiceDialog<String> dialog = new ChoiceDialog<>(eventTypes.get(0), eventTypes);
         dialog.setTitle("Create Event");
         dialog.setHeaderText("Select Event Type");
         dialog.setContentText("Choose the type of event to create:");
 
         dialog.showAndWait().ifPresent(eventType -> {
             if ("Create New Type".equals(eventType)) {
-                TextInputDialog newTypeDialog = new TextInputDialog();
-                newTypeDialog.setTitle("Create New Event Type");
-                newTypeDialog.setHeaderText("Enter the name of the new event type:");
-                newTypeDialog.setContentText("Type:");
+                // Step A: ask for the type name
+                TextInputDialog nameDialog = new TextInputDialog();
+                nameDialog.setTitle("Create New Event Type");
+                nameDialog.setHeaderText("Enter the name of the new event type:");
+                nameDialog.setContentText("Type name:");
 
-                newTypeDialog.showAndWait().ifPresent(newType -> {
-                    if (!newType.trim().isEmpty()) {
-                        // For now, just show a message. In a full implementation, you'd create a new FXML or handle it.
-                        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                        alert.setTitle("New Type Created");
-                        alert.setHeaderText("New event type '" + newType + "' created.");
-                        alert.setContentText("Note: Creation forms for new types need to be implemented.");
-                        alert.showAndWait();
-                        // Optionally, add to the filter
-                        if (!eventTypeFilter.getItems().contains(newType)) {
-                            eventTypeFilter.getItems().add(newType);
+                nameDialog.showAndWait().ifPresent(newTypeName -> {
+                    if (newTypeName.trim().isEmpty()) return;
+
+                    // Step B: ask for an optional description
+                    TextInputDialog descDialog = new TextInputDialog();
+                    descDialog.setTitle("Type Description");
+                    descDialog.setHeaderText("Enter a description for '" + newTypeName + "' (optional):");
+                    descDialog.setContentText("Description:");
+
+                    String description = descDialog.showAndWait().orElse("");
+
+                    // Step C: save to DB
+                    try {
+                        com.synapseevent.entities.CustomEventType existing = customEventTypeService.getByName(newTypeName.trim());
+                        if (existing == null) {
+                            com.synapseevent.entities.CustomEventType newType =
+                                    new com.synapseevent.entities.CustomEventType(newTypeName.trim(), description);
+                            customEventTypeService.ajouter(newType);
                         }
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
+
+                    // Step D: add to filter if not already there
+                    if (!eventTypeFilter.getItems().contains(newTypeName.trim())) {
+                        eventTypeFilter.getItems().add(newTypeName.trim());
+                    }
+
+                    // Step E: open the generic form for this new type
+                    openCustomEventTypeForm(newTypeName.trim());
                 });
-            }  else {
-                    switch (eventType) {
-                    case "Formation", "Paddle", "Partying", "TeamBuilding", "Anniversary" ->
-                        openEventFormWithOptionalTemplate(eventType);
+
+            } else {
+                openEventFormWithOptionalTemplate(eventType);
             }
-        }
         });
     }
 
@@ -1201,6 +1240,21 @@ private void openEventFormWithOptionalTemplate(String eventType) {
             } catch (Exception e) {
                 e.printStackTrace();
             }
+        }private void openCustomEventTypeForm(String typeName) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/customEventType.fxml"));
+            Parent root = loader.load();
+
+            CustomEventTypeController ctrl = loader.getController();
+            ctrl.setTypeName(typeName);
+
+            Stage stage = new Stage();
+            stage.setScene(new Scene(root, 900, 700));
+            stage.setTitle(typeName + " Events");
+            stage.show();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
+    }
 
 }
