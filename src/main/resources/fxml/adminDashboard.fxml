@@ -63,7 +63,7 @@
     </HBox>
 
     <!-- Main TabPane -->
-    <TabPane tabClosingPolicy="UNAVAILABLE" style="-fx-background-color: transparent; -fx-padding: 10 20 20 20;" VBox.vgrow="ALWAYS">
+    <TabPane fx:id="tabPane" tabClosingPolicy="UNAVAILABLE" style="-fx-background-color: transparent; -fx-padding: 10 20 20 20;" VBox.vgrow="ALWAYS">
         <Tab text="👥 Users" style="-fx-background-color: #1e293b; -fx-text-fill: #94a3b8; -fx-font-size: 13;">
             <content>
                 <VBox spacing="15" styleClass="card" style="-fx-background-color: rgba(15, 23, 42, 0.5); -fx-background-radius: 12; -fx-padding: 20;">

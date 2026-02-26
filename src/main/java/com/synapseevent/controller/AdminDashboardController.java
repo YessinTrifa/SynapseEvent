@@ -105,6 +105,16 @@ public class AdminDashboardController {
         loadEvents();
         setupEventTypeFilter();
         updateStatistics();
+        tabPane.getSelectionModel().selectedItemProperty().addListener((obs, oldTab, newTab) -> {
+            if (newTab != null) {
+                String tabText = newTab.getText();
+                if (tabText.contains("Events")) loadEvents();
+                else if (tabText.contains("Users")) loadUsers();
+                else if (tabText.contains("Bookings")) loadBookings();
+                else if (tabText.contains("Requests")) loadCustomRequests();
+                else if (tabText.contains("Enterprises")) loadEnterprises();
+            }
+        });
     }
 
     private void updateStatistics() {
