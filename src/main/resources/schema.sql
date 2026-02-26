@@ -122,6 +122,9 @@ CREATE TABLE IF NOT EXISTS PartyingEvent (
     organizer VARCHAR(255),
     description TEXT,
     status VARCHAR(20) DEFAULT 'draft',
+    theme VARCHAR(100),
+    music_type VARCHAR(100),
+    age_restriction INT DEFAULT 18,
     FOREIGN KEY (venue_id) REFERENCES Venue(id) ON DELETE SET NULL
 );
 

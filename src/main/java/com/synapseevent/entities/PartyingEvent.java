@@ -23,6 +23,9 @@ public class PartyingEvent {
     private String description;
 
     private String status = "draft";
+    private String theme;
+    private String musicType;
+    private Integer ageRestriction = 18;
 
     private final String type = "Partying";
 
@@ -106,6 +109,15 @@ public class PartyingEvent {
     }
 
     public String getType() { return type; }
+
+    public String getTheme() { return theme; }
+    public void setTheme(String theme) { this.theme = theme; }
+
+    public String getMusicType() { return musicType; }
+    public void setMusicType(String musicType) { this.musicType = musicType; }
+
+    public Integer getAgeRestriction() { return ageRestriction; }
+    public void setAgeRestriction(Integer ageRestriction) { this.ageRestriction = ageRestriction; }
 
     @Override
     public String toString() { return name; }

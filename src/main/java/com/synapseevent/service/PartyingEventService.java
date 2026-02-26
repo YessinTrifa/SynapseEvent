@@ -16,7 +16,7 @@ public class PartyingEventService implements IService<PartyingEvent> {
     @Override
     public boolean ajouter(PartyingEvent event) throws SQLException {
         Connection conn = db.requireConnection();
-        String sql = "INSERT INTO PartyingEvent (name, date, start_time, end_time, venue_id, capacity, price, organizer, description, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO PartyingEvent (name, date, start_time, end_time, venue_id, capacity, price, organizer, description, status, theme, music_type, age_restriction) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         try (PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             stmt.setString(1, event.getName());
             stmt.setDate(2, Date.valueOf(event.getDate()));
@@ -48,6 +48,13 @@ public class PartyingEventService implements IService<PartyingEvent> {
             stmt.setString(8, event.getOrganizer());
             stmt.setString(9, event.getDescription());
             stmt.setString(10, event.getStatus());
+            stmt.setString(11, event.getTheme());
+            stmt.setString(12, event.getMusicType());
+            if (event.getAgeRestriction() != null) {
+                stmt.setInt(13, event.getAgeRestriction());
+            } else {
+                stmt.setInt(13, 18);
+            }
             int res = stmt.executeUpdate();
             ResultSet rs = stmt.getGeneratedKeys();
             if (rs.next()) {
@@ -97,7 +104,7 @@ public class PartyingEventService implements IService<PartyingEvent> {
     @Override
     public boolean modifier(PartyingEvent event) throws SQLException {
         Connection conn = db.requireConnection();
-        String sql = "UPDATE PartyingEvent SET name = ?, date = ?, start_time = ?, end_time = ?, venue_id = ?, capacity = ?, price = ?, organizer = ?, description = ?, status = ? WHERE id = ?";
+        String sql = "UPDATE PartyingEvent SET name = ?, date = ?, start_time = ?, end_time = ?, venue_id = ?, capacity = ?, price = ?, organizer = ?, description = ?, status = ?, theme = ?, music_type = ?, age_restriction = ? WHERE id = ?";
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, event.getName());
             stmt.setDate(2, Date.valueOf(event.getDate()));
@@ -129,7 +136,14 @@ public class PartyingEventService implements IService<PartyingEvent> {
             stmt.setString(8, event.getOrganizer());
             stmt.setString(9, event.getDescription());
             stmt.setString(10, event.getStatus());
-            stmt.setLong(11, event.getId());
+            stmt.setString(11, event.getTheme());
+            stmt.setString(12, event.getMusicType());
+            if (event.getAgeRestriction() != null) {
+                stmt.setInt(13, event.getAgeRestriction());
+            } else {
+                stmt.setInt(13, 18);
+            }
+            stmt.setLong(14, event.getId());
             int res = stmt.executeUpdate();
             return res > 0;
         } catch (SQLException e) {
@@ -284,6 +298,27 @@ public class PartyingEventService implements IService<PartyingEvent> {
         event.setOrganizer(rs.getString("organizer"));
         event.setDescription(rs.getString("description"));
         event.setStatus(rs.getString("status"));
+        
+        // New fields - handle gracefully if columns don't exist yet
+        try {
+            event.setTheme(rs.getString("theme"));
+        } catch (SQLException e) {
+            // Column might not exist in older databases
+            event.setTheme(null);
+        }
+        try {
+            event.setMusicType(rs.getString("music_type"));
+        } catch (SQLException e) {
+            event.setMusicType(null);
+        }
+        try {
+            int ageRestriction = rs.getInt("age_restriction");
+            if (!rs.wasNull()) {
+                event.setAgeRestriction(ageRestriction);
+            }
+        } catch (SQLException e) {
+            event.setAgeRestriction(18);
+        }
         
         return event;
     }

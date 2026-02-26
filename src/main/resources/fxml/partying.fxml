@@ -3,121 +3,127 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.paint.Color?>
+<?import javafx.scene.paint.RadialGradient?>
+<?import javafx.scene.paint.Stop?>
 
-<BorderPane xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.synapseevent.controller.PartyingController">
+<BorderPane xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" 
+    fx:controller="com.synapseevent.controller.PartyingController"
+    style="-fx-background-color: linear-gradient(from 0% 0% to 100% 100%, #0f172a 0%, #111827 50%, #1e293b 100%);">
     <top>
-        <VBox style="-fx-background-color: linear-gradient(to right, #dc2626, #ef4444); -fx-padding: 20;" spacing="10">
+        <VBox style="-fx-background-color: rgba(15, 23, 42, 0.92); -fx-padding: 20; -fx-border-color: rgba(255,255,255,0.10); -fx-border-width: 0 0 1 0;" spacing="10">
             <Label text="🎉 Partying Events Management" style="-fx-text-fill: white; -fx-font-size: 28; -fx-font-weight: bold;" />
-            <Label text="Create and manage amazing party events" style="-fx-text-fill: rgba(255,255,255,0.9); -fx-font-size: 14;" />
+            <Label text="Create and manage amazing party events" style="-fx-text-fill: #94a3b8; -fx-font-size: 14;" />
         </VBox>
     </top>
     
     <center>
-        <SplitPane dividerPositions="0.4" style="-fx-padding: 10;">
+        <SplitPane dividerPositions="0.4" style="-fx-padding: 10; -fx-background-color: transparent;">
             <!-- Left Panel - Form -->
-            <ScrollPane fitToHeight="true" fitToWidth="true" style="-fx-background-color: #f8fafc;">
+            <ScrollPane fitToHeight="true" fitToWidth="true" style="-fx-background-color: transparent;">
                 <VBox spacing="20" style="-fx-padding: 20;">
                     <!-- Form Header -->
-                    <VBox spacing="5" style="-fx-background-color: white; -fx-padding: 15; -fx-border-radius: 8; -fx-background-radius: 8; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 2);">
-                        <Label text="Create/Edit Partying Event" style="-fx-font-size: 18; -fx-font-weight: bold; -fx-text-fill: #1e293b;" />
-                        <Label text="Fill in the details below to create an unforgettable party event" style="-fx-font-size: 12; -fx-text-fill: #64748b;" />
+                    <VBox spacing="5" style="-fx-background-color: rgba(30, 41, 59, 0.5); -fx-padding: 15; -fx-border-radius: 8; -fx-background-radius: 8; -fx-border-color: rgba(255,255,255,0.1); -fx-border-radius: 8;">
+                        <Label text="Create/Edit Partying Event" style="-fx-font-size: 18; -fx-font-weight: bold; -fx-text-fill: white;" />
+                        <Label text="Fill in the details below to create an unforgettable party event" style="-fx-font-size: 12; -fx-text-fill: #94a3b8;" />
                     </VBox>
                     
                     <!-- Basic Information -->
-                    <VBox spacing="10" style="-fx-background-color: white; -fx-padding: 15; -fx-border-radius: 8; -fx-background-radius: 8; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 2);">
-                        <Label text="🎊 Basic Information" style="-fx-font-size: 14; -fx-font-weight: bold; -fx-text-fill: #dc2626;" />
+                    <VBox spacing="10" style="-fx-background-color: rgba(30, 41, 59, 0.5); -fx-padding: 15; -fx-border-radius: 8; -fx-background-radius: 8; -fx-border-color: rgba(255,255,255,0.1); -fx-border-radius: 8;">
+                        <Label text="🎊 Party Details" style="-fx-font-size: 14; -fx-font-weight: bold; -fx-text-fill: #f87171;" />
                         <GridPane hgap="15" vgap="12">
                             <columnConstraints>
                                 <ColumnConstraints percentWidth="35" />
                                 <ColumnConstraints percentWidth="65" />
                             </columnConstraints>
                             
-                            <Label text="Event Name:" GridPane.rowIndex="0" GridPane.columnIndex="0" style="-fx-font-weight: 600; -fx-text-fill: #374151;" />
-                            <TextField fx:id="nameField" promptText="Enter party event name" GridPane.rowIndex="0" GridPane.columnIndex="1" style="-fx-pref-height: 35; -fx-border-color: #d1d5db; -fx-border-radius: 6;" />
+                            <Label text="Event Name:" GridPane.rowIndex="0" GridPane.columnIndex="0" style="-fx-font-weight: 600; -fx-text-fill: #e2e8f0;" />
+                            <TextField fx:id="nameField" promptText="Enter party event name" GridPane.rowIndex="0" GridPane.columnIndex="1" style="-fx-pref-height: 40; -fx-background-color: rgba(15, 23, 42, 0.8); -fx-text-fill: white; -fx-prompt-text-fill: #64748b; -fx-border-color: rgba(255,255,255,0.2); -fx-border-radius: 8; -fx-background-radius: 8; -fx-font-size: 14;" />
                             
-                            <Label text="Description:" GridPane.rowIndex="1" GridPane.columnIndex="0" style="-fx-font-weight: 600; -fx-text-fill: #374151;" />
-                            <TextArea fx:id="descriptionField" wrapText="true" prefRowCount="3" GridPane.rowIndex="1" GridPane.columnIndex="1" style="-fx-border-color: #d1d5db; -fx-border-radius: 6;" />
+                            <Label text="Theme:" GridPane.rowIndex="1" GridPane.columnIndex="0" style="-fx-font-weight: 600; -fx-text-fill: #e2e8f0;" />
+                            <ComboBox fx:id="themeComboBox" promptText="Select party theme" GridPane.rowIndex="1" GridPane.columnIndex="1" style="-fx-pref-height: 40; -fx-background-color: rgba(15, 23, 42, 0.8); -fx-text-fill: white; -fx-prompt-text-fill: #64748b; -fx-border-color: rgba(255,255,255,0.2); -fx-border-radius: 8;" />
                             
-                            <Label text="Theme:" GridPane.rowIndex="2" GridPane.columnIndex="0" style="-fx-font-weight: 600; -fx-text-fill: #374151;" />
-                            <ComboBox fx:id="themeComboBox" GridPane.rowIndex="2" GridPane.columnIndex="1" style="-fx-pref-height: 35; -fx-border-color: #d1d5db; -fx-border-radius: 6;" />
+                            <Label text="Music Type:" GridPane.rowIndex="2" GridPane.columnIndex="0" style="-fx-font-weight: 600; -fx-text-fill: #e2e8f0;" />
+                            <ComboBox fx:id="musicTypeComboBox" promptText="Select music type" GridPane.rowIndex="2" GridPane.columnIndex="1" style="-fx-pref-height: 40; -fx-background-color: rgba(15, 23, 42, 0.8); -fx-text-fill: white; -fx-prompt-text-fill: #64748b; -fx-border-color: rgba(255,255,255,0.2); -fx-border-radius: 8;" />
                             
-                            <Label text="Music Type:" GridPane.rowIndex="3" GridPane.columnIndex="0" style="-fx-font-weight: 600; -fx-text-fill: #374151;" />
-                            <ComboBox fx:id="musicTypeComboBox" GridPane.rowIndex="3" GridPane.columnIndex="1" style="-fx-pref-height: 35; -fx-border-color: #d1d5db; -fx-border-radius: 6;" />
+                            <Label text="Description:" GridPane.rowIndex="3" GridPane.columnIndex="0" style="-fx-font-weight: 600; -fx-text-fill: #e2e8f0;" />
+                            <TextArea fx:id="descriptionField" wrapText="true" prefRowCount="2" promptText="Describe your event..." GridPane.rowIndex="3" GridPane.columnIndex="1" style="-fx-background-color: rgba(15, 23, 42, 0.8); -fx-text-fill: white; -fx-prompt-text-fill: #64748b; -fx-border-color: rgba(255,255,255,0.2); -fx-border-radius: 8;" />
                             
-                            <Label text="Status:" GridPane.rowIndex="4" GridPane.columnIndex="0" style="-fx-font-weight: 600; -fx-text-fill: #374151;" />
-                            <ComboBox fx:id="statusComboBox" GridPane.rowIndex="4" GridPane.columnIndex="1" style="-fx-pref-height: 35; -fx-border-color: #d1d5db; -fx-border-radius: 6;" />
+                            <Label text="Status:" GridPane.rowIndex="4" GridPane.columnIndex="0" style="-fx-font-weight: 600; -fx-text-fill: #e2e8f0;" />
+                            <ComboBox fx:id="statusComboBox" GridPane.rowIndex="4" GridPane.columnIndex="1" style="-fx-pref-height: 40; -fx-background-color: rgba(15, 23, 42, 0.8); -fx-text-fill: white; -fx-border-color: rgba(255,255,255,0.2); -fx-border-radius: 8;" />
                         </GridPane>
                     </VBox>
                     
-                    <!-- Schedule & Venue -->
-                    <VBox spacing="10" style="-fx-background-color: white; -fx-padding: 15; -fx-border-radius: 8; -fx-background-radius: 8; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 2);">
-                        <Label text="📅 Schedule &amp; Venue" style="-fx-font-size: 14; -fx-font-weight: bold; -fx-text-fill: #dc2626;" />
+                    <!-- Schedule &amp; Venue -->
+                    <VBox spacing="10" style="-fx-background-color: rgba(30, 41, 59, 0.5); -fx-padding: 15; -fx-border-radius: 8; -fx-background-radius: 8; -fx-border-color: rgba(255,255,255,0.1); -fx-border-radius: 8;">
+                        <Label text="📅 Schedule &amp; Venue" style="-fx-font-size: 14; -fx-font-weight: bold; -fx-text-fill: #f87171;" />
                         <GridPane hgap="15" vgap="12">
                             <columnConstraints>
                                 <ColumnConstraints percentWidth="35" />
                                 <ColumnConstraints percentWidth="65" />
                             </columnConstraints>
                             
-                            <Label text="Date:" GridPane.rowIndex="0" GridPane.columnIndex="0" style="-fx-font-weight: 600; -fx-text-fill: #374151;" />
-                            <DatePicker fx:id="datePicker" GridPane.rowIndex="0" GridPane.columnIndex="1" style="-fx-pref-height: 35; -fx-border-color: #d1d5db; -fx-border-radius: 6;" />
+                            <Label text="Date:" GridPane.rowIndex="0" GridPane.columnIndex="0" style="-fx-font-weight: 600; -fx-text-fill: #e2e8f0;" />
+                            <DatePicker fx:id="datePicker" promptText="Select date" GridPane.rowIndex="0" GridPane.columnIndex="1" style="-fx-pref-height: 40; -fx-background-color: rgba(15, 23, 42, 0.8); -fx-text-fill: white; -fx-prompt-text-fill: #64748b; -fx-border-color: rgba(255,255,255,0.2); -fx-border-radius: 8;" />
                             
-                            <Label text="Start Time:" GridPane.rowIndex="1" GridPane.columnIndex="0" style="-fx-font-weight: 600; -fx-text-fill: #374151;" />
-                            <Spinner fx:id="startTimeHourSpinner" GridPane.rowIndex="1" GridPane.columnIndex="1" style="-fx-pref-height: 35; -fx-border-color: #d1d5db; -fx-border-radius: 6;" />
+                            <Label text="Start Time:" GridPane.rowIndex="1" GridPane.columnIndex="0" style="-fx-font-weight: 600; -fx-text-fill: #e2e8f0;" />
+                            <ComboBox fx:id="startTimeComboBox" promptText="Select start time" GridPane.rowIndex="1" GridPane.columnIndex="1" style="-fx-pref-height: 40; -fx-background-color: rgba(15, 23, 42, 0.8); -fx-text-fill: white; -fx-prompt-text-fill: #64748b; -fx-border-color: rgba(255,255,255,0.2); -fx-border-radius: 8;" />
                             
-                            <Label text="End Time:" GridPane.rowIndex="2" GridPane.columnIndex="0" style="-fx-font-weight: 600; -fx-text-fill: #374151;" />
-                            <Spinner fx:id="endTimeHourSpinner" GridPane.rowIndex="2" GridPane.columnIndex="1" style="-fx-pref-height: 35; -fx-border-color: #d1d5db; -fx-border-radius: 6;" />
+                            <Label text="End Time:" GridPane.rowIndex="2" GridPane.columnIndex="0" style="-fx-font-weight: 600; -fx-text-fill: #e2e8f0;" />
+                            <ComboBox fx:id="endTimeComboBox" promptText="Select end time" GridPane.rowIndex="2" GridPane.columnIndex="1" style="-fx-pref-height: 40; -fx-background-color: rgba(15, 23, 42, 0.8); -fx-text-fill: white; -fx-prompt-text-fill: #64748b; -fx-border-color: rgba(255,255,255,0.2); -fx-border-radius: 8;" />
                             
-                            <Label text="Venue Type:" GridPane.rowIndex="3" GridPane.columnIndex="0" style="-fx-font-weight: 600; -fx-text-fill: #374151;" />
-                            <ComboBox fx:id="venueTypeFilterComboBox" GridPane.rowIndex="3" GridPane.columnIndex="1" style="-fx-pref-height: 35; -fx-border-color: #d1d5db; -fx-border-radius: 6;" />
+                            <Label text="Venue Type:" GridPane.rowIndex="3" GridPane.columnIndex="0" style="-fx-font-weight: 600; -fx-text-fill: #e2e8f0;" />
+                            <ComboBox fx:id="venueTypeFilterComboBox" GridPane.rowIndex="3" GridPane.columnIndex="1" style="-fx-pref-height: 40; -fx-background-color: rgba(15, 23, 42, 0.8); -fx-text-fill: white; -fx-border-color: rgba(255,255,255,0.2); -fx-border-radius: 8;" />
                             
-                            <Label text="Venue:" GridPane.rowIndex="4" GridPane.columnIndex="0" style="-fx-font-weight: 600; -fx-text-fill: #374151;" />
-                            <ComboBox fx:id="venueComboBox" GridPane.rowIndex="4" GridPane.columnIndex="1" style="-fx-pref-height: 35; -fx-border-color: #d1d5db; -fx-border-radius: 6;" />
+                            <Label text="Venue:" GridPane.rowIndex="4" GridPane.columnIndex="0" style="-fx-font-weight: 600; -fx-text-fill: #e2e8f0;" />
+                            <ComboBox fx:id="venueComboBox" promptText="Select venue" GridPane.rowIndex="4" GridPane.columnIndex="1" style="-fx-pref-height: 40; -fx-background-color: rgba(15, 23, 42, 0.8); -fx-text-fill: white; -fx-prompt-text-fill: #64748b; -fx-border-color: rgba(255,255,255,0.2); -fx-border-radius: 8;" />
                         </GridPane>
                     </VBox>
                     
-                    <!-- Pricing & Capacity -->
-                    <VBox spacing="10" style="-fx-background-color: white; -fx-padding: 15; -fx-border-radius: 8; -fx-background-radius: 8; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 2);">
-                        <Label text="💰 Pricing &amp; Capacity" style="-fx-font-size: 14; -fx-font-weight: bold; -fx-text-fill: #dc2626;" />
+                    <!-- Pricing &amp; Capacity -->
+                    <VBox spacing="10" style="-fx-background-color: rgba(30, 41, 59, 0.5); -fx-padding: 15; -fx-border-radius: 8; -fx-background-radius: 8; -fx-border-color: rgba(255,255,255,0.1); -fx-border-radius: 8;">
+                        <Label text="💰 Pricing &amp; Capacity" style="-fx-font-size: 14; -fx-font-weight: bold; -fx-text-fill: #f87171;" />
                         <GridPane hgap="15" vgap="12">
                             <columnConstraints>
                                 <ColumnConstraints percentWidth="35" />
                                 <ColumnConstraints percentWidth="65" />
                             </columnConstraints>
                             
-                            <Label text="Capacity:" GridPane.rowIndex="0" GridPane.columnIndex="0" style="-fx-font-weight: 600; -fx-text-fill: #374151;" />
-                            <Spinner fx:id="capacitySpinner" GridPane.rowIndex="0" GridPane.columnIndex="1" style="-fx-pref-height: 35; -fx-border-color: #d1d5db; -fx-border-radius: 6;" />
+                            <Label text="Capacity:" GridPane.rowIndex="0" GridPane.columnIndex="0" style="-fx-font-weight: 600; -fx-text-fill: #e2e8f0;" />
+                            <TextField fx:id="capacityField" promptText="Number of guests" GridPane.rowIndex="0" GridPane.columnIndex="1" style="-fx-pref-height: 40; -fx-background-color: rgba(15, 23, 42, 0.8); -fx-text-fill: white; -fx-prompt-text-fill: #64748b; -fx-border-color: rgba(255,255,255,0.2); -fx-border-radius: 8; -fx-background-radius: 8; -fx-font-size: 14;" />
                             
-                            <Label text="Price (TND):" GridPane.rowIndex="1" GridPane.columnIndex="0" style="-fx-font-weight: 600; -fx-text-fill: #374151;" />
-                            <Spinner fx:id="priceSpinner" GridPane.rowIndex="1" GridPane.columnIndex="1" style="-fx-pref-height: 35; -fx-border-color: #d1d5db; -fx-border-radius: 6;" />
+                            <Label text="Price (TND):" GridPane.rowIndex="1" GridPane.columnIndex="0" style="-fx-font-weight: 600; -fx-text-fill: #e2e8f0;" />
+                            <TextField fx:id="priceField" promptText="Ticket price" GridPane.rowIndex="1" GridPane.columnIndex="1" style="-fx-pref-height: 40; -fx-background-color: rgba(15, 23, 42, 0.8); -fx-text-fill: white; -fx-prompt-text-fill: #64748b; -fx-border-color: rgba(255,255,255,0.2); -fx-border-radius: 8; -fx-background-radius: 8; -fx-font-size: 14;" />
                             
-                            <Label text="Min Age:" GridPane.rowIndex="2" GridPane.columnIndex="0" style="-fx-font-weight: 600; -fx-text-fill: #374151;" />
-                            <Spinner fx:id="ageRestrictionSpinner" GridPane.rowIndex="2" GridPane.columnIndex="1" style="-fx-pref-height: 35; -fx-border-color: #d1d5db; -fx-border-radius: 6;" />
+                            <Label text="Min Age:" GridPane.rowIndex="2" GridPane.columnIndex="0" style="-fx-font-weight: 600; -fx-text-fill: #e2e8f0;" />
+                            <TextField fx:id="ageRestrictionField" promptText="Minimum age requirement" GridPane.rowIndex="2" GridPane.columnIndex="1" style="-fx-pref-height: 40; -fx-background-color: rgba(15, 23, 42, 0.8); -fx-text-fill: white; -fx-prompt-text-fill: #64748b; -fx-border-color: rgba(255,255,255,0.2); -fx-border-radius: 8; -fx-background-radius: 8; -fx-font-size: 14;" />
                             
-                            <Label text="Catering:" GridPane.rowIndex="3" GridPane.columnIndex="0" style="-fx-font-weight: 600; -fx-text-fill: #374151;" />
-                            <CheckBox fx:id="cateringCheckBox" text="Includes catering" GridPane.rowIndex="3" GridPane.columnIndex="1" style="-fx-text-fill: #374151;" />
+                            <Label text="Catering:" GridPane.rowIndex="3" GridPane.columnIndex="0" style="-fx-font-weight: 600; -fx-text-fill: #e2e8f0;" />
+                            <CheckBox fx:id="cateringCheckBox" text="Includes catering" GridPane.rowIndex="3" GridPane.columnIndex="1" style="-fx-text-fill: #e2e8f0;" />
                         </GridPane>
                     </VBox>
                     
                     <!-- Filters -->
-                    <VBox spacing="10" style="-fx-background-color: white; -fx-padding: 15; -fx-border-radius: 8; -fx-background-radius: 8; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 2);">
-                        <Label text="🔍 Filters" style="-fx-font-size: 14; -fx-font-weight: bold; -fx-text-fill: #dc2626;" />
+                    <VBox spacing="10" style="-fx-background-color: rgba(30, 41, 59, 0.5); -fx-padding: 15; -fx-border-radius: 8; -fx-background-radius: 8; -fx-border-color: rgba(255,255,255,0.1); -fx-border-radius: 8;">
+                        <Label text="🔍 Filters" style="-fx-font-size: 14; -fx-font-weight: bold; -fx-text-fill: #f87171;" />
                         <GridPane hgap="15" vgap="12">
                             <columnConstraints>
                                 <ColumnConstraints percentWidth="35" />
                                 <ColumnConstraints percentWidth="65" />
                             </columnConstraints>
                             
-                            <Label text="Filter by Date:" GridPane.rowIndex="0" GridPane.columnIndex="0" style="-fx-font-weight: 600; -fx-text-fill: #374151;" />
-                            <DatePicker fx:id="filterDatePicker" GridPane.rowIndex="0" GridPane.columnIndex="1" style="-fx-pref-height: 35; -fx-border-color: #d1d5db; -fx-border-radius: 6;" />
+                            <Label text="Filter by Date:" GridPane.rowIndex="0" GridPane.columnIndex="0" style="-fx-font-weight: 600; -fx-text-fill: #e2e8f0;" />
+                            <DatePicker fx:id="filterDatePicker" promptText="Select filter date" GridPane.rowIndex="0" GridPane.columnIndex="1" style="-fx-pref-height: 40; -fx-background-color: rgba(15, 23, 42, 0.8); -fx-text-fill: white; -fx-prompt-text-fill: #64748b; -fx-border-color: rgba(255,255,255,0.2); -fx-border-radius: 8;" />
                         </GridPane>
                     </VBox>
                     
                     <!-- Action Buttons -->
-                    <HBox spacing="10" style="-fx-padding: 10;">
-                        <Button text="➕ Add Event" onAction="#addPartyingEvent" style="-fx-padding: 10 20; -fx-font-weight: bold; -fx-background-color: #dc2626; -fx-text-fill: white; -fx-border-radius: 6; -fx-background-radius: 6;" />
-                        <Button text="✏️ Update" onAction="#updatePartyingEvent" style="-fx-padding: 10 20; -fx-font-weight: bold; -fx-background-color: #059669; -fx-text-fill: white; -fx-border-radius: 6; -fx-background-radius: 6;" />
-                        <Button text="🗑️ Delete" onAction="#deletePartyingEvent" style="-fx-padding: 10 20; -fx-font-weight: bold; -fx-background-color: #dc2626; -fx-text-fill: white; -fx-border-radius: 6; -fx-background-radius: 6;" />
-                        <Button text="🔄 Clear" onAction="#clearFields" style="-fx-padding: 10 20; -fx-font-weight: bold; -fx-background-color: #6b7280; -fx-text-fill: white; -fx-border-radius: 6; -fx-background-radius: 6;" />
+                    <HBox spacing="12" style="-fx-padding: 10;">
+                        <Button text="➕ Add Event" onAction="#addPartyingEvent" style="-fx-padding: 12 24; -fx-font-weight: bold; -fx-background-color: #dc2626; -fx-text-fill: white; -fx-border-radius: 8; -fx-background-radius: 8; -fx-font-size: 14;" />
+                        <Button text="✏️ Update" onAction="#updatePartyingEvent" style="-fx-padding: 12 24; -fx-font-weight: bold; -fx-background-color: #059669; -fx-text-fill: white; -fx-border-radius: 8; -fx-background-radius: 8; -fx-font-size: 14;" />
+                        <Button text="🗑️ Delete" onAction="#deletePartyingEvent" style="-fx-padding: 12 24; -fx-font-weight: bold; -fx-background-color: #dc2626; -fx-text-fill: white; -fx-border-radius: 8; -fx-background-radius: 8; -fx-font-size: 14;" />
+                        <Button text="🔄 Clear" onAction="#clearFields" style="-fx-padding: 12 24; -fx-font-weight: bold; -fx-background-color: #6b7280; -fx-text-fill: white; -fx-border-radius: 8; -fx-background-radius: 8; -fx-font-size: 14;" />
                     </HBox>
                 </VBox>
             </ScrollPane>
@@ -125,30 +131,30 @@
             <!-- Right Panel - Table -->
             <VBox spacing="10" style="-fx-padding: 10;">
                 <!-- Table Header -->
-                <VBox spacing="5" style="-fx-background-color: white; -fx-padding: 15; -fx-border-radius: 8; -fx-background-radius: 8; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 2);">
-                    <Label text="🎊 Partying Events List" style="-fx-font-size: 18; -fx-font-weight: bold; -fx-text-fill: #1e293b;" />
-                    <Label text="Click on an event to edit its details" style="-fx-font-size: 12; -fx-text-fill: #64748b;" />
+                <VBox spacing="5" style="-fx-background-color: rgba(30, 41, 59, 0.5); -fx-padding: 15; -fx-border-radius: 8; -fx-background-radius: 8; -fx-border-color: rgba(255,255,255,0.1); -fx-border-radius: 8;">
+                    <Label text="🎊 Partying Events List" style="-fx-font-size: 18; -fx-font-weight: bold; -fx-text-fill: white;" />
+                    <Label text="Click on an event to edit its details" style="-fx-font-size: 12; -fx-text-fill: #94a3b8;" />
                 </VBox>
                 
                 <!-- Table -->
-                <TableView fx:id="partyingTable" style="-fx-background-color: white; -fx-border-radius: 8; -fx-background-radius: 8; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 2);" VBox.vgrow="ALWAYS">
+                <TableView fx:id="partyingTable" onMouseClicked="#selectPartyingEvent" style="-fx-background-color: rgba(30, 41, 59, 0.4); -fx-border-radius: 8; -fx-background-radius: 8; -fx-border-color: rgba(255,255,255,0.1); -fx-border-radius: 8; -fx-text-fill: white;" VBox.vgrow="ALWAYS">
                     <columns>
-                        <TableColumn fx:id="idColumn" text="ID" prefWidth="50" />
-                        <TableColumn fx:id="nameColumn" text="Name" prefWidth="150" />
-                        <TableColumn fx:id="dateColumn" text="Date" prefWidth="100" />
-                        <TableColumn fx:id="venueColumn" text="Venue" prefWidth="120" />
-                        <TableColumn fx:id="capacityColumn" text="Capacity" prefWidth="80" />
-                        <TableColumn fx:id="priceColumn" text="Price" prefWidth="80" />
-                        <TableColumn fx:id="statusColumn" text="Status" prefWidth="100" />
+                        <TableColumn fx:id="idColumn" text="ID" prefWidth="50" style="-fx-text-fill: white; -fx-background-color: #1e293b;" />
+                        <TableColumn fx:id="nameColumn" text="Name" prefWidth="150" style="-fx-text-fill: white; -fx-background-color: #1e293b;" />
+                        <TableColumn fx:id="dateColumn" text="Date" prefWidth="100" style="-fx-text-fill: white; -fx-background-color: #1e293b;" />
+                        <TableColumn fx:id="venueColumn" text="Venue" prefWidth="120" style="-fx-text-fill: white; -fx-background-color: #1e293b;" />
+                        <TableColumn fx:id="capacityColumn" text="Capacity" prefWidth="80" style="-fx-text-fill: white; -fx-background-color: #1e293b;" />
+                        <TableColumn fx:id="priceColumn" text="Price" prefWidth="80" style="-fx-text-fill: white; -fx-background-color: #1e293b;" />
+                        <TableColumn fx:id="statusColumn" text="Status" prefWidth="100" style="-fx-text-fill: white; -fx-background-color: #1e293b;" />
                     </columns>
                 </TableView>
                 
                 <!-- Quick Actions -->
-                <HBox spacing="10" style="-fx-padding: 10;">
-                    <Button text="📤 Publish" onAction="#publishEvent" style="-fx-padding: 8 16; -fx-font-weight: bold; -fx-background-color: #059669; -fx-text-fill: white; -fx-border-radius: 6; -fx-background-radius: 6;" />
-                    <Button text="📝 Save Draft" onAction="#saveAsDraft" style="-fx-padding: 8 16; -fx-font-weight: bold; -fx-background-color: #f59e0b; -fx-text-fill: white; -fx-border-radius: 6; -fx-background-radius: 6;" />
-                    <Button text="🎵 Filter by Venue" onAction="#filterByVenueType" style="-fx-padding: 8 16; -fx-font-weight: bold; -fx-background-color: #6366f1; -fx-text-fill: white; -fx-border-radius: 6; -fx-background-radius: 6;" />
-                    <Button text="📅 Filter by Date" onAction="#filterByDate" style="-fx-padding: 8 16; -fx-font-weight: bold; -fx-background-color: #8b5cf6; -fx-text-fill: white; -fx-border-radius: 6; -fx-background-radius: 6;" />
+                <HBox spacing="12" style="-fx-padding: 10;">
+                    <Button text="📤 Publish" onAction="#publishEvent" style="-fx-padding: 10 20; -fx-font-weight: bold; -fx-background-color: #059669; -fx-text-fill: white; -fx-border-radius: 8; -fx-background-radius: 8; -fx-font-size: 13;" />
+                    <Button text="📝 Save Draft" onAction="#saveAsDraft" style="-fx-padding: 10 20; -fx-font-weight: bold; -fx-background-color: #f59e0b; -fx-text-fill: white; -fx-border-radius: 8; -fx-background-radius: 8; -fx-font-size: 13;" />
+                    <Button text="🎵 Filter by Venue" onAction="#filterByVenueType" style="-fx-padding: 10 20; -fx-font-weight: bold; -fx-background-color: #6366f1; -fx-text-fill: white; -fx-border-radius: 8; -fx-background-radius: 8; -fx-font-size: 13;" />
+                    <Button text="📅 Filter by Date" onAction="#filterByDate" style="-fx-padding: 10 20; -fx-font-weight: bold; -fx-background-color: #8b5cf6; -fx-text-fill: white; -fx-border-radius: 8; -fx-background-radius: 8; -fx-font-size: 13;" />
                 </HBox>
             </VBox>
         </SplitPane>

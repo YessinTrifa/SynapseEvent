@@ -12,13 +12,13 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.util.converter.DoubleStringConverter;
 import com.synapseevent.entities.EventTemplate;
 import java.time.LocalTime;
 import javafx.scene.control.SpinnerValueFactory;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 
 public class PartyingController implements TemplateAware{
     @FXML private TableView<PartyingEvent> partyingTable;
@@ -33,14 +33,19 @@ public class PartyingController implements TemplateAware{
     @FXML private TextField nameField;
     @FXML private DatePicker datePicker;
     @FXML private DatePicker filterDatePicker;
-    @FXML private Spinner<Integer> startTimeHourSpinner;
-    @FXML private Spinner<Integer> endTimeHourSpinner;
+    @FXML private ComboBox<String> startTimeComboBox;
+    @FXML private ComboBox<String> endTimeComboBox;
     @FXML private ComboBox<Venue> venueComboBox;
     @FXML private ComboBox<String> venueTypeFilterComboBox;
-    @FXML private Spinner<Integer> capacitySpinner;
-    @FXML private Spinner<Double> priceSpinner;
+    @FXML private TextField capacityField;
+    @FXML private TextField priceField;
+    @FXML private TextField ageRestrictionField;
     @FXML private ComboBox<String> statusComboBox;
     @FXML private TextArea descriptionField;
+    
+    // New fields
+    @FXML private ComboBox<String> themeComboBox;
+    @FXML private ComboBox<String> musicTypeComboBox;
 
     private PartyingEventService partyingEventService = new PartyingEventService();
     private VenueService venueService = new VenueService();
@@ -48,28 +53,66 @@ public class PartyingController implements TemplateAware{
 
     @FXML
     public void initialize() {
-        startTimeHourSpinner.setValueFactory(
-                new javafx.scene.control.SpinnerValueFactory.IntegerSpinnerValueFactory(0, 23, 9)
+        // Initialize time combo boxes with hours
+        ObservableList<String> hours = FXCollections.observableArrayList();
+        for (int i = 0; i < 24; i++) {
+            hours.add(String.format("%02d:00", i));
+        }
+        startTimeComboBox.setItems(hours);
+        startTimeComboBox.setValue("18:00");
+        endTimeComboBox.setItems(hours);
+        endTimeComboBox.setValue("23:00");
+
+        // Initialize theme options
+        ObservableList<String> themes = FXCollections.observableArrayList(
+            "🎉 Birthday Party",
+            "🎊 New Year's Eve",
+            "🎄 Holiday Celebration",
+            "💃 Latin Night",
+            "🕺 80s/90s Retro",
+            "🎵 Open Mic Night",
+            "👔 Corporate Gala",
+            "🎓 Graduation Party",
+            "💍 Bachelor/Bachelorette",
+            "🌴 Summer Bash",
+            "🎃 Halloween",
+            "💜 Ladies Night",
+            "🤵 Gentlemen's Night",
+            "🎤 Karaoke Night",
+            "🔥 Bonfire Party"
         );
-        endTimeHourSpinner.setValueFactory(
-                new javafx.scene.control.SpinnerValueFactory.IntegerSpinnerValueFactory(0, 23, 12)
+        themeComboBox.setItems(themes);
+
+        // Initialize music type options
+        ObservableList<String> musicTypes = FXCollections.observableArrayList(
+            "🎵 Pop",
+            "🎸 Rock",
+            "💃 Hip-Hop/R&B",
+            "🎹 Electronic/EDM",
+            "🎺 Jazz/Swing",
+            "🌴 Latin",
+            "🎻 Classical",
+            "🔥 Afrobeat",
+            "🎤 Mixed/Variety",
+            "🎧 DJ Night"
         );
-        capacitySpinner.setValueFactory(
-                new javafx.scene.control.SpinnerValueFactory.IntegerSpinnerValueFactory(1, 10000, 20)
-        );
-        priceSpinner.setValueFactory(
-                new javafx.scene.control.SpinnerValueFactory.DoubleSpinnerValueFactory(0, 100000, 0, 1)
-        );
+        musicTypeComboBox.setItems(musicTypes);
+
+        // Set default values for fields
+        capacityField.setText("50");
+        priceField.setText("0");
+        ageRestrictionField.setText("18");
+
         idColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
         nameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
         dateColumn.setCellValueFactory(cellData -> new SimpleStringProperty(
-            cellData.getValue().getDate() != null ? cellData.getValue().getDate().toString() : ""));
+            cellData.getValue().getDate() != null ? cellData.getValue().getDate().format(DateTimeFormatter.ofPattern("MMM dd, yyyy")) : ""));
         venueColumn.setCellValueFactory(cellData -> new SimpleStringProperty(
             cellData.getValue().getVenue() != null ? cellData.getValue().getVenue().toString() : ""));
         capacityColumn.setCellValueFactory(cellData -> new SimpleStringProperty(
             cellData.getValue().getCapacity() != null ? cellData.getValue().getCapacity().toString() : ""));
         priceColumn.setCellValueFactory(cellData -> new SimpleStringProperty(
-            cellData.getValue().getPrice() != null ? cellData.getValue().getPrice().toString() + " TND" : ""));
+            cellData.getValue().getPrice() != null ? String.format("%.2f TND", cellData.getValue().getPrice()) : ""));
         statusColumn.setCellValueFactory(new PropertyValueFactory<>("status"));
 
         // Set status ComboBox items
@@ -81,9 +124,6 @@ public class PartyingController implements TemplateAware{
         ObservableList<String> venueTypes = FXCollections.observableArrayList("All", "CLUB", "BEACH", "HOTEL");
         venueTypeFilterComboBox.setItems(venueTypes);
         venueTypeFilterComboBox.setValue("All");
-
-        priceSpinner.setValueFactory(new SpinnerValueFactory.DoubleSpinnerValueFactory(0, 10000, 0, 10));
-        priceSpinner.getValueFactory().setConverter(new DoubleStringConverter());
 
         loadVenues();
         loadData();
@@ -142,22 +182,40 @@ public class PartyingController implements TemplateAware{
         }
     }
 
+    private Integer parseTimeToHour(String timeStr) {
+        if (timeStr == null || timeStr.isEmpty()) return 0;
+        try {
+            return Integer.parseInt(timeStr.split(":")[0]);
+        } catch (Exception e) {
+            return 0;
+        }
+    }
+
     @FXML
     private void addPartyingEvent() {
         String name = nameField.getText();
         LocalDate date = datePicker.getValue();
-        LocalTime startTime = LocalTime.of(startTimeHourSpinner.getValue(), 0);
-        LocalTime endTime = LocalTime.of(endTimeHourSpinner.getValue(), 0);
+        LocalTime startTime = LocalTime.of(parseTimeToHour(startTimeComboBox.getValue()), 0);
+        LocalTime endTime = LocalTime.of(parseTimeToHour(endTimeComboBox.getValue()), 0);
         Venue selectedVenue = venueComboBox.getValue();
         Long venueId = selectedVenue != null ? selectedVenue.getId() : null;
-        Integer capacity = capacitySpinner.getValue();
-        Double price = priceSpinner.getValue();
+        
+        Integer capacity = parseCapacity(capacityField.getText());
+        Double price = parsePrice(priceField.getText());
+        Integer ageRestriction = parseAgeRestriction(ageRestrictionField.getText());
+        
         String description = descriptionField.getText();
         String status = statusComboBox.getValue() != null ? statusComboBox.getValue() : "draft";
+        String theme = themeComboBox.getValue();
+        String musicType = musicTypeComboBox.getValue();
 
         if (name != null && !name.isEmpty() && date != null) {
             PartyingEvent event = new PartyingEvent(name, date, startTime, endTime,
                 venueId, capacity, price, "admin@synapse.com", description, status);
+            event.setTheme(theme);
+            event.setMusicType(musicType);
+            event.setAgeRestriction(ageRestriction);
+            
             try {
                 // Save to PartyingEvent table
                 partyingEventService.ajouter(event);
@@ -182,13 +240,16 @@ public class PartyingController implements TemplateAware{
         if (selected != null) {
             selected.setName(nameField.getText());
             selected.setDate(datePicker.getValue());
-            selected.setStartTime(LocalTime.of(startTimeHourSpinner.getValue(), 0));
-            selected.setEndTime(LocalTime.of(endTimeHourSpinner.getValue(), 0));
+            selected.setStartTime(LocalTime.of(parseTimeToHour(startTimeComboBox.getValue()), 0));
+            selected.setEndTime(LocalTime.of(parseTimeToHour(endTimeComboBox.getValue()), 0));
             Venue selectedVenue = venueComboBox.getValue();
             selected.setVenueId(selectedVenue != null ? selectedVenue.getId() : null);
-            selected.setCapacity(capacitySpinner.getValue());
-            selected.setPrice(priceSpinner.getValue());
+            selected.setCapacity(parseCapacity(capacityField.getText()));
+            selected.setPrice(parsePrice(priceField.getText()));
             selected.setDescription(descriptionField.getText());
+            selected.setTheme(themeComboBox.getValue());
+            selected.setMusicType(musicTypeComboBox.getValue());
+            selected.setAgeRestriction(parseAgeRestriction(ageRestrictionField.getText()));
             if (statusComboBox.getValue() != null) {
                 selected.setStatus(statusComboBox.getValue());
             }
@@ -287,23 +348,28 @@ public class PartyingController implements TemplateAware{
             datePicker.setValue(selected.getDate());
 
             if (selected.getStartTime() != null) {
-                startTimeHourSpinner.getValueFactory().setValue(selected.getStartTime().getHour());
+                startTimeComboBox.setValue(String.format("%02d:00", selected.getStartTime().getHour()));
             }
             if (selected.getEndTime() != null) {
-                endTimeHourSpinner.getValueFactory().setValue(selected.getEndTime().getHour());
+                endTimeComboBox.setValue(String.format("%02d:00", selected.getEndTime().getHour()));
             }
 
             if (selected.getVenue() != null) {
                 venueComboBox.setValue(selected.getVenue());
             }
             if (selected.getCapacity() != null) {
-                capacitySpinner.getValueFactory().setValue(selected.getCapacity());
+                capacityField.setText(selected.getCapacity().toString());
             }
             if (selected.getPrice() != null) {
-                priceSpinner.getValueFactory().setValue(selected.getPrice().doubleValue());
+                priceField.setText(selected.getPrice().toString());
+            }
+            if (selected.getAgeRestriction() != null) {
+                ageRestrictionField.setText(selected.getAgeRestriction().toString());
             }
             statusComboBox.setValue(selected.getStatus());
             descriptionField.setText(selected.getDescription());
+            themeComboBox.setValue(selected.getTheme());
+            musicTypeComboBox.setValue(selected.getMusicType());
         }
     }
 
@@ -311,35 +377,63 @@ public class PartyingController implements TemplateAware{
     private void clearFields() {
         nameField.clear();
         datePicker.setValue(null);
-        startTimeHourSpinner.getValueFactory().setValue(18);
-        endTimeHourSpinner.getValueFactory().setValue(23);
+        startTimeComboBox.setValue("18:00");
+        endTimeComboBox.setValue("23:00");
         venueComboBox.setValue(null);
-        capacitySpinner.getValueFactory().setValue(50);
-        priceSpinner.getValueFactory().setValue(0.0);
+        capacityField.setText("50");
+        priceField.setText("0");
+        ageRestrictionField.setText("18");
         statusComboBox.setValue("draft");
         descriptionField.clear();
+        themeComboBox.setValue(null);
+        musicTypeComboBox.setValue(null);
     }
+    
+    private Integer parseCapacity(String value) {
+        try {
+            return value != null && !value.isEmpty() ? Integer.parseInt(value) : 50;
+        } catch (NumberFormatException e) {
+            return 50;
+        }
+    }
+    
+    private Double parsePrice(String value) {
+        try {
+            return value != null && !value.isEmpty() ? Double.parseDouble(value) : 0.0;
+        } catch (NumberFormatException e) {
+            return 0.0;
+        }
+    }
+    
+    private Integer parseAgeRestriction(String value) {
+        try {
+            return value != null && !value.isEmpty() ? Integer.parseInt(value) : 18;
+        } catch (NumberFormatException e) {
+            return 18;
+        }
+    }
+
     @Override
     public void applyTemplate(EventTemplate t) {
         if (t == null) return;
 
-        // Time -> your UI uses only HOUR spinners
+        // Time -> your UI uses combo boxes
         LocalTime st = t.getDefaultStartTime();
         LocalTime et = t.getDefaultEndTime();
 
-        if (st != null && startTimeHourSpinner.getValueFactory() != null) {
-            startTimeHourSpinner.getValueFactory().setValue(st.getHour());
+        if (st != null && startTimeComboBox != null) {
+            startTimeComboBox.setValue(String.format("%02d:00", st.getHour()));
         }
-        if (et != null && endTimeHourSpinner.getValueFactory() != null) {
-            endTimeHourSpinner.getValueFactory().setValue(et.getHour());
-        }
-
-        if (t.getDefaultCapacity() != null && capacitySpinner.getValueFactory() != null) {
-            capacitySpinner.getValueFactory().setValue(t.getDefaultCapacity());
+        if (et != null && endTimeComboBox != null) {
+            endTimeComboBox.setValue(String.format("%02d:00", et.getHour()));
         }
 
-        if (t.getDefaultPrice() != null && priceSpinner.getValueFactory() != null) {
-            priceSpinner.getValueFactory().setValue(t.getDefaultPrice());
+        if (t.getDefaultCapacity() != null && capacityField != null) {
+            capacityField.setText(t.getDefaultCapacity().toString());
+        }
+
+        if (t.getDefaultPrice() != null && priceField != null) {
+            priceField.setText(t.getDefaultPrice().toString());
         }
 
         if (t.getDefaultDescription() != null) {
