@@ -110,10 +110,24 @@ public class UserService implements IService<User> {
         User user = findByEmail(email);
         if (user == null) return null;
 
-        String storedPassword = user.getPassword();
-        boolean passwordValid = storedPassword != null && PasswordUtil.verifyPassword(password, storedPassword);
+        String stored = user.getPassword();
+        if (stored == null) return null;
 
-        if (passwordValid) {
+        boolean ok;
+        if (stored.startsWith("$2")) {
+            ok = PasswordUtil.verifyPassword(password, stored);
+        } else {
+            ok = password.equals(stored);
+            if (ok) {
+                try {
+                    user.setPassword(password);
+                    modifier(user);
+                    user = findByEmail(email);
+                } catch (Exception ignored) {}
+            }
+        }
+
+        if (ok) {
             CurrentUser.setCurrentUser(user);
             return user;
         }
