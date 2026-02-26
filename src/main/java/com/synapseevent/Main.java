@@ -27,10 +27,10 @@ public class Main extends Application {
         
         try {
             System.out.println("Step 2: Loading UI...");
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/login.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/landing.fxml"));
             
             if (loader.getLocation() == null) {
-                throw new Exception("login.fxml not found in resources!");
+                throw new Exception("landing.fxml not found in resources!");
             }
             
             Parent root = loader.load();
