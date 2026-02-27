@@ -2,6 +2,7 @@ package com.synapseevent.controller;
 
 import com.synapseevent.entities.User;
 import com.synapseevent.service.UserService;
+import com.synapseevent.utils.CurrentUser;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -27,6 +28,7 @@ public class LoginController {
         String passwordText = passwordField.getText();
         User user = userService.authenticate(emailText, passwordText);
         if (user != null && "Admin".equals(user.getRole().getName())) {
+            CurrentUser.setCurrentUser(user);
             loadFXML("/fxml/adminDashboard.fxml");
         } else {
             // Show error
@@ -40,6 +42,7 @@ public class LoginController {
         String passwordText = passwordField.getText();
         User user = userService.authenticate(emailText, passwordText);
         if (user != null) {
+            CurrentUser.setCurrentUser(user);
             loadFXML("/fxml/userDashboard.fxml");
         } else {
             System.out.println("Invalid credentials");
