@@ -21,6 +21,12 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import javafx.scene.chart.BarChart;
+import javafx.scene.chart.LineChart;
+import javafx.scene.chart.XYChart;
+import javafx.scene.layout.VBox;
+import javafx.scene.layout.StackPane;
+import javafx.geometry.Pos;
 
 public class AdminDashboardController {
 
@@ -78,7 +84,27 @@ public class AdminDashboardController {
     @FXML private TableColumn<EventInstance, String> eventTypeColumn;
     @FXML private TableColumn<EventInstance, Void> eventActionColumn;
     @FXML private ComboBox<String> eventTypeFilter;
-    @FXML private TabPane tabPane;
+
+    //callendar
+    @FXML private GridPane calendarGrid;
+    @FXML private Label calMonthLabel;
+    @FXML private Button calPrev;
+    @FXML private Button calNext;
+
+    private LocalDate calCurrentMonth = LocalDate.now().withDayOfMonth(1);
+    @FXML private HBox eventCardsRow;
+
+    @FXML private VBox sidebar;
+
+    @FXML private Button navDashboard, navUsers, navEvents, navBookings, navRequests, navEnterprises;
+
+    @FXML private VBox pageDashboard, pageUsers, pageEvents, pageBookings, pageRequests, pageEnterprises;
+
+    @FXML private LineChart<String, Number> bookingsChart;
+    @FXML private BarChart<String, Number> popularChart;
+    @FXML private DatePicker calendarPicker;
+
+    @FXML private HBox kpiWrap;
 
     private UserService userService = new UserService();
     private BookingService bookingService = new BookingService();
@@ -99,23 +125,41 @@ public class AdminDashboardController {
         setupCustomRequestsTable();
         setupEventsTable();
 
+        setupEventTypeFilter();
+
+        // Load initial data
         loadUsers();
         loadEnterprises();
         loadBookings();
         loadCustomRequests();
         loadEvents();
-        setupEventTypeFilter();
         updateStatistics();
-        tabPane.getSelectionModel().selectedItemProperty().addListener((obs, oldTab, newTab) -> {
-            if (newTab != null) {
-                String tabText = newTab.getText();
-                if (tabText.contains("Events")) loadEvents();
-                else if (tabText.contains("Users")) loadUsers();
-                else if (tabText.contains("Bookings")) loadBookings();
-                else if (tabText.contains("Requests")) loadCustomRequests();
-                else if (tabText.contains("Enterprises")) loadEnterprises();
-            }
-        });
+
+        // If using the NEW web dashboard FXML, show Users page by default
+        if (pageUsers != null) {
+            showDashboard();   // ← show dashboard by default, not users
+            enableResponsiveSidebar();
+            setupChartsIfNeeded();
+        }
+        if (calendarGrid != null) {
+            buildCalendar();
+            calPrev.setOnAction(e -> { calCurrentMonth = calCurrentMonth.minusMonths(1); buildCalendar(); });
+            calNext.setOnAction(e -> { calCurrentMonth = calCurrentMonth.plusMonths(1); buildCalendar(); });
+        }
+    }
+    private void activate(Button b) {
+        if (navDashboard == null) return; // means you’re not using the new FXML yet
+        Button[] all = {navDashboard, navUsers, navEvents, navBookings, navRequests, navEnterprises};
+        for (Button x : all) if (x != null) x.getStyleClass().remove("active");
+        if (b != null) b.getStyleClass().add("active");
+    }
+
+    private void showPage(VBox page) {
+        VBox[] all = {pageDashboard, pageUsers, pageEvents, pageBookings, pageRequests, pageEnterprises};
+        for (VBox p : all) {
+            if (p != null) { p.setVisible(false); p.setManaged(false); }
+        }
+        if (page != null) { page.setVisible(true); page.setManaged(true); }
     }
 
     private void updateStatistics() {
@@ -544,8 +588,49 @@ public class AdminDashboardController {
         try {
             allEvents = eventService.readAll();
             eventsTable.setItems(FXCollections.observableArrayList(allEvents));
+            buildEventCards(allEvents);
         } catch (SQLException e) {
             e.printStackTrace();
+        }
+    }
+    private void buildEventCards(List<EventInstance> events) {
+        if (eventCardsRow == null) return;
+        eventCardsRow.getChildren().clear();
+        int count = Math.min(events.size(), 4);
+        for (int i = 0; i < count; i++) {
+            EventInstance ev = events.get(i);
+
+            VBox card = new VBox(8);
+            card.getStyleClass().add("event-card");
+            card.setPrefWidth(175);
+
+            // Colored image placeholder area with type tag
+            StackPane imgBox = new StackPane();
+            imgBox.setPrefSize(175, 95);
+            imgBox.getStyleClass().add("event-card-img");
+
+            Label typeTag = new Label(ev.getType() != null ? ev.getType() : "Event");
+            typeTag.getStyleClass().add("event-type-tag");
+            StackPane.setAlignment(typeTag, Pos.TOP_LEFT);
+            StackPane.setMargin(typeTag, new Insets(8));
+            imgBox.getChildren().add(typeTag);
+
+            Label name = new Label(ev.getName() != null ? ev.getName() : "—");
+            name.getStyleClass().add("event-card-name");
+            name.setWrapText(true);
+            name.setMaxWidth(155);
+            VBox.setMargin(name, new Insets(0, 10, 0, 10));
+
+            Label date = new Label(ev.getDate() != null ? ev.getDate().toString() : "No date");
+            date.getStyleClass().add("event-card-date");
+            VBox.setMargin(date, new Insets(0, 10, 0, 10));
+
+            Label price = new Label(ev.getPrice() != null && ev.getPrice() > 0 ? String.format("$%.0f", ev.getPrice()) : "Free");
+            price.getStyleClass().add("event-card-price");
+            VBox.setMargin(price, new Insets(0, 10, 4, 10));
+
+            card.getChildren().addAll(imgBox, name, date, price);
+            eventCardsRow.getChildren().add(card);
         }
     }
 
@@ -1254,6 +1339,136 @@ private void openEventFormWithOptionalTemplate(String eventType) {
             stage.show();
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+    //side bar handlers
+    @FXML private void showDashboard() {
+        activate(navDashboard);
+        showPage(pageDashboard);
+        updateStatistics();
+        setupChartsIfNeeded();
+    }
+
+    @FXML private void showUsers() {
+        activate(navUsers);
+        showPage(pageUsers);
+        loadUsers();
+        updateStatistics();
+    }
+
+    @FXML private void showEvents() {
+        activate(navEvents);
+        showPage(pageEvents);
+        loadEvents();
+        updateStatistics();
+    }
+
+    @FXML private void showBookings() {
+        activate(navBookings);
+        showPage(pageBookings);
+        loadBookings();
+        updateStatistics();
+    }
+
+    @FXML private void showRequests() {
+        activate(navRequests);
+        showPage(pageRequests);
+        loadCustomRequests();
+        updateStatistics();
+    }
+
+    @FXML private void showEnterprises() {
+        activate(navEnterprises);
+        showPage(pageEnterprises);
+        loadEnterprises();
+        updateStatistics();
+    }
+    private void enableResponsiveSidebar() {
+        if (sidebar == null) return;
+
+        sidebar.sceneProperty().addListener((obs, oldScene, scene) -> {
+            if (scene == null) return;
+            scene.widthProperty().addListener((o, oldW, w) -> {
+                boolean small = w.doubleValue() < 950;
+                sidebar.setVisible(!small);
+                sidebar.setManaged(!small);
+            });
+        });
+    }
+    //charts data
+    private void setupChartsIfNeeded() {
+        if (bookingsChart != null && bookingsChart.getData().isEmpty()) {
+            XYChart.Series<String, Number> s = new XYChart.Series<>();
+            s.setName("Bookings");
+            try {
+                List<Booking> bookings = bookingService.readAll();
+                LocalDate today = LocalDate.now();
+                String[] labels = {"Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"};
+                int[] counts = new int[7];
+                for (Booking b : bookings) {
+                    if (b.getBookingDate() != null) {
+                        long daysAgo = java.time.temporal.ChronoUnit.DAYS.between(b.getBookingDate(), today);
+                        if (daysAgo >= 0 && daysAgo < 7) {
+                            int dayIndex = b.getBookingDate().getDayOfWeek().getValue() - 1; // Mon=0, Sun=6
+                            counts[dayIndex]++;
+                        }
+                    }
+                }
+                for (int i = 0; i < 7; i++) {
+                    s.getData().add(new XYChart.Data<>(labels[i], counts[i]));
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            bookingsChart.getData().add(s);
+        }
+
+        XYChart.Series<String, Number> s2 = new XYChart.Series<>();
+        s2.setName("Events");
+        for (EventInstance ev : allEvents) {
+            String type = ev.getType() != null ? ev.getType() : "Other";
+            // find existing data point or add new one
+            boolean found = false;
+            for (XYChart.Data<String,Number> d : s2.getData()) {
+                if (d.getXValue().equals(type)) {
+                    d.setYValue(d.getYValue().intValue() + 1);
+                    found = true; break;
+                }
+            }
+            if (!found) s2.getData().add(new XYChart.Data<>(type, 1));
+        }
+        popularChart.getData().add(s2);
+    }
+    //callendar method
+    private void buildCalendar() {
+        calendarGrid.getChildren().clear();
+        String[] days = {"Su","Mo","Tu","We","Th","Fr","Sa"};
+        for (int i = 0; i < 7; i++) {
+            Label h = new Label(days[i]);
+            h.getStyleClass().add("cal-header");
+            h.setMinWidth(30);
+            h.setAlignment(javafx.geometry.Pos.CENTER);
+            calendarGrid.add(h, i, 0);
+        }
+        calMonthLabel.setText(calCurrentMonth.getMonth().getDisplayName(
+                java.time.format.TextStyle.FULL, java.util.Locale.ENGLISH)
+                + " " + calCurrentMonth.getYear());
+
+        int firstDayOfWeek = calCurrentMonth.getDayOfWeek().getValue() % 7;
+        int daysInMonth = calCurrentMonth.lengthOfMonth();
+        LocalDate today = LocalDate.now();
+        int cell = firstDayOfWeek;
+        for (int d = 1; d <= daysInMonth; d++) {
+            Label day = new Label(String.valueOf(d));
+            day.setMinWidth(30);
+            day.setMinHeight(28);
+            day.setAlignment(javafx.geometry.Pos.CENTER);
+            day.getStyleClass().add("cal-day");
+            if (calCurrentMonth.withDayOfMonth(d).equals(today)) {
+                day.getStyleClass().add("cal-today");
+            }
+            calendarGrid.add(day, cell % 7, cell / 7 + 1);
+            cell++;
         }
     }
 
