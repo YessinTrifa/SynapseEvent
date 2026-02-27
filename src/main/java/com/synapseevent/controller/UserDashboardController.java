@@ -80,7 +80,7 @@ public class UserDashboardController {
     @FXML private ComboBox<String> eventTypeCombo;
     @FXML private DatePicker eventDatePicker;
     @FXML private TextField budgetField;
-    @FXML private Spinner<Integer> capacitySpinner;
+    @FXML private TextField capacityField;
     @FXML private ComboBox<String> venueTypeFilterComboBox;
     @FXML private ComboBox<String> cityFilterComboBox;
     @FXML private ComboBox<Venue> venueComboBox;
@@ -159,8 +159,10 @@ public class UserDashboardController {
         loadEvents();
 
         loadBookings();
+        allEventsTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+        featuredEventsTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
     }
-    
+
     private void setupProfileTab() {
         // Load current user data
         User current = CurrentUser.getCurrentUser();
@@ -1113,8 +1115,8 @@ public class UserDashboardController {
                 return;
             }
         }
-        
-        Integer capacity = capacitySpinner.getValue();
+
+        int capacity = Integer.parseInt(capacityField.getText().trim());
         Venue selectedVenue = venueComboBox.getValue();
         String location = selectedVenue != null ? selectedVenue.getName() + " (" + selectedVenue.getAddress() + ")" : "";
         
@@ -1135,7 +1137,7 @@ public class UserDashboardController {
                 eventTypeCombo.setValue(null);
                 eventDatePicker.setValue(null);
                 budgetField.clear();
-                capacitySpinner.getValueFactory().setValue(50);
+                capacityField.setText("50");
                 venueComboBox.setValue(null);
                 venueTypeFilterComboBox.setValue("All Types");
                 cityFilterComboBox.setValue("All Cities");
