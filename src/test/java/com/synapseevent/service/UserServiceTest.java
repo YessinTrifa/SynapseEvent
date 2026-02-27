@@ -67,7 +67,7 @@ public class UserServiceTest {
         Role role = roles.get(0);
         Entreprise entreprise = entreprises.get(0);
 
-        User user = new User("testuser" + System.currentTimeMillis() + "@example.com", "password123", "Test", "User", "1234567890", "Test Address", null, role, entreprise);
+        User user = new User("testuser" + System.currentTimeMillis() + "@example.com", "password123", "Test", "User", "1234567890", "Test Address", null, role.getId(), entreprise.getId());
 
         boolean result = userService.ajouter(user);
         assertTrue(result, "User should be added successfully");
@@ -82,7 +82,7 @@ public class UserServiceTest {
             List<Role> roles = roleService.getAll();
             List<Entreprise> entreprises = entrepriseService.getAll();
             if (!roles.isEmpty() && !entreprises.isEmpty()) {
-                User user = new User("testuser" + System.currentTimeMillis() + "@example.com", "password123", "Test", "User", "1234567890", "Test Address", null, roles.get(0), entreprises.get(0));
+                User user = new User("testuser" + System.currentTimeMillis() + "@example.com", "password123", "Test", "User", "1234567890", "Test Address", null, roles.get(0).getId(), entreprises.get(0).getId());
                 userService.ajouter(user);
             }
         }
@@ -100,7 +100,7 @@ public class UserServiceTest {
             List<Role> roles = roleService.getAll();
             List<Entreprise> entreprises = entrepriseService.getAll();
             if (!roles.isEmpty() && !entreprises.isEmpty()) {
-                User user = new User("testuser" + System.currentTimeMillis() + "@example.com", "password123", "Test", "User", "1234567890", "Test Address", null, roles.get(0), entreprises.get(0));
+                User user = new User("testuser" + System.currentTimeMillis() + "@example.com", "password123", "Test", "User", "1234567890", "Test Address", null, roles.get(0).getId(), entreprises.get(0).getId());
                 try {
                     userService.ajouter(user);
                 } catch (SQLException e) {
@@ -125,7 +125,7 @@ public class UserServiceTest {
             List<Role> roles = roleService.getAll();
             List<Entreprise> entreprises = entrepriseService.getAll();
             if (!roles.isEmpty() && !entreprises.isEmpty()) {
-                User user = new User("testuser" + System.currentTimeMillis() + "@example.com", "password123", "Test", "User", "1234567890", "Test Address", null, roles.get(0), entreprises.get(0));
+                User user = new User("testuser" + System.currentTimeMillis() + "@example.com", "password123", "Test", "User", "1234567890", "Test Address", null, roles.get(0).getId(), entreprises.get(0).getId());
                 try {
                     userService.ajouter(user);
                 } catch (SQLException e) {
@@ -150,7 +150,7 @@ public class UserServiceTest {
             List<Role> roles = roleService.getAll();
             List<Entreprise> entreprises = entrepriseService.getAll();
             if (!roles.isEmpty() && !entreprises.isEmpty()) {
-                User user = new User("testuser" + System.currentTimeMillis() + "@example.com", "password123", "Test", "User", "1234567890", "Test Address", null, roles.get(0), entreprises.get(0));
+                User user = new User("testuser" + System.currentTimeMillis() + "@example.com", "password123", "Test", "User", "1234567890", "Test Address", null, roles.get(0).getId(), entreprises.get(0).getId());
                 try {
                     userService.ajouter(user);
                 } catch (SQLException e) {

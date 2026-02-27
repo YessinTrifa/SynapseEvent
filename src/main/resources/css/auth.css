@@ -421,3 +421,52 @@
     -fx-font-weight: 800;
     -fx-padding: 10 16;
 }
+/* tables */
+.table-web {
+    -fx-background-color: rgba(30, 41, 59, 0.35);
+    -fx-background-radius: 10;
+    -fx-border-color: rgba(255,255,255,0.10);
+    -fx-border-radius: 10;
+}
+
+/* inputs */
+.input-web, .combo-web, .date-web, .textarea-web {
+    -fx-background-color: rgba(30, 41, 59, 0.75);
+    -fx-text-fill: white;
+    -fx-prompt-text-fill: #64748b;
+    -fx-background-radius: 8;
+    -fx-border-color: rgba(255,255,255,0.14);
+    -fx-border-radius: 8;
+}
+
+/* chips for quick picks */
+.chip-pink  { -fx-background-color: #ec4899; -fx-text-fill: white; -fx-font-weight: 600; -fx-padding: 10 16; -fx-background-radius: 999; }
+.chip-teal  { -fx-background-color: #14b8a6; -fx-text-fill: white; -fx-font-weight: 600; -fx-padding: 10 16; -fx-background-radius: 999; }
+.chip-blue  { -fx-background-color: #3b82f6; -fx-text-fill: white; -fx-font-weight: 600; -fx-padding: 10 16; -fx-background-radius: 999; }
+.chip-purple{ -fx-background-color: #8b5cf6; -fx-text-fill: white; -fx-font-weight: 600; -fx-padding: 10 16; -fx-background-radius: 999; }
+.chip-amber { -fx-background-color: #f59e0b; -fx-text-fill: white; -fx-font-weight: 600; -fx-padding: 10 16; -fx-background-radius: 999; }
+
+/* sidebar */
+.side-panel {
+    -fx-background-color: rgba(15, 23, 42, 0.6);
+    -fx-padding: 16;
+    -fx-background-radius: 12;
+    -fx-border-color: rgba(255,255,255,0.10);
+    -fx-border-radius: 12;
+}
+
+/* dialog */
+.dialog-card {
+    -fx-background-color: #0b1220;
+    -fx-padding: 24;
+    -fx-background-radius: 16;
+    -fx-border-color: rgba(255,255,255,0.12);
+    -fx-border-radius: 16;
+}
+.dialog-title { -fx-font-size: 20; -fx-font-weight: 800; -fx-text-fill: white; }
+.dialog-label { -fx-font-weight: 700; -fx-text-fill: #94a3b8; }
+.dialog-textarea {
+    -fx-background-color: rgba(30, 41, 59, 0.6);
+    -fx-text-fill: white;
+    -fx-background-radius: 10;
+}
