@@ -14,6 +14,12 @@ import javafx.scene.control.Label;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.VBox;
 import javafx.scene.layout.StackPane;
+import javafx.scene.layout.FlowPane;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Region;
+import javafx.geometry.Pos;
+import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 
 import java.sql.SQLException;
@@ -101,6 +107,11 @@ public class UserDashboardController {
     @FXML private Label dialogEventPrice;
     @FXML private Label dialogEventStatus;
     @FXML private TextArea dialogEventDescription;
+
+    // Category Browse Fields
+    @FXML private FlowPane eventCardsFlowPane;
+    @FXML private Label categoryTitleLabel;
+    @FXML private Label categoryEventCountLabel;
 
     // For booking confirmation
     private EventInstance selectedEventForBooking;
@@ -602,6 +613,206 @@ public class UserDashboardController {
         typeFilterCombo.setValue("Anniversary");
         applyFilters();
         categoryTabPane.getSelectionModel().select(0);
+    }
+
+    // Category Browse Methods with Visual Cards
+    @FXML
+    private void showAllCategoryEvents() {
+        displayEventCards(allPublishedEvents, "All Events");
+    }
+
+    @FXML
+    private void showPartyingEvents() {
+        List<EventInstance> filtered = filterByType("Partying");
+        displayEventCards(filtered, "🎉 Partying Events");
+    }
+
+    @FXML
+    private void showPaddleEvents() {
+        List<EventInstance> filtered = filterByType("Paddle");
+        displayEventCards(filtered, "🏄 Paddle Events");
+    }
+
+    @FXML
+    private void showTeamBuildingEvents() {
+        List<EventInstance> filtered = filterByType("TeamBuilding");
+        displayEventCards(filtered, "🏢 Team Building Events");
+    }
+
+    @FXML
+    private void showFormationEvents() {
+        List<EventInstance> filtered = filterByType("Formation");
+        displayEventCards(filtered, "🎓 Formation Events");
+    }
+
+    @FXML
+    private void showAnniversaryEvents() {
+        List<EventInstance> filtered = filterByType("Anniversary");
+        displayEventCards(filtered, "🎂 Anniversary Events");
+    }
+
+    private List<EventInstance> filterByType(String type) {
+        return allPublishedEvents.stream()
+            .filter(e -> e.getType() != null && e.getType().equals(type))
+            .filter(e -> e.getDate() != null && !e.getDate().isBefore(LocalDate.now()))
+            .sorted((e1, e2) -> e1.getDate().compareTo(e2.getDate()))
+            .collect(Collectors.toList());
+    }
+
+    private void displayEventCards(List<EventInstance> events, String title) {
+        categoryTitleLabel.setText(title);
+        categoryEventCountLabel.setText(events.size() + " events found");
+        eventCardsFlowPane.getChildren().clear();
+
+        if (events.isEmpty()) {
+            Label noEventsLabel = new Label("No events found in this category.\nCheck back later or browse other categories!");
+            noEventsLabel.setStyle("-fx-font-size: 16; -fx-text-fill: #64748b; -fx-padding: 40;");
+            noEventsLabel.setTextAlignment(TextAlignment.CENTER);
+            eventCardsFlowPane.getChildren().add(noEventsLabel);
+            return;
+        }
+
+        for (EventInstance ei : events) {
+            VBox card = createEventCard(ei);
+            eventCardsFlowPane.getChildren().add(card);
+        }
+
+        // Switch to Browse by Type tab
+        categoryTabPane.getSelectionModel().select(1);
+    }
+
+    private VBox createEventCard(EventInstance ei) {
+        // Determine card color based on event type
+        String cardColor = getCardColor(ei.getType());
+        String emoji = getEventEmoji(ei.getType());
+
+        VBox card = new VBox();
+        card.setPrefWidth(280);
+        card.setPrefHeight(280);
+        card.setStyle(
+            "-fx-background-color: white; " +
+            "-fx-background-radius: 15; " +
+            "-fx-border-radius: 15; " +
+            "-fx-border-color: #e2e8f0; " +
+            "-fx-border-width: 1; " +
+            "-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 2); " +
+            "-fx-padding: 0;"
+        );
+
+        // Header with gradient
+        Label header = new Label(emoji + " " + (ei.getType() != null ? ei.getType() : "Event"));
+        header.setStyle(
+            "-fx-font-size: 14; " +
+            "-fx-font-weight: bold; " +
+            "-fx-text-fill: white; " +
+            "-fx-padding: 15; " +
+            "-fx-background-color: " + cardColor + "; " +
+            "-fx-background-radius: 15 15 0 0;"
+        );
+        header.setPrefHeight(50);
+        header.setAlignment(Pos.CENTER_LEFT);
+
+        // Event Name
+        Label nameLabel = new Label(ei.getName() != null ? ei.getName() : "Unnamed Event");
+        nameLabel.setStyle("-fx-font-size: 16; -fx-font-weight: bold; -fx-text-fill: #1e293b; -fx-padding: 15 15 5 15;");
+        nameLabel.setWrapText(true);
+
+        // Date with icon
+        Label dateLabel = new Label("📅 " + (ei.getDate() != null ? ei.getDate().toString() : "TBD"));
+        dateLabel.setStyle("-fx-font-size: 13; -fx-text-fill: #64748b; -fx-padding: 5 15;");
+
+        // Location with icon
+        Label locationLabel = new Label("📍 " + (ei.getLocation() != null ? ei.getLocation() : "TBD"));
+        locationLabel.setStyle("-fx-font-size: 13; -fx-text-fill: #64748b; -fx-padding: 5 15;");
+        locationLabel.setWrapText(true);
+
+        // Price
+        Label priceLabel = new Label("💰 " + (ei.getPrice() != null ? ei.getPrice() + " TND" : "Free"));
+        priceLabel.setStyle("-fx-font-size: 15; -fx-font-weight: bold; -fx-text-fill: #10b981; -fx-padding: 10 15;");
+
+        // Status badge
+        Label statusLabel = new Label(ei.getStatus() != null ? ei.getStatus().toUpperCase() : "AVAILABLE");
+        String statusColor = "available".equalsIgnoreCase(ei.getStatus()) ? "#10b981" : 
+                           "pending".equalsIgnoreCase(ei.getStatus()) ? "#f59e0b" : "#6b7280";
+        statusLabel.setStyle(
+            "-fx-font-size: 11; " +
+            "-fx-font-weight: bold; " +
+            "-fx-text-fill: white; " +
+            "-fx-background-color: " + statusColor + "; " +
+            "-fx-padding: 4 10; " +
+            "-fx-background-radius: 10;"
+        );
+        HBox statusBox = new HBox(statusLabel);
+        statusBox.setStyle("-fx-padding: 0 15 10 15;");
+
+        // Book Button
+        Button bookBtn = new Button("🎫 Book Now");
+        bookBtn.setStyle(
+            "-fx-background-color: " + cardColor + "; " +
+            "-fx-text-fill: white; " +
+            "-fx-font-size: 14; " +
+            "-fx-font-weight: bold; " +
+            "-fx-padding: 12; " +
+            "-fx-background-radius: 10;"
+        );
+        bookBtn.setPrefHeight(40);
+        bookBtn.setOnAction(e -> showEventDetailsDialog(ei));
+
+        VBox content = new VBox(nameLabel, dateLabel, locationLabel, priceLabel, statusBox, bookBtn);
+        content.setStyle("-fx-padding: 0;");
+
+        card.getChildren().addAll(header, content);
+
+        // Hover effect
+        card.setOnMouseEntered(e -> {
+            card.setStyle(
+                "-fx-background-color: white; " +
+                "-fx-background-radius: 15; " +
+                "-fx-border-radius: 15; " +
+                "-fx-border-color: " + cardColor + "; " +
+                "-fx-border-width: 2; " +
+                "-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 15, 0, 0, 4); " +
+                "-fx-padding: 0;"
+            );
+        });
+
+        card.setOnMouseExited(e -> {
+            card.setStyle(
+                "-fx-background-color: white; " +
+                "-fx-background-radius: 15; " +
+                "-fx-border-radius: 15; " +
+                "-fx-border-color: #e2e8f0; " +
+                "-fx-border-width: 1; " +
+                "-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 2); " +
+                "-fx-padding: 0;"
+            );
+        });
+
+        return card;
+    }
+
+    private String getCardColor(String type) {
+        if (type == null) return "#6366f1";
+        switch (type) {
+            case "Partying": return "#ec4899";
+            case "Paddle": return "#14b8a6";
+            case "TeamBuilding": return "#3b82f6";
+            case "Formation": return "#8b5cf6";
+            case "Anniversary": return "#f59e0b";
+            default: return "#6366f1";
+        }
+    }
+
+    private String getEventEmoji(String type) {
+        if (type == null) return "🎉";
+        switch (type) {
+            case "Partying": return "🎉";
+            case "Paddle": return "🏄";
+            case "TeamBuilding": return "🏢";
+            case "Formation": return "🎓";
+            case "Anniversary": return "🎂";
+            default: return "🎉";
+        }
     }
 
     private void setupBookingsTable() {
