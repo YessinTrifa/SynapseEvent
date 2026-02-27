@@ -55,7 +55,12 @@ public class LoginController {
         try {
             Stage stage = (Stage) emailField.getScene().getWindow();
             Parent root = FXMLLoader.load(getClass().getResource(fxmlPath));
-            stage.setScene(new Scene(root));
+            Scene scene = new Scene(root);
+            stage.setScene(scene);
+            stage.setWidth(1280);
+            stage.setHeight(800);
+            stage.setMinWidth(900);
+            stage.setMinHeight(600);
         } catch (Exception e) {
             e.printStackTrace();
         }
