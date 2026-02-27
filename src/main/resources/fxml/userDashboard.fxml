@@ -317,25 +317,23 @@
     </VBox>
 
     <!-- OVERLAY DIALOG (from remote) -->
-    <StackPane fx:id="eventDialogPane" managed="false" style="-fx-background-color: rgba(0,0,0,0.6);" visible="false">
-        <VBox maxHeight="600" prefWidth="500" spacing="20" styleClass="dialog-card">
+    <StackPane fx:id="eventDialogPane" managed="true" StackPane.alignment="CENTER" style="-fx-background-color: rgba(0,0,0,0.45);" visible="false">
+        <VBox maxHeight="480" prefWidth="420" spacing="14" styleClass="dialog-card">
             <Label fx:id="dialogEventTitle" styleClass="dialog-title" text="Event Details" />
             <Separator />
             <GridPane hgap="15" vgap="10">
                 <Label styleClass="dialog-label" text="Type:" GridPane.columnIndex="0" GridPane.rowIndex="0" />
-                <Label fx:id="dialogEventType" text="-" GridPane.columnIndex="1" GridPane.rowIndex="0" />
-
+                <Label fx:id="dialogEventType" text="-" styleClass="dialog-value" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
                 <Label styleClass="dialog-label" text="Date:" GridPane.columnIndex="0" GridPane.rowIndex="1" />
-                <Label fx:id="dialogEventDate" text="-" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-
+                <Label fx:id="dialogEventDate" text="-" styleClass="dialog-value" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
                 <Label styleClass="dialog-label" text="Location:" GridPane.columnIndex="0" GridPane.rowIndex="2" />
-                <Label fx:id="dialogEventLocation" text="-" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                <Label fx:id="dialogEventLocation" text="-" styleClass="dialog-value" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
 
                 <Label styleClass="dialog-label" text="Price:" GridPane.columnIndex="0" GridPane.rowIndex="3" />
-                <Label fx:id="dialogEventPrice" text="-" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                <Label fx:id="dialogEventPrice" text="-" styleClass="dialog-value" GridPane.columnIndex="1" GridPane.rowIndex="3"/>
 
                 <Label styleClass="dialog-label" text="Status:" GridPane.columnIndex="0" GridPane.rowIndex="4" />
-                <Label fx:id="dialogEventStatus" text="-" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+                <Label fx:id="dialogEventStatus" text="-" styleClass="dialog-value" GridPane.columnIndex="1" GridPane.rowIndex="4"/>
 
                 <Label styleClass="dialog-label" text="Description:" GridPane.columnIndex="0" GridPane.rowIndex="5" />
             <columnConstraints>
