@@ -141,8 +141,6 @@ public class UserDashboardController {
         // Setup all events table
         setupAllEventsTable();
 
-        // Setup recommended events table
-        setupRecommendedEventsTable();
 
         // Setup bookings table
         setupBookingsTable();
@@ -159,7 +157,7 @@ public class UserDashboardController {
 
         // Load data
         loadEvents();
-        loadRecommendedEvents();
+
         loadBookings();
     }
     
@@ -346,50 +344,50 @@ public class UserDashboardController {
         });
     }
 
-    private void setupRecommendedEventsTable() {
-        recommendedNameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
-        recommendedTypeColumn.setCellValueFactory(new PropertyValueFactory<>("type"));
-        recommendedDateColumn.setCellValueFactory(new PropertyValueFactory<>("date"));
-        recommendedLocationColumn.setCellValueFactory(new PropertyValueFactory<>("location"));
-        recommendedPriceColumn.setCellValueFactory(new PropertyValueFactory<>("price"));
+    //private void setupRecommendedEventsTable() {
+       // recommendedNameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
+       // recommendedTypeColumn.setCellValueFactory(new PropertyValueFactory<>("type"));
+       // recommendedDateColumn.setCellValueFactory(new PropertyValueFactory<>("date"));
+       // recommendedLocationColumn.setCellValueFactory(new PropertyValueFactory<>("location"));
+       // recommendedPriceColumn.setCellValueFactory(new PropertyValueFactory<>("price"));
 
         // Custom match percentage column
-        recommendedMatchColumn.setCellFactory(param -> new TableCell<EventInstance, String>() {
-            @Override
-            protected void updateItem(String item, boolean empty) {
-                super.updateItem(item, empty);
-                if (empty) {
-                    setGraphic(null);
-                } else {
-                    EventInstance ei = getTableView().getItems().get(getIndex());
-                    int match = calculateMatchPercentage(ei);
-                    Label matchLabel = new Label(match + "%");
-                    matchLabel.setStyle("-fx-font-weight: bold; -fx-text-fill: " + (match >= 80 ? "#10b981" : match >= 60 ? "#f59e0b" : "#6b7280"));
-                    setGraphic(matchLabel);
-                }
-            }
-        });
+        //recommendedMatchColumn.setCellFactory(param -> new TableCell<EventInstance, String>() {
+           // @Override
+            //protected void updateItem(String item, boolean empty) {
+             //   super.updateItem(item, empty);
+             //   if (empty) {
+             //       setGraphic(null);
+             //   } else {
+               //     EventInstance ei = getTableView().getItems().get(getIndex());
+               //     int match = calculateMatchPercentage(ei);
+                //    Label matchLabel = new Label(match + "%");
+                //    matchLabel.setStyle("-fx-font-weight: bold; -fx-text-fill: " + (match >= 80 ? "#10b981" : match >= 60 ? "#f59e0b" : "#6b7280"));
+                 //   setGraphic(matchLabel);
+               // }
+          //  }
+       // });
 
-        recommendedActionColumn.setCellFactory(param -> new TableCell<EventInstance, Void>() {
-            private final Button bookButton = new Button("Book Now");
-            {
-                bookButton.setStyle("-fx-background-color: #10b981; -fx-text-fill: white; -fx-font-weight: bold;");
-                bookButton.setOnAction(event -> {
-                    EventInstance ei = getTableView().getItems().get(getIndex());
-                    showEventDetailsDialog(ei);
-                });
-            }
-            @Override
-            protected void updateItem(Void item, boolean empty) {
-                super.updateItem(item, empty);
-                if (empty) {
-                    setGraphic(null);
-                } else {
-                    setGraphic(bookButton);
-                }
-            }
-        });
-    }
+        //recommendedActionColumn.setCellFactory(param -> new TableCell<EventInstance, Void>() {
+            //private final Button bookButton = new Button("Book Now");
+            //{
+              //  bookButton.setStyle("-fx-background-color: #10b981; -fx-text-fill: white; -fx-font-weight: bold;");
+             //   bookButton.setOnAction(event -> {
+                //    EventInstance ei = getTableView().getItems().get(getIndex());
+               //     showEventDetailsDialog(ei);
+              //  });
+         //   }
+          //  @Override
+          //  protected void updateItem(Void item, boolean empty) {
+              //super.updateItem(item, empty);
+               // if (empty) {
+                  //  setGraphic(null);
+               // } else {
+               //     setGraphic(bookButton);
+               // }
+           // }
+        //});
+    //}
 
     private int calculateMatchPercentage(EventInstance ei) {
         int match = 0;
@@ -512,7 +510,9 @@ public class UserDashboardController {
     // Quick Recommendation Actions
     @FXML
     private void showRecommendedByLocation() {
-        filterByLocationPreference();
+        typeFilterCombo.setValue("Partying");
+        applyFilters();
+        categoryTabPane.getSelectionModel().select(0);
     }
 
     @FXML
@@ -569,7 +569,7 @@ public class UserDashboardController {
                 }
                 return false;
             })
-            .filter(e -> e.getDate() != null && !e.getDate().isBefore(LocalDate.now()))
+
             .sorted((e1, e2) -> e1.getDate().compareTo(e2.getDate()))
             .collect(Collectors.toList());
         

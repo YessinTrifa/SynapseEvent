@@ -33,6 +33,11 @@
     -fx-text-fill: rgba(255,255,255,0.55);
     -fx-font-size: 12px;
 }
+.top-muted {
+    -fx-text-fill: rgba(255,255,255,0.45);
+    -fx-font-size: 12px;
+    -fx-font-weight: 500;
+}
 
 /* Card */
 .card{
@@ -165,10 +170,11 @@
     -fx-border-color: rgba(255,255,255,0.10);
 }
 
-.section-title{
-    -fx-font-size: 13px;
+.section-title {
+    -fx-font-size: 15px;
     -fx-font-weight: 800;
-    -fx-text-fill: rgba(255,255,255,0.85);
+    -fx-text-fill: white;
+    -fx-letter-spacing: 0.3px;
 }
 
 /* Errors */
@@ -384,17 +390,18 @@
     -fx-font-size: 11px;
     -fx-font-weight: 800;
 }
-.web-header{
-    -fx-padding: 20 26;
-    -fx-background-color: rgba(10,14,24,0.35);
-    -fx-border-color: rgba(255,255,255,0.06);
+.web-header {
+    -fx-padding: 14 32;   /* was 20 26 — add horizontal breathing room */
+    -fx-background-color: rgba(7, 10, 20, 0.85);
+    -fx-border-color: rgba(255,255,255,0.08);
     -fx-border-width: 0 0 1 0;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.4), 20, 0, 0, 4);
 }
 
-.web-logo-text{
-    -fx-font-size: 15px;
+.web-logo-text {
+    -fx-font-size: 18px;    /* was 15px */
     -fx-font-weight: 900;
-    -fx-text-fill: rgba(255,255,255,0.92);
+    -fx-letter-spacing: 1px;
 }
 
 .hero-wrap{
@@ -440,11 +447,17 @@
 }
 
 /* chips for quick picks */
-.chip-pink  { -fx-background-color: #ec4899; -fx-text-fill: white; -fx-font-weight: 600; -fx-padding: 10 16; -fx-background-radius: 999; }
-.chip-teal  { -fx-background-color: #14b8a6; -fx-text-fill: white; -fx-font-weight: 600; -fx-padding: 10 16; -fx-background-radius: 999; }
-.chip-blue  { -fx-background-color: #3b82f6; -fx-text-fill: white; -fx-font-weight: 600; -fx-padding: 10 16; -fx-background-radius: 999; }
-.chip-purple{ -fx-background-color: #8b5cf6; -fx-text-fill: white; -fx-font-weight: 600; -fx-padding: 10 16; -fx-background-radius: 999; }
-.chip-amber { -fx-background-color: #f59e0b; -fx-text-fill: white; -fx-font-weight: 600; -fx-padding: 10 16; -fx-background-radius: 999; }
+.button.chip-pink   { -fx-background-color: #ec4899; -fx-text-fill: white; -fx-font-weight: 700; -fx-padding: 7 14; -fx-background-radius: 999; -fx-font-size: 12px; -fx-cursor: hand; }
+.button.chip-teal   { -fx-background-color: #14b8a6; -fx-text-fill: white; -fx-font-weight: 700; -fx-padding: 7 14; -fx-background-radius: 999; -fx-font-size: 12px; -fx-cursor: hand; }
+.button.chip-blue   { -fx-background-color: #3b82f6; -fx-text-fill: white; -fx-font-weight: 700; -fx-padding: 7 14; -fx-background-radius: 999; -fx-font-size: 12px; -fx-cursor: hand; }
+.button.chip-purple { -fx-background-color: #8b5cf6; -fx-text-fill: white; -fx-font-weight: 700; -fx-padding: 7 14; -fx-background-radius: 999; -fx-font-size: 12px; -fx-cursor: hand; }
+.button.chip-amber  { -fx-background-color: #f59e0b; -fx-text-fill: white; -fx-font-weight: 700; -fx-padding: 7 14; -fx-background-radius: 999; -fx-font-size: 12px; -fx-cursor: hand; }
+
+.button.chip-pink:hover   { -fx-background-color: #db2777; }
+.button.chip-teal:hover   { -fx-background-color: #0d9488; }
+.button.chip-blue:hover   { -fx-background-color: #2563eb; }
+.button.chip-purple:hover { -fx-background-color: #7c3aed; }
+.button.chip-amber:hover  { -fx-background-color: #d97706; }
 
 /* sidebar */
 .side-panel {
