@@ -255,6 +255,17 @@ public class FormationController implements TemplateAware{
         descriptionField.clear();
         statusComboBox.setValue("draft");
     }
+    
+    @FXML
+    private void exportPdf() {
+        // Show information dialog - PDF export functionality would require additional library
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Export PDF");
+        alert.setHeaderText(null);
+        alert.setContentText("PDF export feature is not yet implemented.\nThis would export the formation events table to a PDF file.");
+        alert.showAndWait();
+    }
+    
     @Override
     public void applyTemplate(EventTemplate t) {
         if (t == null) return;

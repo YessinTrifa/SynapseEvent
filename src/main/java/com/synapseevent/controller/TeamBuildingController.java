@@ -288,6 +288,17 @@ public class TeamBuildingController implements TemplateAware{
         statusComboBox.setValue("draft");
         descriptionField.clear();
     }
+    
+    @FXML
+    private void generateReport() {
+        // Show information dialog - Report generation functionality
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Generate Report");
+        alert.setHeaderText(null);
+        alert.setContentText("Report generation feature is not yet implemented.\nThis would generate a report of all Team Building events.");
+        alert.showAndWait();
+    }
+    
     @Override
     public void applyTemplate(EventTemplate t) {
         if (t == null) return;
