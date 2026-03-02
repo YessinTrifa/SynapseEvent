@@ -1,0 +1,121 @@
+/* Semi-transparent overlay behind the card */
+.overlay-root {
+    -fx-background-color: rgba(0,0,0,0.55);
+}
+
+/* The dialog “card” */
+.dialog-card {
+    -fx-background-color: #0f172a;           /* deep navy */
+    -fx-background-radius: 16;
+    -fx-border-radius: 16;
+    -fx-border-color: rgba(255,255,255,0.06);
+    -fx-border-width: 1;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.55), 30, 0.25, 0, 10);
+}
+
+/* Header */
+.dialog-title {
+    -fx-text-fill: white;
+    -fx-font-size: 18px;
+    -fx-font-weight: 800;
+}
+
+.icon-close {
+    -fx-background-color: transparent;
+    -fx-text-fill: rgba(255,255,255,0.75);
+    -fx-font-size: 14px;
+    -fx-padding: 6 10 6 10;
+    -fx-background-radius: 10;
+    -fx-cursor: hand;
+}
+.icon-close:hover {
+    -fx-background-color: rgba(255,255,255,0.08);
+    -fx-text-fill: white;
+}
+
+/* Divider line */
+.divider {
+    -fx-min-height: 1;
+    -fx-pref-height: 1;
+    -fx-max-height: 1;
+    -fx-background-color: rgba(255,255,255,0.08);
+}
+
+/* Field label */
+.field-label {
+    -fx-text-fill: rgba(255,255,255,0.70);
+    -fx-font-size: 12px;
+}
+
+/* ComboBox */
+.combo {
+    -fx-background-color: rgba(255,255,255,0.06);
+    -fx-background-radius: 12;
+    -fx-border-radius: 12;
+    -fx-border-color: rgba(255,255,255,0.08);
+    -fx-border-width: 1;
+    -fx-padding: 6 10 6 10;
+}
+.combo .list-cell {
+    -fx-text-fill: white;
+}
+.combo .arrow-button {
+    -fx-background-color: transparent;
+}
+.combo .arrow {
+    -fx-background-color: rgba(255,255,255,0.70);
+}
+
+/* Info box */
+.info-box {
+    -fx-background-color: rgba(59, 130, 246, 0.10); /* blue tint */
+    -fx-background-radius: 14;
+    -fx-border-radius: 14;
+    -fx-border-color: rgba(59,130,246,0.25);
+    -fx-border-width: 1;
+    -fx-padding: 12;
+}
+
+.info-icon {
+    -fx-min-width: 20;
+    -fx-min-height: 20;
+    -fx-alignment: center;
+    -fx-background-color: rgba(59,130,246,0.20);
+    -fx-background-radius: 999;
+    -fx-text-fill: rgba(255,255,255,0.85);
+    -fx-font-weight: 800;
+}
+
+.info-text {
+    -fx-text-fill: rgba(255,255,255,0.75);
+    -fx-font-size: 12px;
+}
+
+/* Spacer helper */
+.spacer {
+    -fx-min-height: 4;
+}
+
+/* Buttons */
+.btn-secondary {
+    -fx-background-color: rgba(255,255,255,0.06);
+    -fx-text-fill: rgba(255,255,255,0.85);
+    -fx-background-radius: 12;
+    -fx-padding: 10 16 10 16;
+    -fx-cursor: hand;
+}
+.btn-secondary:hover {
+    -fx-background-color: rgba(255,255,255,0.10);
+}
+
+.btn-primary {
+    -fx-background-color: #3b82f6;
+    -fx-text-fill: white;
+    -fx-background-radius: 12;
+    -fx-padding: 10 18 10 18;
+    -fx-font-weight: 800;
+    -fx-cursor: hand;
+}
+.btn-primary:hover {
+    -fx-background-color: #2563eb;
+}

@@ -27,6 +27,9 @@ import javafx.scene.chart.XYChart;
 import javafx.scene.layout.VBox;
 import javafx.scene.layout.StackPane;
 import javafx.geometry.Pos;
+import javafx.stage.Modality;
+import javafx.stage.StageStyle;
+import javafx.scene.paint.Color;
 
 public class AdminDashboardController {
 
@@ -1205,55 +1208,46 @@ public class AdminDashboardController {
         }
         eventTypes.add("Create New Type");
 
-        ChoiceDialog<String> dialog = new ChoiceDialog<>(eventTypes.get(0), eventTypes);
-        dialog.setTitle("Create Event");
-        dialog.setHeaderText("Select Event Type");
-        dialog.setContentText("Choose the type of event to create:");
+        String eventType = showCreateEventDialog(eventTypes);
+        if (eventType == null) return;
 
-        dialog.showAndWait().ifPresent(eventType -> {
-            if ("Create New Type".equals(eventType)) {
-                // Step A: ask for the type name
-                TextInputDialog nameDialog = new TextInputDialog();
-                nameDialog.setTitle("Create New Event Type");
-                nameDialog.setHeaderText("Enter the name of the new event type:");
-                nameDialog.setContentText("Type name:");
+        if ("Create New Type".equals(eventType)) {
+            // keep your existing flow for creating new type
+            TextInputDialog nameDialog = new TextInputDialog();
+            nameDialog.setTitle("Create New Event Type");
+            nameDialog.setHeaderText("Enter the name of the new event type:");
+            nameDialog.setContentText("Type name:");
 
-                nameDialog.showAndWait().ifPresent(newTypeName -> {
-                    if (newTypeName.trim().isEmpty()) return;
+            nameDialog.showAndWait().ifPresent(newTypeName -> {
+                if (newTypeName.trim().isEmpty()) return;
 
-                    // Step B: ask for an optional description
-                    TextInputDialog descDialog = new TextInputDialog();
-                    descDialog.setTitle("Type Description");
-                    descDialog.setHeaderText("Enter a description for '" + newTypeName + "' (optional):");
-                    descDialog.setContentText("Description:");
+                TextInputDialog descDialog = new TextInputDialog();
+                descDialog.setTitle("Type Description");
+                descDialog.setHeaderText("Enter a description for '" + newTypeName + "' (optional):");
+                descDialog.setContentText("Description:");
 
-                    String description = descDialog.showAndWait().orElse("");
+                String description = descDialog.showAndWait().orElse("");
 
-                    // Step C: save to DB
-                    try {
-                        com.synapseevent.entities.CustomEventType existing = customEventTypeService.getByName(newTypeName.trim());
-                        if (existing == null) {
-                            com.synapseevent.entities.CustomEventType newType =
-                                    new com.synapseevent.entities.CustomEventType(newTypeName.trim(), description);
-                            customEventTypeService.ajouter(newType);
-                        }
-                    } catch (Exception e) {
-                        e.printStackTrace();
+                try {
+                    CustomEventType existing = customEventTypeService.getByName(newTypeName.trim());
+                    if (existing == null) {
+                        CustomEventType newType = new CustomEventType(newTypeName.trim(), description);
+                        customEventTypeService.ajouter(newType);
                     }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
 
-                    // Step D: add to filter if not already there
-                    if (!eventTypeFilter.getItems().contains(newTypeName.trim())) {
-                        eventTypeFilter.getItems().add(newTypeName.trim());
-                    }
+                if (!eventTypeFilter.getItems().contains(newTypeName.trim())) {
+                    eventTypeFilter.getItems().add(newTypeName.trim());
+                }
 
-                    // Step E: open the generic form for this new type
-                    openCustomEventTypeForm(newTypeName.trim());
-                });
+                openCustomEventTypeForm(newTypeName.trim());
+            });
 
-            } else {
-                openEventFormWithOptionalTemplate(eventType);
-            }
-        });
+        } else {
+            openEventFormWithOptionalTemplate(eventType);
+        }
     }
 
 
@@ -1475,6 +1469,47 @@ private void openEventFormWithOptionalTemplate(String eventType) {
             }
             calendarGrid.add(day, cell % 7, cell / 7 + 1);
             cell++;
+        }
+    }
+    private String showCreateEventDialog(List<String> eventTypes) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/create_event_dialog.fxml"));
+            Parent root = loader.load();
+
+            Stage dialogStage = new Stage();
+            dialogStage.initModality(Modality.APPLICATION_MODAL);
+            dialogStage.initStyle(StageStyle.TRANSPARENT);
+
+            Scene scene = new Scene(root);
+            scene.setFill(Color.TRANSPARENT);
+            scene.getStylesheets().add(getClass().getResource("/css/dialogs.css").toExternalForm());
+            dialogStage.setScene(scene);
+
+            // controller
+            CreateEventDialogController controller = loader.getController();
+            controller.setStage(dialogStage);
+            controller.setEventTypes(eventTypes); // we will add this method in controller
+
+            // owner (use any existing node)
+            Stage owner = (Stage) usersTable.getScene().getWindow();
+            dialogStage.initOwner(owner);
+
+            // click outside closes (optional premium feel)
+            root.setOnMouseClicked(e -> {
+                if (e.getTarget() == root) dialogStage.close();
+            });
+
+            // show -> center -> wait (centering works even if size changes)
+            dialogStage.sizeToScene();
+            dialogStage.setX(owner.getX() + (owner.getWidth() - dialogStage.getWidth()) / 2);
+            dialogStage.setY(owner.getY() + (owner.getHeight() - dialogStage.getHeight()) / 2);
+
+            dialogStage.showAndWait();
+            return controller.getResult();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
         }
     }
 
