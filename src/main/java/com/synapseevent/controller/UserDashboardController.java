@@ -123,7 +123,7 @@ public class UserDashboardController {
     private VenueService venueService = new VenueService();
     private UserService userService = new UserService();
     private UserPreferencesService userPreferencesService = new UserPreferencesService();
-
+    private CustomEventTypeService customEventTypeService = new CustomEventTypeService();
     private Map<String, List<EventInstance>> eventsByType;
     private List<EventInstance> allPublishedEvents = new ArrayList<>();
 
@@ -153,7 +153,7 @@ public class UserDashboardController {
         setupBookingsTable();
 
         // Setup custom request combo
-        eventTypeCombo.getItems().addAll("Anniversary", "Formation", "Paddle", "Partying", "TeamBuilding");
+        loadEventTypeCombo();
         eventTypeCombo.setOnAction(e -> onEventTypeSelected());
 
         // Setup venue filter combos
@@ -1025,6 +1025,26 @@ public class UserDashboardController {
         // Add listeners for filtering
         venueTypeFilterComboBox.setOnAction(e -> filterVenues());
         cityFilterComboBox.setOnAction(e -> filterVenues());
+    }
+
+    private void loadEventTypeCombo() {
+        // Start with the built-in types
+        List<String> types = new ArrayList<>();
+        types.addAll(java.util.Arrays.asList("Anniversary", "Formation", "Paddle", "Partying", "TeamBuilding"));
+
+        // Append any custom types from the database
+        try {
+            List<CustomEventType> customTypes = customEventTypeService.readAll();
+            for (CustomEventType ct : customTypes) {
+                if (ct.getName() != null && !ct.getName().isBlank()) {
+                    types.add(ct.getName());
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        eventTypeCombo.getItems().setAll(types);
     }
     
     private void loadVenues() {
