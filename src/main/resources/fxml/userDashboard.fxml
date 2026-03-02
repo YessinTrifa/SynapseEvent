@@ -182,6 +182,8 @@
                                     <TableColumn fx:id="bookingEventIdColumn" text="Event ID" />
                                     <TableColumn fx:id="bookingDateColumn" text="Booking Date" />
                                     <TableColumn fx:id="bookingStatusColumn" text="Status" />
+                                    <TableColumn fx:id="bookingRatingColumn" text="Avg Rating" prefWidth="100" />
+                                    <TableColumn fx:id="bookingActionColumn" text="Action" prefWidth="100" />
                                 </columns>
                             </TableView>
                         </VBox>
@@ -362,5 +364,24 @@
             </HBox>
         </VBox>
     </StackPane>
+        <StackPane fx:id="reviewDialogPane" visible="false" managed="true"
+                   StackPane.alignment="CENTER"
+                   style="-fx-background-color: rgba(0,0,0,0.45);">
+            <VBox maxHeight="400" prefWidth="400" spacing="14" styleClass="dialog-card">
+                <Label fx:id="reviewDialogTitle" styleClass="dialog-title" text="Leave a Review" />
+                <Separator />
+                <Label styleClass="top-muted" text="Rating (1–5):" />
+                <ComboBox fx:id="reviewRatingCombo" styleClass="combo-web" />
+                <Label styleClass="top-muted" text="Comment:" />
+                <TextArea fx:id="reviewCommentArea" prefRowCount="4"
+                          promptText="Share your experience..."
+                          styleClass="textarea-web" />
+                <HBox alignment="CENTER" spacing="15">
+                    <Button onAction="#submitReview" styleClass="btn-success" text="Submit Review" />
+                    <Button onAction="#closeReviewDialog" styleClass="btn-ghost" text="Cancel" />
+                </HBox>
+            </VBox>
+        </StackPane>
+
 
 </StackPane>

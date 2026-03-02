@@ -29,6 +29,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import com.synapseevent.entities.Review;
+import com.synapseevent.service.ReviewService;
+
 public class UserDashboardController {
 
     @FXML private TabPane categoryTabPane;
@@ -75,6 +78,8 @@ public class UserDashboardController {
     @FXML private TableColumn<Booking, Long> bookingEventIdColumn;
     @FXML private TableColumn<Booking, LocalDate> bookingDateColumn;
     @FXML private TableColumn<Booking, String> bookingStatusColumn;
+    @FXML private TableColumn<Booking, Void> bookingActionColumn;
+    @FXML private TableColumn<Booking, String> bookingRatingColumn;
 
     // Custom Request Tab
     @FXML private ComboBox<String> eventTypeCombo;
@@ -114,6 +119,12 @@ public class UserDashboardController {
     @FXML private Label categoryEventCountLabel;
     @FXML private Button backToAdminBtn;
 
+    @FXML private StackPane reviewDialogPane;
+    @FXML private Label reviewDialogTitle;
+    @FXML private ComboBox<Integer> reviewRatingCombo;
+    @FXML private TextArea reviewCommentArea;
+    private Booking selectedBookingForReview;
+
     // For booking confirmation
     private EventInstance selectedEventForBooking;
 
@@ -126,6 +137,7 @@ public class UserDashboardController {
     private CustomEventTypeService customEventTypeService = new CustomEventTypeService();
     private Map<String, List<EventInstance>> eventsByType;
     private List<EventInstance> allPublishedEvents = new ArrayList<>();
+    private ReviewService reviewService = new ReviewService();
 
     @FXML
     public void initialize() {
@@ -151,6 +163,9 @@ public class UserDashboardController {
 
         // Setup bookings table
         setupBookingsTable();
+
+        //Reviews
+        reviewRatingCombo.getItems().addAll(1, 2, 3, 4, 5);
 
         // Setup custom request combo
         loadEventTypeCombo();
@@ -843,6 +858,32 @@ public class UserDashboardController {
         bookingEventIdColumn.setCellValueFactory(new PropertyValueFactory<>("eventId"));
         bookingDateColumn.setCellValueFactory(new PropertyValueFactory<>("bookingDate"));
         bookingStatusColumn.setCellValueFactory(new PropertyValueFactory<>("status"));
+        bookingRatingColumn.setCellValueFactory(cellData -> {
+            Booking booking = cellData.getValue();
+            try {
+                double avg = reviewService.getAverageRating(booking.getEventType(), booking.getEventId());
+                String display = avg == 0.0 ? "No reviews" : String.format("⭐ %.1f / 5", avg);
+                return new SimpleStringProperty(display);
+            } catch (SQLException e) {
+                e.printStackTrace();
+                return new SimpleStringProperty("-");
+            }
+        });
+        bookingActionColumn.setCellFactory(param -> new TableCell<Booking, Void>() {
+            private final Button reviewBtn = new Button("⭐ Review");
+            {
+                reviewBtn.setStyle("-fx-background-color: #f59e0b; -fx-text-fill: white;");
+                reviewBtn.setOnAction(event -> {
+                    Booking booking = getTableView().getItems().get(getIndex());
+                    openReviewDialog(booking);
+                });
+            }
+            @Override
+            protected void updateItem(Void item, boolean empty) {
+                super.updateItem(item, empty);
+                setGraphic(empty ? null : reviewBtn);
+            }
+        });
     }
 
     private void setupLocationFilter() {
@@ -1211,5 +1252,63 @@ public class UserDashboardController {
         alert.setHeaderText(null);
         alert.setContentText(message);
         alert.showAndWait();
+    }
+    private void openReviewDialog(Booking booking) {
+        if (booking == null) return;
+        selectedBookingForReview = booking;
+
+        // Set the title to show which event is being reviewed
+        try {
+            EventInstance instance = eventInstanceService.findbyId(booking.getEventId());
+            String name = instance != null && instance.getName() != null ? instance.getName() : "Event #" + booking.getEventId();
+            reviewDialogTitle.setText("Review: " + name);
+        } catch (SQLException e) {
+            reviewDialogTitle.setText("Leave a Review");
+        }
+
+        reviewRatingCombo.setValue(5);
+        reviewCommentArea.clear();
+        reviewDialogPane.setVisible(true);
+    }
+    @FXML
+    private void submitReview() {
+        if (selectedBookingForReview == null) return;
+
+        Integer rating = reviewRatingCombo.getValue();
+        String comment = reviewCommentArea.getText();
+
+        if (rating == null) {
+            showAlert("Error", "Please select a rating.");
+            return;
+        }
+
+        User current = CurrentUser.getCurrentUser();
+        if (current == null || current.getId() == null) {
+            showAlert("Error", "You must be logged in to leave a review.");
+            return;
+        }
+
+        Review review = new Review(
+                current.getId(),
+                selectedBookingForReview.getEventType(),
+                selectedBookingForReview.getEventId(),
+                rating,
+                comment
+        );
+
+        try {
+            reviewService.ajouter(review);
+            closeReviewDialog();
+            loadBookings(); // refresh the table so avg rating updates
+            showAlert("Thank you! 🌟", "Your review has been submitted successfully.");
+        } catch (SQLException e) {
+            e.printStackTrace();
+            showAlert("Error", "Failed to submit review: " + e.getMessage());
+        }
+    }
+    @FXML
+    private void closeReviewDialog() {
+        reviewDialogPane.setVisible(false);
+        selectedBookingForReview = null;
     }
 }
