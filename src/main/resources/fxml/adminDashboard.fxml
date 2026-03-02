@@ -156,6 +156,7 @@
                         <HBox spacing="10">
                             <Label styleClass="card-title-web" text="Events" />
                             <Region HBox.hgrow="ALWAYS" />
+                            <Button onAction="#createEvent" styleClass="btn-primary" text="+ Add Event" />
                             <Label styleClass="muted" text="Type" />
                             <ComboBox fx:id="eventTypeFilter" onAction="#filterEventsByType" prefWidth="180" />
                         </HBox>
