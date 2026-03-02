@@ -103,7 +103,7 @@ public class AdminDashboardController {
     @FXML private LineChart<String, Number> bookingsChart;
     @FXML private BarChart<String, Number> popularChart;
     @FXML private DatePicker calendarPicker;
-
+    @FXML private Button userViewBtn;
     @FXML private HBox kpiWrap;
 
     private UserService userService = new UserService();
@@ -1279,6 +1279,12 @@ private void openEventFormWithOptionalTemplate(String eventType) {
         openEventForm(eventType, null);
     }
 }
+
+    @FXML
+    private void goToUserView() {
+        // No logout here. We keep the admin session.
+        loadFXML("/fxml/userDashboard.fxml");
+    }
 
     @FXML
     private void logout() {

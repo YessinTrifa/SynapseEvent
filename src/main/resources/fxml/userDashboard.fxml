@@ -51,6 +51,10 @@
             <Region HBox.hgrow="ALWAYS" />
             <Label styleClass="top-muted" text="User Dashboard" />
             <Region prefWidth="20" />
+
+            <Button fx:id="backToAdminBtn" onAction="#goToAdminDashboard" styleClass="btn-secondary" text="Back to Admin" />
+
+            <Region prefWidth="10" />
             <Button onAction="#logout" styleClass="btn-danger" text="Logout" />
         </HBox>
 

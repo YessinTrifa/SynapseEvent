@@ -52,8 +52,7 @@
 
             <!-- Keep your existing handlers (no backend changes needed) -->
             <VBox spacing="10">
-               <Button text="Continue as Admin" onAction="#loginAsAdmin" styleClass="btn-primary" maxWidth="1e9"/>
-               <Button text="Continue as User"  onAction="#loginAsUser"  styleClass="btn-ghost"   maxWidth="1e9"/>
+               <Button text="Sign in" onAction="#login" styleClass="btn-primary" maxWidth="1e9"/>
             </VBox>
 
             <HBox alignment="CENTER_LEFT" spacing="8">

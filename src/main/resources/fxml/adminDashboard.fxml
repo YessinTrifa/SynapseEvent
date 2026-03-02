@@ -42,7 +42,6 @@
             <Button fx:id="navBookings" onAction="#showBookings" styleClass="nav-btn" text="Bookings" />
             <Button fx:id="navRequests" onAction="#showRequests" styleClass="nav-btn" text="Requests" />
             <Button fx:id="navEnterprises" onAction="#showEnterprises" styleClass="nav-btn" text="Enterprises" />
-
             <Region VBox.vgrow="ALWAYS" />
             <Label styleClass="muted" text="© SynapseEvent" />
         </VBox>
@@ -56,7 +55,17 @@
                <Font name="System Bold Italic" size="12.0" />
             </font></Label>
             <Region HBox.hgrow="ALWAYS" />
-            <Button onAction="#logout" styleClass="btn-danger" text="Logout" />
+
+            <Button fx:id="userViewBtn"
+                    text="User View"
+                    onAction="#goToUserView"
+                    styleClass="btn-secondary" />
+
+            <Region prefWidth="10" />
+
+            <Button text="Logout"
+                    onAction="#logout"
+                    styleClass="btn-danger" />
         </HBox>
     </top>
 

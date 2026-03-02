@@ -112,6 +112,7 @@ public class UserDashboardController {
     @FXML private FlowPane eventCardsFlowPane;
     @FXML private Label categoryTitleLabel;
     @FXML private Label categoryEventCountLabel;
+    @FXML private Button backToAdminBtn;
 
     // For booking confirmation
     private EventInstance selectedEventForBooking;
@@ -128,6 +129,12 @@ public class UserDashboardController {
 
     @FXML
     public void initialize() {
+        // Show "Back to Admin" only if the logged user is admin
+        if (backToAdminBtn != null) {
+            boolean isAdmin = CurrentUser.isAdmin();
+            backToAdminBtn.setVisible(isAdmin);
+            backToAdminBtn.setManaged(isAdmin);
+        }
         // Setup location filter combo with venues
         setupLocationFilter();
 
@@ -1150,6 +1157,18 @@ public class UserDashboardController {
             }
         } else {
             showAlert("Error", "Please fill in all required fields (Event Type and Date)");
+        }
+    }
+
+    @FXML
+    private void goToAdminDashboard() {
+        try {
+            Stage stage = (Stage) categoryTabPane.getScene().getWindow();
+            Parent root = FXMLLoader.load(getClass().getResource("/fxml/adminDashboard.fxml"));
+            stage.setScene(new Scene(root));
+        } catch (Exception e) {
+            e.printStackTrace();
+            showAlert("Error", "Error opening admin dashboard: " + e.getMessage());
         }
     }
 

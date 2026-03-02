@@ -14,7 +14,9 @@ public class CurrentUser {
     }
 
     public static boolean isAdmin() {
-        return currentUser != null && "Admin".equals(currentUser.getRole().getName());
+        return currentUser != null
+                && currentUser.getRole() != null
+                && "Admin".equalsIgnoreCase(currentUser.getRole().getName());
     }
 
     public static void logout() {

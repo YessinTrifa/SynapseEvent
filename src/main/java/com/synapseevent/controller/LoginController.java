@@ -23,32 +23,27 @@ public class LoginController {
     private UserService userService = new UserService();
 
     @FXML
-    private void loginAsAdmin() {
+    private void login() {
         String emailText = emailField.getText();
         String passwordText = passwordField.getText();
+
         User user = userService.authenticate(emailText, passwordText);
-        if (user != null && "Admin".equals(user.getRole().getName())) {
-            CurrentUser.setCurrentUser(user);
+
+        if (user == null) {
+            System.out.println("Invalid credentials");
+            return;
+        }
+
+        CurrentUser.setCurrentUser(user);
+
+        String roleName = (user.getRole() != null) ? user.getRole().getName() : "";
+
+        if ("Admin".equalsIgnoreCase(roleName)) {
             loadFXML("/fxml/adminDashboard.fxml");
         } else {
-            // Show error
-            System.out.println("Access denied: Invalid credentials or not an admin");
-        }
-    }
-
-    @FXML
-    private void loginAsUser() {
-        String emailText = emailField.getText();
-        String passwordText = passwordField.getText();
-        User user = userService.authenticate(emailText, passwordText);
-        if (user != null) {
-            CurrentUser.setCurrentUser(user);
             loadFXML("/fxml/userDashboard.fxml");
-        } else {
-            System.out.println("Invalid credentials");
         }
     }
-
     @FXML
     private void goToRegister() {
         loadFXML("/fxml/register.fxml");
