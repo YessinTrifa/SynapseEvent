@@ -1,9 +1,7 @@
 .root{
-    /* “Web app” background: subtle, not loud */
     -fx-background-color: radial-gradient(center 20% 15%, radius 90%, #1b2b4a 0%, #0b1220 55%, #070b14 100%);
     -fx-font-family: "Segoe UI", "Inter", "System";
 }
-
 /* This is the web “container” */
 .shell{
     -fx-padding: 64;
@@ -42,7 +40,7 @@
 /* Card */
 .card{
     -fx-padding: 28;
-    -fx-background-color: rgba(255,255,255,0.07);
+    -fx-background-color: rgba(246, 232, 232, 0.07);
     -fx-background-radius: 18;
     -fx-border-radius: 18;
     -fx-border-color: rgba(255,255,255,0.12);
@@ -98,13 +96,13 @@
     -fx-font-weight: 800;
     -fx-text-fill: white;
 
-    -fx-background-color: linear-gradient(to right, #7c3aed, #4f46e5);
+    -fx-background-color: linear-gradient(to right, #8b5cf6, #6d28d9);
     -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.25), 16, 0, 0, 8);
     -fx-cursor: hand;
 }
 
 .button.btn-primary:hover {
-    -fx-background-color: linear-gradient(to right, #8b5cf6, #6366f1);
+    -fx-background-color: linear-gradient(to right, #a78bfa, #7c3aed);
 }
 
 .button.btn-primary:pressed {
@@ -279,21 +277,23 @@
 }
 
 .hero-kicker{
-    -fx-text-fill: rgba(165,180,252,0.95);
-    -fx-font-weight: 800;
-    -fx-font-size: 12px;
+    -fx-text-fill: rgba(167,139,250,0.90);
+    -fx-font-weight: 700;
+    -fx-font-size: 11px;
+    -fx-letter-spacing: 1.5px;
 }
 
 .hero-title{
-    -fx-font-size: 34px;
+    -fx-font-size: 42px;
     -fx-font-weight: 900;
     -fx-text-fill: white;
-    -fx-line-spacing: 2px;
+    -fx-line-spacing: 4px;
 }
 
 .hero-subtitle{
-    -fx-font-size: 13px;
-    -fx-text-fill: rgba(255,255,255,0.72);
+    -fx-font-size: 14px;
+    -fx-text-fill: rgba(200,210,230,0.75);
+    -fx-line-spacing: 3px;
 }
 
 .pill{
@@ -391,21 +391,22 @@
     -fx-font-weight: 800;
 }
 .web-header {
-    -fx-padding: 14 32;   /* was 20 26 — add horizontal breathing room */
-    -fx-background-color: rgba(7, 10, 20, 0.85);
-    -fx-border-color: rgba(255,255,255,0.08);
+    -fx-padding: 16 40;
+    -fx-background-color: rgba(8, 10, 18, 0.92);
+    -fx-border-color: rgba(255,255,255,0.06);
     -fx-border-width: 0 0 1 0;
-    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.4), 20, 0, 0, 4);
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.55), 24, 0, 0, 2);
 }
 
 .web-logo-text {
-    -fx-font-size: 18px;    /* was 15px */
+    -fx-font-size: 17px;
     -fx-font-weight: 900;
-    -fx-letter-spacing: 1px;
+    -fx-text-fill: white;
+    -fx-letter-spacing: 0.5px;
 }
 
 .hero-wrap{
-    -fx-padding: 80 26 56 26;
+    -fx-padding: 100 40 80 40;
     -fx-max-width: 1150;
     -fx-alignment: CENTER;
 }
@@ -483,3 +484,5 @@
     -fx-text-fill: white;
     -fx-background-radius: 10;
 }
+
+

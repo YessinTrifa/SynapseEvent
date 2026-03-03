@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.StackPane?>
+
+<?import java.lang.String?>
+<BorderPane xmlns="http://javafx.com/javafx/17"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.synapseevent.controller.ShellController"
+            prefWidth="1200" prefHeight="800"
+            styleClass="shell-root">
+    <stylesheets>
+        <String fx:value="/css/dashboard.css" />
+    </stylesheets>
+
+    <!-- TOP NAV BAR — hidden by default, shown only on dashboard pages -->
+    <top>
+        <HBox fx:id="navBar" spacing="4" styleClass="shell-nav" prefHeight="52"
+              visible="false" managed="false">
+
+            <!-- Back button -->
+            <Button fx:id="backBtn"
+                    text="←"
+                    onAction="#goBack"
+                    styleClass="nav-icon-btn"
+                    disable="true" />
+
+            <!-- Forward button -->
+            <Button fx:id="forwardBtn"
+                    text="→"
+                    onAction="#goForward"
+                    styleClass="nav-icon-btn"
+                    disable="true" />
+
+            <!-- Refresh button -->
+            <Button text="⟳"
+                    onAction="#refresh"
+                    styleClass="nav-icon-btn" />
+
+            <!-- Spacer pushes title to center -->
+            <Region HBox.hgrow="ALWAYS"/>
+
+            <!-- Page title centered -->
+            <Label fx:id="titleLabel"
+                   text="SynapseEvent"
+                   styleClass="shell-nav-title" />
+
+            <!-- Spacer mirrors the left buttons to keep title truly centered -->
+            <Region HBox.hgrow="ALWAYS"/>
+
+        </HBox>
+    </top>
+
+    <!-- CENTER: all page content loads here -->
+    <center>
+        <StackPane fx:id="contentHost" />
+    </center>
+
+</BorderPane>

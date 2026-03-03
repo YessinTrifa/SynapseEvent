@@ -110,7 +110,7 @@ public class CustomEventRequestService implements IService<CustomEventRequest> {
                 Long userId = rs.getLong("user_id");
                 if (rs.wasNull()) userId = null;
 
-                Double budget = (Double) rs.getObject("budget");
+                Double budget = (Double) rs.getDouble("budget");
                 Integer capacity = (Integer) rs.getObject("capacity");
 
                 CustomEventRequest request = new CustomEventRequest(
@@ -197,7 +197,7 @@ public class CustomEventRequestService implements IService<CustomEventRequest> {
             try (ResultSet rs = stmt.executeQuery()) {
                 while (rs.next()) {
 
-                    Double budget = (Double) rs.getObject("budget");
+                    Double budget = (Double) rs.getDouble("budget");
                     Integer capacity = (Integer) rs.getObject("capacity");
 
                     CustomEventRequest request = new CustomEventRequest(

@@ -1,5 +1,6 @@
 package com.synapseevent.controller;
 
+import com.synapseevent.utils.Navigator;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -27,14 +28,13 @@ public class LandingController {
 
     @FXML
     private void goToLogin() {
-        switchScene("/fxml/login.fxml");
+        Navigator.get().go("/fxml/login.fxml", "Login - SynapseEvent");
     }
 
     @FXML
     private void goToRegister() {
-        switchScene("/fxml/register.fxml");
+        Navigator.get().go("/fxml/register.fxml", "Register - SynapseEvent");
     }
-
     private void switchScene(String fxmlPath) {
         try {
             Stage stage = (Stage) root.getScene().getWindow();

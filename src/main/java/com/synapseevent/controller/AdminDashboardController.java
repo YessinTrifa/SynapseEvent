@@ -4,6 +4,7 @@ import com.synapseevent.entities.*;
 import com.synapseevent.service.*;
 import com.synapseevent.utils.CurrentUser;
 
+import com.synapseevent.utils.Navigator;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
@@ -30,6 +31,7 @@ import javafx.geometry.Pos;
 import javafx.stage.Modality;
 import javafx.stage.StageStyle;
 import javafx.scene.paint.Color;
+
 
 public class AdminDashboardController {
 
@@ -1276,25 +1278,16 @@ private void openEventFormWithOptionalTemplate(String eventType) {
 
     @FXML
     private void goToUserView() {
-        // No logout here. We keep the admin session.
-        loadFXML("/fxml/userDashboard.fxml");
+        Navigator.get().go("/fxml/userDashboard.fxml", "My Dashboard");
     }
 
     @FXML
     private void logout() {
         CurrentUser.logout();
-        loadFXML("/fxml/login.fxml");
+        Navigator.get().go("/fxml/login.fxml", "Login – SynapseEvent");
     }
 
-    private void loadFXML(String fxmlPath) {
-        try {
-            Stage stage = (Stage) usersTable.getScene().getWindow();
-            Parent root = FXMLLoader.load(getClass().getResource(fxmlPath));
-            stage.setScene(new Scene(root));
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
+
 
 
         private void openEventForm(String eventType, EventTemplate template) {

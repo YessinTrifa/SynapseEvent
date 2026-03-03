@@ -3,12 +3,11 @@ package com.synapseevent.controller;
 import com.synapseevent.entities.*;
 import com.synapseevent.service.*;
 import com.synapseevent.utils.CurrentUser;
+import com.synapseevent.utils.Navigator;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.Label;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -20,7 +19,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Region;
 import javafx.geometry.Pos;
 import javafx.scene.text.TextAlignment;
-import javafx.stage.Stage;
+
 
 import java.sql.SQLException;
 import java.time.LocalDate;
@@ -1256,7 +1255,13 @@ public class UserDashboardController {
             }
         }
 
-        int capacity = Integer.parseInt(capacityField.getText().trim());
+        String rawValue = capacityField.getText().trim();
+        if (rawValue.isEmpty()) {
+            // either show an error alert to the user, or default to 0
+            showAlert("Validation Error", "Please enter a valid number for capacity.");
+            return;
+        }
+        int capacity = Integer.parseInt(rawValue);
         Venue selectedVenue = venueComboBox.getValue();
         String location = selectedVenue != null ? selectedVenue.getName() + " (" + selectedVenue.getAddress() + ")" : "";
         
@@ -1297,9 +1302,7 @@ public class UserDashboardController {
     @FXML
     private void goToAdminDashboard() {
         try {
-            Stage stage = (Stage) categoryTabPane.getScene().getWindow();
-            Parent root = FXMLLoader.load(getClass().getResource("/fxml/adminDashboard.fxml"));
-            stage.setScene(new Scene(root));
+            Navigator.get().go("/fxml/adminDashboard.fxml", "Admin Dashboard");
         } catch (Exception e) {
             e.printStackTrace();
             showAlert("Error", "Error opening admin dashboard: " + e.getMessage());
@@ -1310,9 +1313,7 @@ public class UserDashboardController {
     private void logout() {
         try {
             CurrentUser.logout();
-            Stage stage = (Stage) categoryTabPane.getScene().getWindow();
-            Parent root = FXMLLoader.load(getClass().getResource("/fxml/login.fxml"));
-            stage.setScene(new Scene(root));
+            Navigator.get().go("/fxml/login.fxml", "Login – SynapseEvent");
         } catch (Exception e) {
             e.printStackTrace();
             showAlert("Error", "Error during logout: " + e.getMessage());

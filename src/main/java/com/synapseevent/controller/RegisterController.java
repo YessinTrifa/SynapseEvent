@@ -7,13 +7,11 @@ import com.synapseevent.service.EntrepriseService;
 import com.synapseevent.service.RoleService;
 import com.synapseevent.service.UserService;
 import com.synapseevent.utils.MaConnection;
+import com.synapseevent.utils.Navigator;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.stage.Stage;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -215,9 +213,7 @@ public class RegisterController {
     @FXML
     private void goToLogin() {
         try {
-            Stage stage = (Stage) nomField.getScene().getWindow();
-            Parent root = FXMLLoader.load(getClass().getResource("/fxml/login.fxml"));
-            stage.setScene(new Scene(root));
+            Navigator.get().go("/fxml/login.fxml", "Login - SynapseEvent");
         } catch (Exception e) {
             e.printStackTrace();
         }

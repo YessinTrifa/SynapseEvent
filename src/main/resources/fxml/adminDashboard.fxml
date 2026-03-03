@@ -63,9 +63,9 @@
 
             <Region prefWidth="10" />
 
-            <Button text="Logout"
+            <Button text="⏻  Logout"
                     onAction="#logout"
-                    styleClass="btn-danger" />
+                    styleClass="nav-logout-btn" />
         </HBox>
     </top>
 

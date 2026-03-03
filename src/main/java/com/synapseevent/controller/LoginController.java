@@ -3,6 +3,7 @@ package com.synapseevent.controller;
 import com.synapseevent.entities.User;
 import com.synapseevent.service.UserService;
 import com.synapseevent.utils.CurrentUser;
+import com.synapseevent.utils.Navigator;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -39,14 +40,15 @@ public class LoginController {
         String roleName = (user.getRole() != null) ? user.getRole().getName() : "";
 
         if ("Admin".equalsIgnoreCase(roleName)) {
-            loadFXML("/fxml/adminDashboard.fxml");
+            Navigator.get().go("/fxml/adminDashboard.fxml", "Admin Dashboard - SynapseEvent");
         } else {
-            loadFXML("/fxml/userDashboard.fxml");
+            Navigator.get().go("/fxml/userDashboard.fxml", "User Dashboard - SynapseEvent");
         }
     }
+
     @FXML
     private void goToRegister() {
-        loadFXML("/fxml/register.fxml");
+        Navigator.get().go("/fxml/register.fxml", "Register - SynapseEvent");
     }
 
     private void loadFXML(String fxmlPath) {
