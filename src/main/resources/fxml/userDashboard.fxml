@@ -258,6 +258,19 @@
                         </VBox>
 
                         <Button fx:id="submitRequestButton" onAction="#submitCustomRequest" styleClass="btn-success" text="Submit Request" />
+                        <Label styleClass="section-title" text="📋 My Pending Requests" />
+
+                        <TableView fx:id="myRequestsTable" prefHeight="200" styleClass="table-web">
+                            <columns>
+                                <TableColumn fx:id="reqTypeColumn"     text="Event Type"   prefWidth="120" />
+                                <TableColumn fx:id="reqDateColumn"     text="Event Date"   prefWidth="110" />
+                                <TableColumn fx:id="reqBudgetColumn"   text="Budget (TND)" prefWidth="110" />
+                                <TableColumn fx:id="reqCapacityColumn" text="Capacity"     prefWidth="90"  />
+                                <TableColumn fx:id="reqLocationColumn" text="Location"     prefWidth="150" />
+                                <TableColumn fx:id="reqStatusColumn"   text="Status"       prefWidth="100" />
+                                <TableColumn fx:id="reqCreatedColumn"  text="Submitted On" prefWidth="120" />
+                            </columns>
+                        </TableView>
                     </VBox>
                 </content>
             </Tab>

@@ -91,6 +91,15 @@ public class UserDashboardController {
     @FXML private ComboBox<Venue> venueComboBox;
     @FXML private TextArea descriptionArea;
     @FXML private Button submitRequestButton;
+    // My Requests Table
+    @FXML private TableView<CustomEventRequest> myRequestsTable;
+    @FXML private TableColumn<CustomEventRequest, String>    reqTypeColumn;
+    @FXML private TableColumn<CustomEventRequest, LocalDate> reqDateColumn;
+    @FXML private TableColumn<CustomEventRequest, Double>    reqBudgetColumn;
+    @FXML private TableColumn<CustomEventRequest, Integer>   reqCapacityColumn;
+    @FXML private TableColumn<CustomEventRequest, String>    reqLocationColumn;
+    @FXML private TableColumn<CustomEventRequest, String>    reqStatusColumn;
+    @FXML private TableColumn<CustomEventRequest, LocalDate> reqCreatedColumn;
     
     // Profile Tab Fields
     @FXML private TextField firstNameField;
@@ -165,6 +174,9 @@ public class UserDashboardController {
 
         // Setup bookings table
         setupBookingsTable();
+
+        setupMyRequestsTable();
+        loadMyRequests();
 
         //Reviews
         reviewRatingCombo.getItems().addAll(1, 2, 3, 4, 5);
@@ -847,6 +859,57 @@ public class UserDashboardController {
             default: return "EVENT";
         }
     }
+    private void setupMyRequestsTable() {
+        reqTypeColumn.setCellValueFactory(new PropertyValueFactory<>("eventType"));
+        reqDateColumn.setCellValueFactory(new PropertyValueFactory<>("eventDate"));
+        reqBudgetColumn.setCellValueFactory(new PropertyValueFactory<>("budget"));
+        reqCapacityColumn.setCellValueFactory(new PropertyValueFactory<>("capacity"));
+        reqLocationColumn.setCellValueFactory(new PropertyValueFactory<>("location"));
+        reqStatusColumn.setCellValueFactory(new PropertyValueFactory<>("status"));
+        reqCreatedColumn.setCellValueFactory(new PropertyValueFactory<>("createdDate"));
+
+        // Color-code the status cell
+        reqStatusColumn.setCellFactory(col -> new TableCell<CustomEventRequest, String>() {
+            @Override
+            protected void updateItem(String status, boolean empty) {
+                super.updateItem(status, empty);
+                if (empty || status == null) {
+                    setText(null);
+                    setStyle("");
+                } else {
+                    setText(status);
+                    switch (status.toLowerCase()) {
+                        case "pending":
+                            setStyle("-fx-text-fill: #f59e0b; -fx-font-weight: bold;");
+                            break;
+                        case "approved":
+                            setStyle("-fx-text-fill: #10b981; -fx-font-weight: bold;");
+                            break;
+                        case "rejected":
+                            setStyle("-fx-text-fill: #ef4444; -fx-font-weight: bold;");
+                            break;
+                        default:
+                            setStyle("");
+                    }
+                }
+            }
+        });
+    }
+
+    private void loadMyRequests() {
+        User current = CurrentUser.getCurrentUser();
+        if (current == null || current.getId() == null) {
+            myRequestsTable.setItems(FXCollections.observableArrayList());
+            return;
+        }
+        try {
+            List<CustomEventRequest> requests = customRequestService.getRequestsByUserId(current.getId());
+            myRequestsTable.setItems(FXCollections.observableArrayList(requests));
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
 
     private void setupBookingsTable() {
         bookingTypeColumn.setCellValueFactory(cellData -> {
@@ -1221,6 +1284,7 @@ public class UserDashboardController {
                 filterVenues();
                 descriptionArea.clear();
                 showAlert("Success", "Your custom event request has been submitted successfully!");
+                loadMyRequests();
             } catch (SQLException e) {
                 e.printStackTrace();
                 showAlert("Error", "Error submitting request: " + e.getMessage());
