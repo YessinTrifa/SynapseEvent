@@ -98,8 +98,8 @@ public class UserDashboardController {
     @FXML private TextField emailField;
     @FXML private TextField phoneField;
     @FXML private TextField addressField;
-    @FXML private ComboBox<String> preferredCategoriesCombo;
-    @FXML private ComboBox<String> preferredLocationsCombo;
+    @FXML private TextField preferredCategoriesCombo;
+    @FXML private TextField preferredLocationsCombo;
     @FXML private TextField maxPriceField;
     @FXML private ComboBox<Integer> minRatingCombo;
 
@@ -160,6 +160,8 @@ public class UserDashboardController {
         // Setup all events table
         setupAllEventsTable();
 
+        //Step Recommended
+        setupRecommendedEventsTable();
 
         // Setup bookings table
         setupBookingsTable();
@@ -179,6 +181,11 @@ public class UserDashboardController {
 
         // Load data
         loadEvents();
+
+        //Load recommended
+        loadRecommendedEvents();
+
+
 
         loadBookings();
         allEventsTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
@@ -200,15 +207,10 @@ public class UserDashboardController {
         }
         
         // Setup preferences combos
-        preferredCategoriesCombo.getItems().addAll("All", "Anniversary", "Formation", "Paddle", "Partying", "TeamBuilding");
-        preferredCategoriesCombo.setValue("All");
-        
-        preferredLocationsCombo.getItems().addAll("All Cities", "Tunis", "Sfax", "Sousse", "Kairouan", "Bizerte");
-        preferredLocationsCombo.setValue("All Cities");
-        
+        // preferredCategoriesCombo and preferredLocationsCombo are now TextFields
         minRatingCombo.getItems().addAll(1, 2, 3, 4, 5);
         minRatingCombo.setValue(3);
-        
+
         // Load existing preferences
         loadUserPreferences();
     }
@@ -221,16 +223,21 @@ public class UserDashboardController {
             UserPreferences prefs = userPreferencesService.findByUserId(current.getId());
             if (prefs != null) {
                 if (prefs.getPreferredCategories() != null) {
-                    preferredCategoriesCombo.setValue(prefs.getPreferredCategories());
+                    preferredCategoriesCombo.setText(prefs.getPreferredCategories());
                 }
                 if (prefs.getPreferredLocations() != null) {
-                    preferredLocationsCombo.setValue(prefs.getPreferredLocations());
+                    preferredLocationsCombo.setText(prefs.getPreferredLocations());
                 }
                 if (prefs.getMaxPrice() != null) {
                     maxPriceField.setText(prefs.getMaxPrice().toString());
                 }
                 if (prefs.getMinRating() != null) {
                     minRatingCombo.setValue(prefs.getMinRating());
+                }
+                // After loading prefs into the Profile tab combos, also sync the Home tab filter:
+                if (prefs.getPreferredCategories() != null && typeFilterCombo != null) {
+                    typeFilterCombo.setValue(prefs.getPreferredCategories());
+                    applyFilters(); // triggers immediate filter on the All Events table
                 }
             }
         } catch (SQLException e) {
@@ -254,6 +261,7 @@ public class UserDashboardController {
         try {
             userService.modifier(current);
             CurrentUser.setCurrentUser(current);
+            loadRecommendedEvents();
             showAlert("Success", "Profile updated successfully!");
         } catch (SQLException e) {
             e.printStackTrace();
@@ -279,10 +287,10 @@ public class UserDashboardController {
                 isNew = true;
             }
             
-            String categories = preferredCategoriesCombo.getValue();
+            String categories = preferredCategoriesCombo.getText();
             prefs.setPreferredCategories(categories != null && !categories.equals("All") ? categories : null);
             
-            String locations = preferredLocationsCombo.getValue();
+            String locations = preferredLocationsCombo.getText();
             prefs.setPreferredLocations(locations != null && !locations.equals("All Cities") ? locations : null);
             
             try {
@@ -368,50 +376,50 @@ public class UserDashboardController {
         });
     }
 
-    //private void setupRecommendedEventsTable() {
-       // recommendedNameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
-       // recommendedTypeColumn.setCellValueFactory(new PropertyValueFactory<>("type"));
-       // recommendedDateColumn.setCellValueFactory(new PropertyValueFactory<>("date"));
-       // recommendedLocationColumn.setCellValueFactory(new PropertyValueFactory<>("location"));
-       // recommendedPriceColumn.setCellValueFactory(new PropertyValueFactory<>("price"));
+    private void setupRecommendedEventsTable() {
+        recommendedNameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
+        recommendedTypeColumn.setCellValueFactory(new PropertyValueFactory<>("type"));
+        recommendedDateColumn.setCellValueFactory(new PropertyValueFactory<>("date"));
+        recommendedLocationColumn.setCellValueFactory(new PropertyValueFactory<>("location"));
+        recommendedPriceColumn.setCellValueFactory(new PropertyValueFactory<>("price"));
 
         // Custom match percentage column
-        //recommendedMatchColumn.setCellFactory(param -> new TableCell<EventInstance, String>() {
-           // @Override
-            //protected void updateItem(String item, boolean empty) {
-             //   super.updateItem(item, empty);
-             //   if (empty) {
-             //       setGraphic(null);
-             //   } else {
-               //     EventInstance ei = getTableView().getItems().get(getIndex());
-               //     int match = calculateMatchPercentage(ei);
-                //    Label matchLabel = new Label(match + "%");
-                //    matchLabel.setStyle("-fx-font-weight: bold; -fx-text-fill: " + (match >= 80 ? "#10b981" : match >= 60 ? "#f59e0b" : "#6b7280"));
-                 //   setGraphic(matchLabel);
-               // }
-          //  }
-       // });
+            recommendedMatchColumn.setCellFactory(param -> new TableCell<EventInstance, String>() {
+            @Override
+            protected void updateItem(String item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty) {
+                   setGraphic(null);
+                } else {
+                    EventInstance ei = getTableView().getItems().get(getIndex());
+                    int match = calculateMatchPercentage(ei);
+                    Label matchLabel = new Label(match + "%");
+                    matchLabel.setStyle("-fx-font-weight: bold; -fx-text-fill: " + (match >= 80 ? "#10b981" : match >= 60 ? "#f59e0b" : "#6b7280"));
+                   setGraphic(matchLabel);
+               }
+            }
+        });
 
-        //recommendedActionColumn.setCellFactory(param -> new TableCell<EventInstance, Void>() {
-            //private final Button bookButton = new Button("Book Now");
-            //{
-              //  bookButton.setStyle("-fx-background-color: #10b981; -fx-text-fill: white; -fx-font-weight: bold;");
-             //   bookButton.setOnAction(event -> {
-                //    EventInstance ei = getTableView().getItems().get(getIndex());
-               //     showEventDetailsDialog(ei);
-              //  });
-         //   }
-          //  @Override
-          //  protected void updateItem(Void item, boolean empty) {
-              //super.updateItem(item, empty);
-               // if (empty) {
-                  //  setGraphic(null);
-               // } else {
-               //     setGraphic(bookButton);
-               // }
-           // }
-        //});
-    //}
+        recommendedActionColumn.setCellFactory(param -> new TableCell<EventInstance, Void>() {
+            private final Button bookButton = new Button("Book Now");
+            {
+               bookButton.setStyle("-fx-background-color: #10b981; -fx-text-fill: white; -fx-font-weight: bold;");
+                bookButton.setOnAction(event -> {
+                    EventInstance ei = getTableView().getItems().get(getIndex());
+                    showEventDetailsDialog(ei);
+                });
+            }
+            @Override
+            protected void updateItem(Void item, boolean empty) {
+              super.updateItem(item, empty);
+                if (empty) {
+                    setGraphic(null);
+                } else {
+                   setGraphic(bookButton);
+                }
+           }
+        });
+    }
 
     private int calculateMatchPercentage(EventInstance ei) {
         int match = 0;
@@ -424,10 +432,11 @@ public class UserDashboardController {
             UserPreferences prefs = userPreferencesService.findByUserId(current.getId());
             if (prefs != null) {
                 // Check category preference
-                if (prefs.getPreferredCategories() != null && ei.getType() != null) {
-                    factors++;
-                    if (ei.getType().equals(prefs.getPreferredCategories())) {
+                String[] cats = prefs.getPreferredCategories().split(",");
+                for (String cat : cats) {
+                    if (ei.getType() != null && ei.getType().equalsIgnoreCase(cat.trim())) {
                         match += 40;
+                        break;
                     }
                 }
                 // Check location preference
@@ -648,31 +657,31 @@ public class UserDashboardController {
     @FXML
     private void showPartyingEvents() {
         List<EventInstance> filtered = filterByType("Partying");
-        displayEventCards(filtered, "🎉 Partying Events");
+        displayEventCards(filtered, "Partying Events");
     }
 
     @FXML
     private void showPaddleEvents() {
         List<EventInstance> filtered = filterByType("Paddle");
-        displayEventCards(filtered, "🏄 Paddle Events");
+        displayEventCards(filtered, "Paddle Events");
     }
 
     @FXML
     private void showTeamBuildingEvents() {
         List<EventInstance> filtered = filterByType("TeamBuilding");
-        displayEventCards(filtered, "🏢 Team Building Events");
+        displayEventCards(filtered, "Team Building Events");
     }
 
     @FXML
     private void showFormationEvents() {
         List<EventInstance> filtered = filterByType("Formation");
-        displayEventCards(filtered, "🎓 Formation Events");
+        displayEventCards(filtered, "Formation Events");
     }
 
     @FXML
     private void showAnniversaryEvents() {
         List<EventInstance> filtered = filterByType("Anniversary");
-        displayEventCards(filtered, "🎂 Anniversary Events");
+        displayEventCards(filtered, "Anniversary Events");
     }
 
     private List<EventInstance> filterByType(String type) {
@@ -742,16 +751,16 @@ public class UserDashboardController {
         nameLabel.setWrapText(true);
 
         // Date with icon
-        Label dateLabel = new Label("📅 " + (ei.getDate() != null ? ei.getDate().toString() : "TBD"));
+        Label dateLabel = new Label("Date: " + (ei.getDate() != null ? ei.getDate().toString() : "TBD"));
         dateLabel.setStyle("-fx-font-size: 13; -fx-text-fill: #64748b; -fx-padding: 5 15;");
 
         // Location with icon
-        Label locationLabel = new Label("📍 " + (ei.getLocation() != null ? ei.getLocation() : "TBD"));
+        Label locationLabel = new Label("Location: " + (ei.getLocation() != null ? ei.getLocation() : "TBD"));
         locationLabel.setStyle("-fx-font-size: 13; -fx-text-fill: #64748b; -fx-padding: 5 15;");
         locationLabel.setWrapText(true);
 
         // Price
-        Label priceLabel = new Label("💰 " + (ei.getPrice() != null ? ei.getPrice() + " TND" : "Free"));
+        Label priceLabel = new Label("Price: " + (ei.getPrice() != null ? ei.getPrice() + " TND" : "Free"));
         priceLabel.setStyle("-fx-font-size: 15; -fx-font-weight: bold; -fx-text-fill: #10b981; -fx-padding: 10 15;");
 
         // Status badge
@@ -770,7 +779,7 @@ public class UserDashboardController {
         statusBox.setStyle("-fx-padding: 0 15 10 15;");
 
         // Book Button
-        Button bookBtn = new Button("🎫 Book Now");
+        Button bookBtn = new Button("Book Now");
         bookBtn.setStyle(
             "-fx-background-color: " + cardColor + "; " +
             "-fx-text-fill: white; " +
@@ -828,14 +837,14 @@ public class UserDashboardController {
     }
 
     private String getEventEmoji(String type) {
-        if (type == null) return "🎉";
+        if (type == null) return "EVENT";
         switch (type) {
-            case "Partying": return "🎉";
-            case "Paddle": return "🏄";
-            case "TeamBuilding": return "🏢";
-            case "Formation": return "🎓";
-            case "Anniversary": return "🎂";
-            default: return "🎉";
+            case "Partying": return "PARTY";
+            case "Paddle": return "PADDLE";
+            case "TeamBuilding": return "TEAM";
+            case "Formation": return "TRAINING";
+            case "Anniversary": return "ANNIV";
+            default: return "EVENT";
         }
     }
 
@@ -862,7 +871,7 @@ public class UserDashboardController {
             Booking booking = cellData.getValue();
             try {
                 double avg = reviewService.getAverageRating(booking.getEventType(), booking.getEventId());
-                String display = avg == 0.0 ? "No reviews" : String.format("⭐ %.1f / 5", avg);
+                String display = avg == 0.0 ? "No reviews" : String.format("Rating %.1f / 5", avg);
                 return new SimpleStringProperty(display);
             } catch (SQLException e) {
                 e.printStackTrace();
@@ -870,7 +879,7 @@ public class UserDashboardController {
             }
         });
         bookingActionColumn.setCellFactory(param -> new TableCell<Booking, Void>() {
-            private final Button reviewBtn = new Button("⭐ Review");
+            private final Button reviewBtn = new Button("Review");
             {
                 reviewBtn.setStyle("-fx-background-color: #f59e0b; -fx-text-fill: white;");
                 reviewBtn.setOnAction(event -> {
@@ -1312,3 +1321,4 @@ public class UserDashboardController {
         selectedBookingForReview = null;
     }
 }
+

@@ -117,6 +117,23 @@
                                 </TableView>
                             </VBox>
 
+
+                            <!-- Recommended Events (Personalized) -->
+                            <VBox spacing="10" styleClass="card-web">
+                                <Label styleClass="section-title" text="🎯 Recommended For You" />
+                                <TableView fx:id="recommendedEventsTable" prefHeight="200" styleClass="table-web">
+                                    <columns>
+                                        <TableColumn fx:id="recommendedNameColumn" text="Name" />
+                                        <TableColumn fx:id="recommendedTypeColumn" text="Type" />
+                                        <TableColumn fx:id="recommendedDateColumn" text="Date" />
+                                        <TableColumn fx:id="recommendedLocationColumn" text="Location" />
+                                        <TableColumn fx:id="recommendedPriceColumn" text="Price" />
+                                        <TableColumn fx:id="recommendedMatchColumn" text="Match %" />
+                                        <TableColumn fx:id="recommendedActionColumn" text="Book" />
+                                    </columns>
+                                </TableView>
+                            </VBox>
+
                             <!-- All Events (keep yours) -->
                             <VBox spacing="10" styleClass="card-web">
                                 <Label styleClass="section-title" text="All Available Events" />
@@ -292,11 +309,11 @@
                                 <HBox spacing="15">
                                     <VBox spacing="5" HBox.hgrow="ALWAYS">
                                         <Label styleClass="top-muted" text="Favorite Categories:" />
-                                        <ComboBox fx:id="preferredCategoriesCombo" styleClass="combo-web" />
+                                        <TextField fx:id="preferredCategoriesCombo" promptText="e.g. Partying,Formation" styleClass="input-web" />
                                     </VBox>
                                     <VBox spacing="5" HBox.hgrow="ALWAYS">
                                         <Label styleClass="top-muted" text="Favorite Locations:" />
-                                        <ComboBox fx:id="preferredLocationsCombo" styleClass="combo-web" />
+                                        <TextField fx:id="preferredLocationsCombo" promptText="e.g. Tunis,Sfax,Bizert" styleClass="input-web" />
                                     </VBox>
                                 </HBox>
 
