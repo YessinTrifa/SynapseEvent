@@ -484,5 +484,353 @@
     -fx-text-fill: white;
     -fx-background-radius: 10;
 }
+/* ============================================================
+   REGISTER PAGE — Split card design
+   ============================================================ */
 
+/* Outer page background */
+.register-bg {
+    -fx-background-color: linear-gradient(
+            from 0% 0% to 100% 100%,
+            #000b21 0%, #003f82 40%, #4ca2b5 70%, #ffd27f 100%
+    );
+}
+
+/* The centered card wrapper */
+.auth-card {
+    -fx-background-color: transparent;
+    -fx-background-radius: 32;
+    -fx-border-radius: 32;
+}
+
+/* LEFT PANEL */
+.left-panel {
+    -fx-background-radius: 32 0 0 32;
+    -fx-background-insets: 0;
+    -fx-min-width: 300;
+    -fx-pref-width: 360;
+    -fx-max-width: 400;
+}
+.left-bg-image {
+    -fx-background-image: url("/images/clocks.jpg");
+    -fx-background-size: cover;
+    -fx-background-position: center center;
+    -fx-background-repeat: no-repeat;
+    -fx-background-radius: 32 0 0 32;
+    -fx-background-insets: 0;
+}
+/* The beige warm overlay on top of the image */
+.left-overlay {
+    -fx-background-color: rgba(180, 140, 60, 0.45);
+    -fx-background-radius: 32 0 0 32;
+    -fx-background-insets: 0;
+}
+
+/* Headline: "Create your Account" */
+.reg-headline {
+    -fx-font-family: "Georgia", "Times New Roman", serif;
+    -fx-font-size: 34px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #17320b;
+    -fx-wrap-text: true;
+}
+
+/* Subheadline */
+.reg-subhead {
+    -fx-font-family: "Georgia", "Times New Roman", serif;
+    -fx-font-size: 13px;
+    -fx-text-fill: #17320b;
+    -fx-wrap-text: true;
+    -fx-font-style: italic;
+}
+
+/* "Already have an account ? Login" line */
+.reg-already {
+    -fx-font-size: 12px;
+    -fx-text-fill: #712122;
+    -fx-font-weight: 600;
+}
+
+/* Clickable "Login" part inside the already-have label */
+.reg-login-link {
+    -fx-background-color: transparent;
+    -fx-text-fill: #712122;
+    -fx-font-weight: 800;
+    -fx-font-size: 12px;
+    -fx-underline: false;
+    -fx-cursor: hand;
+    -fx-padding: 0 0 0 2;
+    -fx-border-color: transparent;
+}
+.reg-login-link:hover {
+    -fx-underline: true;
+}
+
+.reg-login-link:hover {
+    -fx-underline: true;
+}
+
+/* RIGHT PANEL */
+.right-panel {
+    -fx-background-color: #e8d5a3;
+    -fx-background-radius: 0 32 32 0;
+    -fx-padding: 28 36 28 36;
+    -fx-min-width: 440;
+}
+/* "Sign Up" title */
+.reg-form-title {
+    -fx-font-family: "Georgia", "Times New Roman", serif;
+    -fx-font-size: 30px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #17320b;
+}
+
+/* Field labels */
+.reg-label {
+    -fx-font-size: 12px;
+    -fx-font-weight: 700;
+    -fx-text-fill: #471a1a;
+}
+
+/* PILL FIELDS — TextField, PasswordField */
+.pill-field {
+    -fx-background-color: #e8d5a3;
+    -fx-background-radius: 999;
+    -fx-border-radius: 999;
+    -fx-border-color: #8a6a20;
+    -fx-border-width: 1.5;
+    -fx-padding: 9 18;
+    -fx-font-size: 13px;
+    -fx-text-fill: #3a2a10;
+    -fx-prompt-text-fill: #7a6040;
+    -fx-max-width: 9999;
+}
+.pill-field:focused {
+    -fx-border-color: #5a3010;
+    -fx-border-width: 2;
+    -fx-background-color: #f0ddb0;
+}
+
+.pill-field:focused {
+    -fx-border-color: #5a3010;
+    -fx-border-width: 2;
+    -fx-background-color: rgba(145, 130, 91, 0.34);
+}
+
+/* ComboBox pill style */
+.pill-combo {
+    -fx-background-color: #e8d5a3;
+    -fx-background-radius: 999;
+    -fx-border-radius: 999;
+    -fx-border-color: #8a6a20;
+    -fx-border-width: 1.5;
+    -fx-padding: 8 14;
+    -fx-font-size: 13px;
+    -fx-text-fill: #3a2a10;
+    -fx-max-width: 9999;
+    -fx-pref-height: 38;
+    -fx-min-height: 38;
+}
+.pill-combo:focused {
+    -fx-border-color: #5a3010;
+    -fx-border-width: 2;
+}
+.pill-combo .arrow-button {
+    -fx-background-color: transparent;
+    -fx-background-radius: 999;
+    -fx-padding: 0 8;
+}
+.pill-combo .arrow {
+    -fx-background-color: #5a3010;
+}
+.pill-combo .list-cell {
+    -fx-background-color: #e8d5a3;
+    -fx-text-fill: #3a2a10;
+    -fx-padding: 8 14;
+    -fx-font-size: 13px;
+}
+.combo-box-popup .list-view {
+    -fx-background-color: #e8d5a3;
+    -fx-border-color: #8a6a20;
+    -fx-border-radius: 12;
+    -fx-background-radius: 12;
+}
+.combo-box-popup .list-view .list-cell:hover {
+    -fx-background-color: #c8a860;
+}
+/* CREATE ACCOUNT button */
+.reg-primary-btn {
+    -fx-background-color: #7a1a2a;
+    -fx-background-radius: 999;
+    -fx-border-radius: 999;
+    -fx-border-color: #6c5a2e;
+    -fx-border-width: 2px;
+    -fx-text-fill: #6c5a2e;
+    -fx-font-size: 15px;
+    -fx-font-weight: 700;
+    -fx-padding: 13 0;
+    -fx-max-width: 9999;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.3), 8, 0, 0, 3);
+}
+
+.reg-primary-btn:hover {
+    -fx-background-color: #921f32;
+}
+
+.reg-primary-btn:pressed {
+    -fx-background-color: #5a1020;
+    -fx-translate-y: 1;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.15), 4, 0, 0, 1);
+}
+
+/* Error labels under fields */
+.reg-error {
+    -fx-text-fill: #b00020;
+    -fx-font-size: 11px;
+    -fx-font-weight: 600;
+    -fx-padding: 2 4 0 4;
+}
+
+/* Message label (success/fail) */
+.reg-message {
+    -fx-font-size: 12px;
+    -fx-font-weight: 700;
+    -fx-wrap-text: true;
+}
+/* ============================================================
+   LOGIN PAGE — matching register split-card design
+   ============================================================ */
+
+.login-bg {
+    -fx-background-color: linear-gradient(
+            from 0% 100% to 100% 0%,
+            #000b21 0%, #003f82 33%, #4ca2b5 66%, #ffd27f 100%
+    );
+}
+
+.login-left-bg {
+    -fx-background-image: url("/images/clocks.jpg");
+    -fx-background-size: cover;
+    -fx-background-position: center center;
+    -fx-background-repeat: no-repeat;
+    -fx-background-radius: 32 0 0 32;
+    -fx-background-insets: 0;
+}
+
+.login-left-overlay {
+    -fx-background-color: rgba(180, 140, 60, 0.45);
+    -fx-background-radius: 32 0 0 32;
+    -fx-background-insets: 0;
+}
+
+.login-left-panel {
+    -fx-background-radius: 32 0 0 32;
+    -fx-background-insets: 0;
+    -fx-min-width: 300;
+    -fx-pref-width: 360;
+    -fx-max-width: 400;
+}
+
+.login-headline {
+    -fx-font-family: "Georgia", "Times New Roman", serif;
+    -fx-font-size: 34px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #1a4a1a;
+    -fx-wrap-text: true;
+}
+
+.login-subhead {
+    -fx-font-family: "Georgia", "Times New Roman", serif;
+    -fx-font-size: 13px;
+    -fx-text-fill: #1a4a1a;
+    -fx-wrap-text: true;
+    -fx-font-style: italic;
+}
+
+.login-already {
+    -fx-font-size: 12px;
+    -fx-text-fill: #471a1a;
+    -fx-font-weight: 600;
+}
+
+.login-create-link {
+    -fx-background-color: transparent;
+    -fx-text-fill: #7a1a2a;
+    -fx-font-weight: 800;
+    -fx-font-size: 12px;
+    -fx-underline: false;
+    -fx-cursor: hand;
+    -fx-padding: 0 0 0 2;
+    -fx-border-color: transparent;
+}
+
+.login-create-link:hover {
+    -fx-underline: true;
+}
+
+.login-right-panel {
+    -fx-background-color: #e8d5a3;
+    -fx-background-radius: 0 32 32 0;
+    -fx-padding: 48 48 48 48;
+    -fx-min-width: 380;
+}
+
+.login-form-title {
+    -fx-font-family: "Georgia", "Times New Roman", serif;
+    -fx-font-size: 30px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #1a4a1a;
+}
+
+.login-label {
+    -fx-font-size: 12px;
+    -fx-font-weight: 700;
+    -fx-text-fill: #1a3a1a;
+}
+
+.login-pill-field {
+    -fx-background-color: #e8d5a3;
+    -fx-background-radius: 999;
+    -fx-border-radius: 999;
+    -fx-border-color: #8a6a20;
+    -fx-border-width: 1.5;
+    -fx-padding: 11 20;
+    -fx-font-size: 13px;
+    -fx-text-fill: #3a2a10;
+    -fx-prompt-text-fill: #7a6040;
+    -fx-max-width: 9999;
+    -fx-pref-height: 42;
+}
+
+.login-pill-field:focused {
+    -fx-border-color: #5a3010;
+    -fx-border-width: 2;
+    -fx-background-color: rgba(145, 130, 91, 0.34);
+}
+
+.login-primary-btn {
+    -fx-background-color: #7a1a2a;
+    -fx-background-radius: 999;
+    -fx-border-radius: 999;
+    -fx-border-color: #6c5a2e;
+    -fx-border-width: 2px;
+    -fx-text-fill: #6c5a2e;
+    -fx-font-size: 16px;
+    -fx-font-weight: 700;
+    -fx-padding: 14 0;
+    -fx-max-width: 9999;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.3), 8, 0, 0, 3);
+}
+
+.login-primary-btn:hover {
+    -fx-background-color: #921f32;
+}
+
+.login-primary-btn:pressed {
+    -fx-background-color: #5a1020;
+    -fx-translate-y: 1;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.15), 4, 0, 0, 1);
+}
 

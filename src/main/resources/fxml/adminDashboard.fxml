@@ -26,120 +26,144 @@
 
     <!-- LEFT SIDEBAR -->
     <left>
-        <VBox fx:id="sidebar" prefWidth="240" minWidth="200" spacing="10" styleClass="sidebar">
-            <HBox alignment="CENTER_LEFT" spacing="10">
-                <ImageView fitHeight="62.0" fitWidth="58.0" preserveRatio="true">
-                    <image>
-                  <Image url="@../images/logo.png" />
-               </image>
+        <VBox fx:id="sidebar" styleClass="sidebar" spacing="0">
+
+            <!-- Logo -->
+            <HBox alignment="CENTER_LEFT" spacing="8"
+                  style="-fx-padding: 16 12 14 12;
+                     -fx-border-color: rgba(255,255,255,0.10);
+                     -fx-border-width: 0 0 1 0;">
+                <ImageView fitHeight="48" fitWidth="48" preserveRatio="true">
+                    <image><Image url="@../images/logo.png" /></image>
                 </ImageView>
-                <Label prefHeight="46.0" prefWidth="138.0" styleClass="sidebar-title" text="SynapseEvent" />
+                <Label styleClass="sidebar-title" text="SynapseEvent" wrapText="true" />
             </HBox>
 
-            <Button fx:id="navDashboard" onAction="#showDashboard" styleClass="nav-btn" text="Dashboard" />
-            <Button fx:id="navUsers" onAction="#showUsers" styleClass="nav-btn" text="Users" />
-            <Button fx:id="navEvents" onAction="#showEvents" styleClass="nav-btn" text="Events" />
-            <Button fx:id="navBookings" onAction="#showBookings" styleClass="nav-btn" text="Bookings" />
-            <Button fx:id="navRequests" onAction="#showRequests" styleClass="nav-btn" text="Requests" />
-            <Button fx:id="navEnterprises" onAction="#showEnterprises" styleClass="nav-btn" text="Enterprises" />
+            <!-- Gap before nav -->
+            <Region prefHeight="8" />
+
+            <!-- Nav buttons -->
+            <Button fx:id="navDashboard"   onAction="#showDashboard"   styleClass="nav-btn" text="Dashboard"   maxWidth="9999" />
+            <Button fx:id="navUsers"       onAction="#showUsers"       styleClass="nav-btn" text="Users"        maxWidth="9999" />
+            <Button fx:id="navEvents"      onAction="#showEvents"      styleClass="nav-btn" text="Events"       maxWidth="9999" />
+            <Button fx:id="navBookings"    onAction="#showBookings"    styleClass="nav-btn" text="Booking"      maxWidth="9999" />
+            <Button fx:id="navRequests"    onAction="#showRequests"    styleClass="nav-btn" text="Requests"     maxWidth="9999" />
+            <Button fx:id="navEnterprises" onAction="#showEnterprises" styleClass="nav-btn" text="Entreprises"  maxWidth="9999" />
+
             <Region VBox.vgrow="ALWAYS" />
-            <Label styleClass="muted" text="© SynapseEvent" />
+
         </VBox>
     </left>
 
     <!-- TOP BAR -->
     <top>
-        <HBox spacing="12" styleClass="topbar">
-            <Label styleClass="top-title" text="Admin Dashboard">
-            <font>
-               <Font name="System Bold Italic" size="12.0" />
-            </font></Label>
+        <HBox alignment="CENTER_LEFT" spacing="14"
+              style="-fx-padding: 14 24 14 24; -fx-background-color: transparent;">
+            <Label styleClass="top-title" text="Admin Dashboard" />
             <Region HBox.hgrow="ALWAYS" />
-
             <Button fx:id="userViewBtn"
                     text="User View"
                     onAction="#goToUserView"
                     styleClass="btn-secondary" />
-
-            <Region prefWidth="10" />
-
-            <Button text="⏻  Logout"
+            <Button text="Logout"
                     onAction="#logout"
                     styleClass="nav-logout-btn" />
         </HBox>
     </top>
-
     <!-- CENTER CONTENT -->
     <center>
         <ScrollPane fitToWidth="true" fitToHeight="false" hbarPolicy="NEVER" styleClass="scroll-clean" maxWidth="Infinity">
             <content>
                 <VBox maxWidth="Infinity" spacing="16" styleClass="content">
                     <!-- PAGE: Dashboard -->
+                    <!-- PAGE: Dashboard -->
                     <VBox fx:id="pageDashboard" managed="true" spacing="16" visible="true">
-                        <HBox fx:id="kpiWrap" spacing="16" HBox.hgrow="ALWAYS">
-                            <VBox maxWidth="Infinity" styleClass="kpi-card" HBox.hgrow="ALWAYS">
-                                <Label styleClass="kpi-icon" text="👥" />
-                                <Label styleClass="muted" text="Total Users" />
-                                <Label fx:id="totalUsersLabel" styleClass="kpi-number" text="0" />
-                            </VBox>
-                            <VBox maxWidth="Infinity" styleClass="kpi-card" HBox.hgrow="ALWAYS">
-                                <Label styleClass="kpi-icon" text="📅" />
-                                <Label styleClass="muted" text="Total Events" />
-                                <Label fx:id="totalEventsLabel" styleClass="kpi-number" text="0" />
-                            </VBox>
-                            <VBox maxWidth="Infinity" styleClass="kpi-card" HBox.hgrow="ALWAYS">
-                                <Label styleClass="kpi-icon" text="🕐" />
-                                <Label styleClass="muted" text="Pending Bookings" />
-                                <Label fx:id="pendingBookingsLabel" styleClass="kpi-number" text="0" />
-                            </VBox>
-                            <VBox maxWidth="Infinity" styleClass="kpi-card" HBox.hgrow="ALWAYS">
-                                <Label styleClass="kpi-icon" text="📋" />
-                                <Label styleClass="muted" text="Open Requests" />
-                                <Label fx:id="openRequestsLabel" styleClass="kpi-number" text="0" />
-                            </VBox>
-                        </HBox>
 
-                        <GridPane hgap="16" maxWidth="1e9" vgap="16">
-                            <columnConstraints>
-                                <ColumnConstraints hgrow="ALWAYS" minWidth="300" />
-                                <ColumnConstraints hgrow="ALWAYS" minWidth="200" />
-                            </columnConstraints>
-                            <rowConstraints>
-                                <RowConstraints />
-                                <RowConstraints />
-                            </rowConstraints>
+                        <!-- KPI ROW: 2 cards left column + bar chart right column -->
+                        <HBox spacing="16">
 
-                            <VBox spacing="10" styleClass="card-web" GridPane.columnIndex="0">
-                                <HBox spacing="10">
-                                    <Label styleClass="card-title-web" text="Bookings (last 7 days)" />
-                                    <Region HBox.hgrow="ALWAYS" />
-                                    <ComboBox fx:id="bookingRangeCombo" prefWidth="140" />
-                                </HBox>
-                                <LineChart fx:id="bookingsChart" animated="false" maxHeight="200" prefHeight="200">
-                                    <xAxis><CategoryAxis /></xAxis>
-                                    <yAxis><NumberAxis /></yAxis>
-                                </LineChart>
-                            </VBox>
+                            <!-- Left: 2x2 KPI grid -->
+                            <GridPane hgap="14" vgap="14" HBox.hgrow="NEVER">
+                                <columnConstraints>
+                                    <ColumnConstraints prefWidth="190" minWidth="160" />
+                                    <ColumnConstraints prefWidth="190" minWidth="160" />
+                                </columnConstraints>
+                                <rowConstraints>
+                                    <RowConstraints />
+                                    <RowConstraints />
+                                </rowConstraints>
 
-                            <VBox spacing="10" styleClass="card-web" GridPane.columnIndex="1">
+                                <VBox styleClass="kpi-card" spacing="6"
+                                      GridPane.columnIndex="0" GridPane.rowIndex="0">
+                                    <Label styleClass="muted" text="Total Users" />
+                                    <Label fx:id="totalUsersLabel" styleClass="kpi-number" text="0" />
+                                </VBox>
+
+                                <VBox styleClass="kpi-card" spacing="6"
+                                      GridPane.columnIndex="1" GridPane.rowIndex="0">
+                                    <Label styleClass="muted" text="Total Events" />
+                                    <Label fx:id="totalEventsLabel" styleClass="kpi-number" text="0" />
+                                </VBox>
+
+                                <VBox styleClass="kpi-card" spacing="6"
+                                      GridPane.columnIndex="0" GridPane.rowIndex="1">
+                                    <Label styleClass="muted" text="Open Requests" />
+                                    <Label fx:id="openRequestsLabel" styleClass="kpi-number" text="0" />
+                                </VBox>
+
+                                <VBox styleClass="kpi-card" spacing="6"
+                                      GridPane.columnIndex="1" GridPane.rowIndex="1">
+                                    <Label styleClass="muted" text="Pending Booking" />
+                                    <Label fx:id="pendingBookingsLabel" styleClass="kpi-number" text="0" />
+                                </VBox>
+                            </GridPane>
+
+                            <!-- Right: Bar chart -->
+                            <VBox spacing="8" styleClass="card-web" HBox.hgrow="ALWAYS">
                                 <Label styleClass="card-title-web" text="Popular event types" />
-                                <BarChart fx:id="popularChart" animated="false" maxHeight="200" prefHeight="200">
+                                <BarChart fx:id="popularChart" animated="false"
+                                          maxHeight="220" prefHeight="220" VBox.vgrow="ALWAYS">
                                     <xAxis><CategoryAxis /></xAxis>
                                     <yAxis><NumberAxis /></yAxis>
                                 </BarChart>
                             </VBox>
 
-                            <VBox spacing="10" styleClass="card-web" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                        </HBox>
+
+                        <!-- SECOND ROW: Line chart left + Calendar right -->
+                        <HBox spacing="16">
+
+                            <!-- Line chart -->
+                            <VBox spacing="8" styleClass="card-web" HBox.hgrow="ALWAYS">
+                                <!-- fx:id kept for controller wiring — ComboBox hidden via CSS -->
+                                <HBox spacing="10" alignment="CENTER_LEFT">
+                                    <Label styleClass="card-title-web" text="Booking (last 7 days)" />
+                                    <Region HBox.hgrow="ALWAYS" />
+                                    <ComboBox fx:id="bookingRangeCombo" prefWidth="0"
+                                              minWidth="0" maxWidth="0"
+                                              style="-fx-opacity: 0; -fx-padding: 0;" />
+                                </HBox>
+                                <LineChart fx:id="bookingsChart" animated="false"
+                                           maxHeight="260" prefHeight="260" VBox.vgrow="ALWAYS">
+                                    <xAxis><CategoryAxis /></xAxis>
+                                    <yAxis><NumberAxis /></yAxis>
+                                </LineChart>
+                            </VBox>
+
+                            <!-- Calendar -->
+                            <VBox spacing="8" styleClass="card-web" HBox.hgrow="ALWAYS">
                                 <HBox alignment="CENTER_LEFT" spacing="8">
                                     <Label styleClass="card-title-web" text="Calendar" />
                                     <Region HBox.hgrow="ALWAYS" />
                                     <Button fx:id="calPrev" styleClass="cal-nav-btn" text="‹" />
-                                    <Label fx:id="calMonthLabel" styleClass="cal-month-label" text="February 2026" />
+                                    <Label fx:id="calMonthLabel" styleClass="cal-month-label" text="March 2026" />
                                     <Button fx:id="calNext" styleClass="cal-nav-btn" text="›" />
                                 </HBox>
-                                <GridPane fx:id="calendarGrid" alignment="CENTER" hgap="4" vgap="4" />
+                                <GridPane fx:id="calendarGrid" alignment="CENTER" hgap="6" vgap="6" />
                             </VBox>
-                        </GridPane>
+
+                        </HBox>
+
                     </VBox>
 
                     <!-- PAGE: Users -->

@@ -1,0 +1,87 @@
+/* =====================================================
+   landing.css  — SynapseEvent Landing Page
+   ===================================================== */
+
+/* ROOT: full-page gradient — navy left → teal center → warm gold right */
+.landing-root {
+    -fx-background-color: linear-gradient(
+            from 0% 100% to 100% 0%,
+            #000b21 0%,
+            #003f82 33%,
+            #4ca2b5 66%,
+            #ffd27f 100%
+    );
+}
+
+/* TOP BAR */
+.landing-topbar {
+    -fx-padding: 18 32 18 24;
+    -fx-background-color: transparent;
+    -fx-alignment: CENTER_LEFT;
+    -fx-spacing: 0;
+}
+/* LOGIN BUTTON — pill with border, top-right */
+.pill-button {
+    -fx-background-color: transparent;
+    -fx-border-color: #471a1a;
+    -fx-border-width: 2;
+    -fx-border-radius: 999;
+    -fx-background-radius: 999;
+    -fx-text-fill: #471a1a;
+    -fx-font-family: "Segoe UI", "System";
+    -fx-font-size: 15px;
+    -fx-font-weight: 700;
+    -fx-padding: 10 32;
+    -fx-cursor: hand;
+}
+
+.pill-button:hover {
+    -fx-background-color: rgba(200, 120, 48, 0.12);
+    -fx-border-color: #c85a1a;
+}
+
+.pill-button:pressed {
+    -fx-translate-y: 1;
+    -fx-background-color: rgba(200, 120, 48, 0.22);
+}
+
+/* BRAND TITLE — "Synapse" and "Event" */
+.brand-title {
+    -fx-font-family: "Georgia", "Times New Roman", serif;
+    -fx-font-size: 150px;
+    -fx-text-fill: #c85a1a;
+    -fx-font-weight: normal;
+}
+
+/* TAGLINE */
+.tagline {
+    -fx-font-family: "Segoe UI", "System";
+    -fx-font-size: 14px;
+    -fx-text-fill: #c87830;
+    -fx-font-weight: 600;
+}
+
+/* GET STARTED BUTTON */
+.outline-button {
+    -fx-background-color: transparent;
+    -fx-border-color: rgba(89, 4, 4, 0.8);
+    -fx-border-width: 2;
+    -fx-border-radius: 999;
+    -fx-background-radius: 999;
+    -fx-text-fill: #590404;
+    -fx-font-family: "Segoe UI", "System";
+    -fx-font-size: 15px;
+    -fx-font-weight: 600;
+    -fx-padding: 13 70;
+    -fx-cursor: hand;
+}
+
+.outline-button:hover {
+    -fx-background-color: rgba(200, 90, 26, 0.10);
+    -fx-border-color: #c85a1a;
+}
+
+.outline-button:pressed {
+    -fx-translate-y: 1;
+    -fx-background-color: rgba(200, 90, 26, 0.20);
+}

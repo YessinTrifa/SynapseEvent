@@ -27,7 +27,7 @@ public class Main extends Application {
         
         try {
             System.out.println("Step 2: Loading UI...");
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/shell.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/Shell.fxml"));
             
             if (loader.getLocation() == null) {
                 throw new Exception("landing.fxml not found in resources!");

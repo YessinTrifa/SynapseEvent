@@ -150,10 +150,10 @@ public final class Navigator {
             if (titleLabel != null) titleLabel.setText(entry.title);
 
             // Show or hide the entire nav bar
-            boolean isAuthPage = AUTH_PAGES.contains(entry.fxml);
+            // Shell navbar permanently hidden — each dashboard has its own sidebar
             if (navBar != null) {
-                navBar.setVisible(!isAuthPage);
-                navBar.setManaged(!isAuthPage);
+                navBar.setVisible(false);
+                navBar.setManaged(false);
             }
 
             updateButtons();
