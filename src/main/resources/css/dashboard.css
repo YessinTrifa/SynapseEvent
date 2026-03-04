@@ -1,12 +1,13 @@
-/* ============================================================
-   dashboard.css — Admin Dashboard warm antique theme
-   ============================================================ */
+/* dashboard.css — Admin Dashboard warm antique theme */
 
 /* ── ROOT ── */
 .app-root {
     -fx-background-color: linear-gradient(
-            from 0% 100% to 100% 0%,
-            #000b21 0%, #003f82 33%, #4ca2b5 66%, #ffd27f 100%
+            to right,
+            #2b2e33 0%,
+            #3a3d42 25%,
+            #6c624e 60%,
+            #c7a96b 100%
     );
     -fx-font-family: "Segoe UI", "System";
 }
@@ -14,14 +15,18 @@
 /* ── SIDEBAR ── */
 .sidebar {
     -fx-background-color: linear-gradient(
-            to bottom,
-            #001535 0%, #002d5a 45%, #1a6070 80%, #4a8a7a 100%
+            to right,
+            #2b2e33 0%,
+            #3a3d42 25%,
+            #6c624e 60%,
+            #c7a96b 100%
     );
     -fx-border-color: transparent;
     -fx-border-width: 0;
     -fx-min-width: 150;
     -fx-pref-width: 175;
     -fx-max-width: 200;
+    -fx-padding: 0 0 0 0;
 }
 
 .sidebar-logo-box {
@@ -63,9 +68,9 @@
     -fx-text-fill: #1a3a1a;
     -fx-font-weight: 800;
     -fx-background-radius: 14 0 0 14;
-    -fx-padding: 13 20;
+    -fx-background-insets: 0 -4 0 0;
+    -fx-padding: 13 24 13 20;
 }
-
 /* ── DIVIDER under logo ── */
 .sidebar-divider {
     -fx-border-color: rgba(255,255,255,0.12);
@@ -290,6 +295,21 @@
     -fx-background-color: #c8a040;
     -fx-background-radius: 12 12 0 0;
 }
+
+/* Kill the filler/placeholder column that creates the white ghost */
+.table-view .column-header.filler {
+    -fx-background-color: #c8a040;
+    -fx-border-color: transparent;
+}
+
+.table-view .column-resize-line {
+    -fx-background-color: rgba(138,106,32,0.30);
+}
+
+/* Remove the white placeholder cell at end of header row */
+.table-view .filler {
+    -fx-background-color: #c8a040;
+}
 .table-view .column-header { -fx-background-color: transparent; }
 .table-view .column-header .label {
     -fx-text-fill: #1a3a1a;
@@ -344,6 +364,11 @@
     -fx-cursor: hand;
 }
 .btn-primary:hover { -fx-background-color: #2a6a2a; }
+
+
+.button.btn-primary:pressed {
+    -fx-translate-y: 1;
+}
 
 .btn-danger {
     -fx-background-color: rgba(122,26,42,0.14);
@@ -440,8 +465,15 @@
 }
 
 /* Active sidebar item right-edge blend fix */
+/* Active sidebar item right-edge blend fix */
 .nav-btn.active {
-    -fx-effect: dropshadow(gaussian, rgba(232,213,163,0.0), 0, 0, 0, 0);
+    -fx-background-color: #e8d5a3;
+    -fx-text-fill: #1a3a1a;
+    -fx-font-weight: 800;
+    -fx-background-radius: 14 0 0 14;
+    -fx-background-insets: 0 -4 0 0;
+    -fx-padding: 13 24 13 20;
+    -fx-effect: none;
 }
 
 /* Remove all scrollbar chrome */
@@ -453,3 +485,14 @@
 .scroll-bar > .increment-arrow,
 .scroll-bar > .decrement-arrow  { -fx-shape: ""; -fx-padding: 0; }
 .corner { -fx-background-color: transparent; }
+
+/* Force columns to fill table width — removes ghost empty column */
+.table-view .column-header.filler,
+.table-view .nested-column-header.filler {
+    -fx-background-color: #c8a040;
+    -fx-border-color: transparent;
+    -fx-border-width: 0;
+}
+.table-view:focused .column-header.filler {
+    -fx-background-color: #c8a040;
+}

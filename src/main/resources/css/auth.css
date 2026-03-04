@@ -246,9 +246,7 @@
     -fx-cursor: hand;
 }
 .button.btn-link:hover{ -fx-underline: true; }
-/* =====================
-   Landing (web)
-   ===================== */
+/*Landing (web)*/
 
 .page{
     -fx-alignment: top-center;
@@ -343,7 +341,7 @@
     -fx-font-size: 12px;
     -fx-text-fill: rgba(255,255,255,0.68);
 }
-/* === Landing polish (template-like) === */
+/*  Landing polish (template-like)  */
 
 .preview{
     -fx-padding: 22;
@@ -484,16 +482,16 @@
     -fx-text-fill: white;
     -fx-background-radius: 10;
 }
-/* ============================================================
-   REGISTER PAGE — Split card design
-   ============================================================ */
+/* REGISTER PAGE — Split card design*/
 
 /* Outer page background */
 .register-bg {
     -fx-background-color: linear-gradient(
-            from 0% 0% to 100% 100%,
-            #000b21 0%, #003f82 40%, #4ca2b5 70%, #ffd27f 100%
-    );
+            to right,
+            #2b2e33 0%,
+            #3a3d42 25%,
+            #6c624e 60%,
+            #c7a96b 100%);
 }
 
 /* The centered card wrapper */
@@ -698,14 +696,16 @@
     -fx-font-weight: 700;
     -fx-wrap-text: true;
 }
-/* ============================================================
-   LOGIN PAGE — matching register split-card design
-   ============================================================ */
+/*
+  LOGIN PAGE — matching register split-card design*/
 
 .login-bg {
     -fx-background-color: linear-gradient(
-            from 0% 100% to 100% 0%,
-            #000b21 0%, #003f82 33%, #4ca2b5 66%, #ffd27f 100%
+            to right,
+            #2b2e33 0%,
+            #3a3d42 25%,
+            #6c624e 60%,
+            #c7a96b 100%
     );
 }
 

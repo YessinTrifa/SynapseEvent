@@ -1,15 +1,13 @@
-/* =====================================================
-   landing.css  — SynapseEvent Landing Page
-   ===================================================== */
+
 
 /* ROOT: full-page gradient — navy left → teal center → warm gold right */
 .landing-root {
     -fx-background-color: linear-gradient(
-            from 0% 100% to 100% 0%,
-            #000b21 0%,
-            #003f82 33%,
-            #4ca2b5 66%,
-            #ffd27f 100%
+            to right,
+            #2b2e33 0%,
+            #3a3d42 25%,
+            #6c624e 60%,
+            #c7a96b 100%
     );
 }
 
