@@ -7,10 +7,10 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.Separator?>
-<?import javafx.scene.control.Spinner?>
-<?import javafx.scene.control.SpinnerValueFactory?>
-<?import javafx.scene.control.Tab?>
-<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.layout.FlowPane?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextArea?>
@@ -23,333 +23,326 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
-<?import javafx.scene.paint.Color?>
-<?import javafx.scene.paint.RadialGradient?>
-<?import javafx.scene.paint.Stop?>
 
 <StackPane styleClass="page-wrap" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.synapseevent.controller.UserDashboardController">
     <stylesheets>
-        <URL value="@../css/auth.css" />
         <URL value="@../css/dashboard.css" />
     </stylesheets>
     <!-- MAIN PAGE CONTENT (your dark web layout) -->
     <VBox spacing="0" VBox.vgrow="ALWAYS">
 
-        <!-- Header (keep your header theme) -->
-        <HBox alignment="CENTER_LEFT" styleClass="web-header">
-            <Label styleClass="web-logo-text" text="SynapseEvent">
-                <textFill>
-                    <RadialGradient centerX="0.5" centerY="0.5" radius="0.5">
-                        <stops>
-                            <Stop><color><Color red="0.9" green="0.91" blue="0.92" /></color></Stop>
-                            <Stop offset="1.0"><color><Color red="0.17" green="0.31" blue="0.33" /></color></Stop>
-                        </stops>
-                    </RadialGradient>
-                </textFill>
-            </Label>
-
-            <Region HBox.hgrow="ALWAYS" />
-            <Label styleClass="top-muted" text="User Dashboard" />
-            <Region prefWidth="20" />
-
-            <Button fx:id="backToAdminBtn" onAction="#goToAdminDashboard" styleClass="btn-secondary" text="Back to Admin" />
-
-            <Region prefWidth="10" />
-            <Button onAction="#logout" styleClass="btn-danger" text="Logout" />
-        </HBox>
 
         <!-- Main TabPane -->
-        <TabPane fx:id="categoryTabPane" style="-fx-background-color: transparent; -fx-padding: 0;" tabClosingPolicy="UNAVAILABLE" VBox.vgrow="ALWAYS">
+        <HBox VBox.vgrow="ALWAYS">
 
-            <!-- HOME -->
-            <Tab text="Home">
-                <content>
-                    <ScrollPane fitToWidth="true" style="-fx-background-color: transparent;">
-                        <VBox spacing="20" style="-fx-background-color: rgba(15, 23, 42, 0.5); -fx-background-radius: 12; -fx-padding: 30;">
+            <!-- SIDEBAR -->
+            <VBox styleClass="user-sidebar" spacing="0">
 
-                            <!-- Quick Recommendations (from remote) -->
-                            <VBox spacing="10">
-                                <Label styleClass="section-title" text="✨ Quick Picks" />
-                                <HBox fx:id="quickRecommendationsBox" spacing="10">
-                                    <Button onAction="#showRecommendedByLocation" styleClass="chip-pink" text=" Parties Near Me" />
-                                    <Button onAction="#showRecommendedBeach" styleClass="chip-teal" text=" Beach Events" />
-                                    <Button onAction="#showRecommendedTeamBuilding" styleClass="chip-blue" text=" Team Building" />
-                                    <Button onAction="#showRecommendedFormation" styleClass="chip-purple" text=" Formation" />
-                                    <Button onAction="#showRecommendedAnniversary" styleClass="chip-amber" text=" Anniversaries" />
-                                </HBox>
-                            </VBox>
+                <!-- Logo -->
+                <HBox alignment="CENTER_LEFT" spacing="8"
+                      style="-fx-padding: 16 12 14 12;
+                     -fx-border-color: rgba(255,255,255,0.12);
+                     -fx-border-width: 0 0 1 0;">
+                    <ImageView fitHeight="90.0" fitWidth="102.0" nodeOrientation="RIGHT_TO_LEFT" preserveRatio="true">
+                        <image>
+                            <Image url="@../images/logo.png" />
+                        </image>
+                    </ImageView>
+                </HBox>
 
-                            <!-- Filter bar (keep yours) -->
-                            <HBox alignment="CENTER_LEFT" spacing="12" styleClass="filter-bar">
-                                <Label style="-fx-font-weight: 600;" text=" Venue:" textFill="white" />
-                                <ComboBox fx:id="locationFilterCombo" maxWidth="1e9" styleClass="combo-web" HBox.hgrow="ALWAYS" />
+                <Region prefHeight="10" />
 
-                                <Label style="-fx-font-weight: 600;" text="Type:" textFill="white" />
-                                <ComboBox fx:id="typeFilterCombo" maxWidth="1e9" styleClass="combo-web" HBox.hgrow="ALWAYS" />
+                <!-- Nav buttons -->
+                <Button fx:id="userNavHome"          styleClass="user-nav-btn" text="Home"            maxWidth="9999" onAction="#showUserHome" />
+                <Button fx:id="userNavBrowse"        styleClass="user-nav-btn" text="Browse By Type"  maxWidth="9999" onAction="#showUserBrowse" />
+                <Button fx:id="userNavBookings"      styleClass="user-nav-btn" text="My Booking"      maxWidth="9999" onAction="#showUserBookings" />
+                <Button fx:id="userNavRequests"      styleClass="user-nav-btn" text="Custom Requests" maxWidth="9999" onAction="#showUserRequests" />
+                <Button fx:id="userNavProfile"       styleClass="user-nav-btn" text="Profile"         maxWidth="9999" onAction="#showUserProfile" />
 
-                                <Label style="-fx-font-weight: 600;" text=" From:" textFill="white" />
-                                <DatePicker fx:id="dateFromPicker" maxWidth="1e9" styleClass="date-web" HBox.hgrow="ALWAYS" />
+                <Region VBox.vgrow="ALWAYS" />
 
-                                <Label style="-fx-font-weight: 600;" text="To:" textFill="white" />
-                                <DatePicker fx:id="dateToPicker" maxWidth="1e9" styleClass="date-web" HBox.hgrow="ALWAYS" />
+            </VBox>
 
-                                <Region HBox.hgrow="ALWAYS" />
-                                <Button onAction="#applyFilters" styleClass="btn-primary" text="Apply Filters" />
-                                <Button onAction="#clearFilters" styleClass="btn-ghost" text="Clear" />
-                            </HBox>
+            <!-- MAIN CONTENT -->
+            <VBox HBox.hgrow="ALWAYS" spacing="0">
 
+                <!-- Top bar: title + buttons -->
+                <HBox alignment="CENTER_LEFT" spacing="14"
+                      style="-fx-padding: 12 24 12 24; -fx-background-color: transparent;">
+                    <Label styleClass="user-top-title" text="User Dashboard" />
+                    <Region HBox.hgrow="ALWAYS" />
+                    <Button fx:id="backToAdminBtn" onAction="#goToAdminDashboard"
+                            styleClass="user-btn-secondary" text="Admin View" />
+                    <Button onAction="#logout"
+                            styleClass="user-btn-logout" text="Logout" />
+                </HBox>
 
+                <!-- Scrollable content area -->
+                <ScrollPane fitToWidth="true" fitToHeight="false"
+                            hbarPolicy="NEVER" vbarPolicy="NEVER"
+                            styleClass="user-scroll"
+                            VBox.vgrow="ALWAYS">
+                    <content>
+                        <VBox spacing="0">
 
+                            <!-- PAGE: Home -->
+                            <VBox fx:id="userPageHome" spacing="16" visible="true" managed="true"
+                                  style="-fx-padding: 16 24 24 24; -fx-background-color: #f0e0b0;">
 
-
-                            <!-- Featured (keep yours) -->
-                            <VBox spacing="10" styleClass="card-web">
-                                <Label styleClass="section-title" text="⭐ Featured Events" />
-                                <TableView fx:id="featuredEventsTable" prefHeight="200"  styleClass="table-web">
-                                    <columns>
-                                        <TableColumn fx:id="featuredNameColumn" text="Name" />
-                                        <TableColumn fx:id="featuredTypeColumn" text="Type" />
-                                        <TableColumn fx:id="featuredDateColumn" text="Date" />
-                                        <TableColumn fx:id="featuredLocationColumn" text="Location" />
-                                        <TableColumn fx:id="featuredPriceColumn" text="Price" />
-                                        <TableColumn fx:id="featuredActionColumn" prefWidth="151.19998168945312" text="Book" />
-                                    </columns>
-                                </TableView>
-                            </VBox>
-
-
-                            <!-- Recommended Events (Personalized) -->
-                            <VBox spacing="10" styleClass="card-web">
-                                <Label styleClass="section-title" text="🎯 Recommended For You" />
-                                <TableView fx:id="recommendedEventsTable" prefHeight="200" styleClass="table-web">
-                                    <columns>
-                                        <TableColumn fx:id="recommendedNameColumn" text="Name" />
-                                        <TableColumn fx:id="recommendedTypeColumn" text="Type" />
-                                        <TableColumn fx:id="recommendedDateColumn" text="Date" />
-                                        <TableColumn fx:id="recommendedLocationColumn" text="Location" />
-                                        <TableColumn fx:id="recommendedPriceColumn" text="Price" />
-                                        <TableColumn fx:id="recommendedMatchColumn" text="Match %" />
-                                        <TableColumn fx:id="recommendedActionColumn" text="Book" />
-                                    </columns>
-                                </TableView>
-                            </VBox>
-
-                            <!-- All Events (keep yours) -->
-                            <VBox spacing="10" styleClass="card-web">
-                                <Label styleClass="section-title" text="All Available Events" />
-                                <TableView fx:id="allEventsTable" prefHeight="250" styleClass="table-web">
-                                    <columns>
-                                        <TableColumn fx:id="allNameColumn" text="Name" />
-                                        <TableColumn fx:id="allTypeColumn" text="Type" />
-                                        <TableColumn fx:id="allDateColumn" text="Date" />
-                                        <TableColumn fx:id="allLocationColumn" text="Location" />
-                                        <TableColumn fx:id="allPriceColumn" text="Price" />
-                                        <TableColumn fx:id="allStatusColumn" text="Status" />
-                                        <TableColumn fx:id="allActionColumn" text="Book" />
-                                    </columns>
-                                </TableView>
-                            </VBox>
-
-                        </VBox>
-                    </ScrollPane>
-                </content>
-            </Tab>
-
-            <!-- Browse by Type (remote content, but we’ll later darken css) -->
-            <Tab text="Browse by Type">
-                <content>
-                    <HBox spacing="20" styleClass="vbox-content">
-                        <VBox prefWidth="220" spacing="10" styleClass="side-panel">
-                            <Label styleClass="section-title" text="Categories" />
-                            <Label styleClass="top-muted" text="Select a category" />
-                            <Separator style="-fx-padding: 10 0;" />
-
-                            <Button onAction="#showAllCategoryEvents" styleClass="btn-side" text="All Events" />
-                            <Button onAction="#showPartyingEvents" styleClass="btn-side" text="Partying" />
-                            <Button onAction="#showPaddleEvents" styleClass="btn-side" text="Paddle" />
-                            <Button onAction="#showTeamBuildingEvents" styleClass="btn-side" text="Team Building" />
-                            <Button onAction="#showFormationEvents" styleClass="btn-side" text="Formation" />
-                            <Button onAction="#showAnniversaryEvents" styleClass="btn-side" text="Anniversary" />
-                        </VBox>
-
-                        <VBox spacing="15" HBox.hgrow="ALWAYS">
-                            <HBox alignment="CENTER_LEFT" spacing="10">
-                                <Label fx:id="categoryTitleLabel" styleClass="section-title" text="All Events" />
-                                <Region HBox.hgrow="ALWAYS" />
-                                <Label fx:id="categoryEventCountLabel" styleClass="top-muted" text="0 events found" />
-                            </HBox>
-
-                            <ScrollPane fitToWidth="true" style="-fx-background-color: transparent;">
-                                <FlowPane fx:id="eventCardsFlowPane" hgap="20" style="-fx-padding: 10;" vgap="20" />
-                            </ScrollPane>
-                        </VBox>
-                    </HBox>
-                </content>
-            </Tab>
-
-            <!-- My Bookings -->
-            <Tab text="My Bookings">
-                <content>
-                    <ScrollPane fitToWidth="true" style="-fx-background-color: transparent;">
-                        <VBox spacing="20" styleClass="dash-surface">
-                            <Label styleClass="section-title" text="📋 My Booking History" />
-                            <TableView fx:id="bookingsTable" styleClass="table-web" VBox.vgrow="ALWAYS">
-                                <columns>
-                                    <TableColumn fx:id="bookingTypeColumn" text="Event Name" />
-                                    <TableColumn fx:id="bookingEventIdColumn" text="Event ID" />
-                                    <TableColumn fx:id="bookingDateColumn" text="Booking Date" />
-                                    <TableColumn fx:id="bookingStatusColumn" text="Status" />
-                                    <TableColumn fx:id="bookingRatingColumn" text="Avg Rating" prefWidth="100" />
-                                    <TableColumn fx:id="bookingActionColumn" text="Action" prefWidth="100" />
-                                </columns>
-                            </TableView>
-                        </VBox>
-                    </ScrollPane>
-                </content>
-            </Tab>
-
-            <!-- Custom Request -->
-            <Tab text="Custom Request">
-                <content>
-                    <VBox spacing="20" styleClass="dash-surface">
-                        <Label styleClass="section-title" text="✨ Create Custom Event Request" />
-
-                        <HBox spacing="15">
-                            <VBox spacing="5" HBox.hgrow="ALWAYS">
-                                <Label styleClass="top-muted" text="🎭 Event Type:" />
-                                <ComboBox fx:id="eventTypeCombo" styleClass="combo-web" />
-                            </VBox>
-                            <VBox spacing="5" HBox.hgrow="ALWAYS">
-                                <Label styleClass="top-muted" text="📅 Event Date:" />
-                                <DatePicker fx:id="eventDatePicker" styleClass="date-web" />
-                            </VBox>
-                            <VBox spacing="5" HBox.hgrow="ALWAYS">
-                                <Label styleClass="top-muted" text="Budget (TND):" />
-                                <TextField fx:id="budgetField" promptText="Enter budget" styleClass="input-web" />
-                            </VBox>
-                        </HBox>
-
-                        <HBox spacing="15">
-                            <VBox spacing="5" HBox.hgrow="ALWAYS">
-                                <Label styleClass="top-muted" text="👥 Capacity:" />
-                                <VBox spacing="5" HBox.hgrow="ALWAYS">
-                                    <Label styleClass="top-muted" text="Capacity:" />
-                                    <TextField fx:id="capacityField" promptText="50" styleClass="input-web" />
+                                <!-- Quick Picks -->
+                                <VBox spacing="8">
+                                    <Label styleClass="user-section-title" text="Quick Picks" />
+                                    <HBox fx:id="quickRecommendationsBox" spacing="10" style="-fx-flex-wrap: wrap;">
+                                        <Button onAction="#showRecommendedByLocation"  styleClass="user-chip-red"    text="Anniverssaire" />
+                                        <Button onAction="#showRecommendedFormation"   styleClass="user-chip-maroon" text="Formation" />
+                                        <Button onAction="#showRecommendedBeach"       styleClass="user-chip-teal"   text="Paddel" />
+                                        <Button onAction="#showRecommendedTeamBuilding" styleClass="user-chip-orange" text="Team buikding" />
+                                    </HBox>
                                 </VBox>
+
+                                <!-- Filter bar -->
+                                <HBox alignment="CENTER_LEFT" spacing="10" styleClass="user-filter-bar">
+                                    <Label styleClass="user-filter-label" text="VENUE" />
+                                    <ComboBox fx:id="locationFilterCombo" styleClass="user-combo" prefWidth="100" />
+                                    <Label styleClass="user-filter-label" text="TYPE" />
+                                    <ComboBox fx:id="typeFilterCombo" styleClass="user-combo" prefWidth="100" />
+                                    <Label styleClass="user-filter-label" text="FROM" />
+                                    <DatePicker fx:id="dateFromPicker" styleClass="user-datepicker" prefWidth="130" />
+                                    <Label styleClass="user-filter-label" text="TO" />
+                                    <DatePicker fx:id="dateToPicker" styleClass="user-datepicker" prefWidth="130" />
+                                    <Region HBox.hgrow="ALWAYS" />
+                                    <Button onAction="#applyFilters"  styleClass="user-btn-apply" text="Apply" />
+                                    <Button onAction="#clearFilters"  styleClass="user-btn-clear" text="Clear" />
+                                </HBox>
+
+                                <!-- All Available Events (full width, on top) -->
+                                <VBox spacing="8" styleClass="user-card">
+                                    <Label styleClass="user-section-title" text="All Available Events" />
+                                    <TableView fx:id="allEventsTable" prefHeight="220" styleClass="user-table">
+                                        <columns>
+                                            <TableColumn fx:id="allNameColumn"     text="Name"     />
+                                            <TableColumn fx:id="allTypeColumn"     text="Type"     />
+                                            <TableColumn fx:id="allDateColumn"     text="Date"     />
+                                            <TableColumn fx:id="allLocationColumn" text="Location" />
+                                            <TableColumn fx:id="allPriceColumn"    text="Price"    />
+                                            <TableColumn fx:id="allStatusColumn"   text="Status"   />
+                                            <TableColumn fx:id="allActionColumn"   text="Book"     />
+                                        </columns>
+                                    </TableView>
+                                </VBox>
+
+                                <!-- Featured + Recommended SIDE BY SIDE -->
+                                <HBox spacing="16">
+
+                                    <!-- Featured Events -->
+                                    <VBox spacing="8" styleClass="user-card" HBox.hgrow="ALWAYS">
+                                        <Label styleClass="user-section-title" text="Featured events" />
+                                        <TableView fx:id="featuredEventsTable" prefHeight="180" styleClass="user-table">
+                                            <columns>
+                                                <TableColumn fx:id="featuredNameColumn"     text="Name"     />
+                                                <TableColumn fx:id="featuredTypeColumn"     text="Type"     />
+                                                <TableColumn fx:id="featuredDateColumn"     text="Date"     />
+                                                <TableColumn fx:id="featuredLocationColumn" text="Location" />
+                                                <TableColumn fx:id="featuredPriceColumn"    text="Price"    />
+                                                <TableColumn fx:id="featuredActionColumn"   text="Book"     prefWidth="80" />
+                                            </columns>
+                                        </TableView>
+                                    </VBox>
+
+                                    <!-- Recommended For You -->
+                                    <VBox spacing="8" styleClass="user-card" HBox.hgrow="ALWAYS">
+                                        <Label styleClass="user-section-title" text="Reccomended for you" />
+                                        <TableView fx:id="recommendedEventsTable" prefHeight="180" styleClass="user-table">
+                                            <columns>
+                                                <TableColumn fx:id="recommendedNameColumn"     text="Name"  />
+                                                <TableColumn fx:id="recommendedTypeColumn"     text="Type"  />
+                                                <TableColumn fx:id="recommendedDateColumn"     text="Date"  />
+                                                <TableColumn fx:id="recommendedLocationColumn" text="Location" />
+                                                <TableColumn fx:id="recommendedPriceColumn"    text="Price" />
+                                                <TableColumn fx:id="recommendedMatchColumn"    text="Match %" />
+                                                <TableColumn fx:id="recommendedActionColumn"   text="Book"  />
+                                            </columns>
+                                        </TableView>
+                                    </VBox>
+
+                                </HBox>
+
                             </VBox>
-                            <VBox spacing="5" HBox.hgrow="ALWAYS">
-                                <Label styleClass="top-muted" text=" Venue Type:" />
-                                <ComboBox fx:id="venueTypeFilterComboBox" styleClass="combo-web" />
+
+                            <!-- PAGE: Browse By Type -->
+                            <HBox fx:id="userPageBrowse" spacing="0" visible="false" managed="false"
+                                  style="-fx-background-color: #f0e0b0; -fx-padding: 16 24 24 24;">
+
+
+                                <VBox fx:id="userPageBrowsePanel" prefWidth="200" spacing="10" styleClass="user-browse-panel">
+                                    <Label styleClass="user-section-title" text="Categories" />
+                                    <Button onAction="#showAllCategoryEvents"   styleClass="user-browse-btn" text="All Events"    maxWidth="9999" />
+                                    <Button onAction="#showPartyingEvents"      styleClass="user-browse-btn" text="Partying"      maxWidth="9999" />
+                                    <Button onAction="#showPaddleEvents"        styleClass="user-browse-btn" text="Paddle"        maxWidth="9999" />
+                                    <Button onAction="#showTeamBuildingEvents"  styleClass="user-browse-btn" text="Team Building" maxWidth="9999" />
+                                    <Button onAction="#showFormationEvents"     styleClass="user-browse-btn" text="Formation"     maxWidth="9999" />
+                                    <Button onAction="#showAnniversaryEvents"   styleClass="user-browse-btn" text="Anniversary"   maxWidth="9999" />
+                                </VBox>
+
+                                <VBox spacing="14" HBox.hgrow="ALWAYS" style="-fx-padding: 0 0 0 20;">
+                                    <HBox alignment="CENTER_LEFT" spacing="10">
+                                        <Label fx:id="categoryTitleLabel" styleClass="user-section-title" text="All Events" />
+                                        <Region HBox.hgrow="ALWAYS" />
+                                        <Label fx:id="categoryEventCountLabel" styleClass="user-muted" text="0 events found" />
+                                    </HBox>
+                                    <ScrollPane fitToWidth="true" style="-fx-background-color: transparent;">
+                                        <FlowPane fx:id="eventCardsFlowPane" hgap="20" vgap="20"
+                                                  style="-fx-padding: 10;" />
+                                    </ScrollPane>
+                                </VBox>
+                            </HBox>
+
+                            <!-- PAGE: My Bookings -->
+                            <VBox fx:id="userPageBookings" spacing="14" visible="false" managed="false"
+                                  style="-fx-background-color: #f0e0b0; -fx-padding: 16 24 24 24;">
+                                <Label styleClass="user-section-title" text="My Booking History" />
+                                <TableView fx:id="bookingsTable" styleClass="user-table" VBox.vgrow="ALWAYS">
+                                    <columns>
+                                        <TableColumn fx:id="bookingTypeColumn"    text="Event Name"    />
+                                        <TableColumn fx:id="bookingEventIdColumn" text="Event ID"      />
+                                        <TableColumn fx:id="bookingDateColumn"    text="Booking Date"  />
+                                        <TableColumn fx:id="bookingStatusColumn"  text="Status"        />
+                                        <TableColumn fx:id="bookingRatingColumn"  text="Avg Rating"    prefWidth="100" />
+                                        <TableColumn fx:id="bookingActionColumn"  text="Action"        prefWidth="100" />
+                                    </columns>
+                                </TableView>
                             </VBox>
-                            <VBox spacing="5" HBox.hgrow="ALWAYS">
-                                <Label styleClass="top-muted" text="City:" />
-                                <ComboBox fx:id="cityFilterComboBox" styleClass="combo-web" />
-                            </VBox>
-                        </HBox>
 
-                        <VBox spacing="5">
-                            <Label styleClass="top-muted" text="🏟Venue:" />
-                            <ComboBox fx:id="venueComboBox" styleClass="combo-web" />
-                        </VBox>
+                            <!-- PAGE: Custom Requests -->
+                            <VBox fx:id="userPageRequests" spacing="16" visible="false" managed="false"
+                                  style="-fx-background-color: #f0e0b0; -fx-padding: 16 24 24 24;">
+                                <Label styleClass="user-section-title" text="Create Custom Event Request" />
 
-                        <VBox spacing="5">
-                            <Label styleClass="top-muted" text="Description:" />
-                            <TextArea fx:id="descriptionArea" prefRowCount="4" promptText="Enter event description" styleClass="textarea-web" />
-                        </VBox>
-
-                        <Button fx:id="submitRequestButton" onAction="#submitCustomRequest" styleClass="btn-success" text="Submit Request" />
-                        <Label styleClass="section-title" text="📋 My Pending Requests" />
-
-                        <TableView fx:id="myRequestsTable" prefHeight="200" styleClass="table-web">
-                            <columns>
-                                <TableColumn fx:id="reqTypeColumn"     text="Event Type"   prefWidth="120" />
-                                <TableColumn fx:id="reqDateColumn"     text="Event Date"   prefWidth="110" />
-                                <TableColumn fx:id="reqBudgetColumn"   text="Budget (TND)" prefWidth="110" />
-                                <TableColumn fx:id="reqCapacityColumn" text="Capacity"     prefWidth="90"  />
-                                <TableColumn fx:id="reqLocationColumn" text="Location"     prefWidth="150" />
-                                <TableColumn fx:id="reqStatusColumn"   text="Status"       prefWidth="100" />
-                                <TableColumn fx:id="reqCreatedColumn"  text="Submitted On" prefWidth="120" />
-                            </columns>
-                        </TableView>
-                    </VBox>
-                </content>
-            </Tab>
-
-            <!-- Profile (from remote) -->
-            <Tab text="Profile">
-                <content>
-                    <ScrollPane fitToWidth="true" style="-fx-background-color: transparent;">
-                        <VBox spacing="20" styleClass="dash-surface">
-
-                            <Label styleClass="section-title" text="My Profile" />
-
-                            <VBox spacing="15" styleClass="card-web">
-                                <Label styleClass="top-muted" text="Personal Information" />
-
-                                <HBox spacing="15">
+                                <HBox spacing="14">
                                     <VBox spacing="5" HBox.hgrow="ALWAYS">
-                                        <Label styleClass="top-muted" text="First Name:" />
-                                        <TextField fx:id="firstNameField" promptText="First Name" styleClass="input-web" />
+                                        <Label styleClass="user-form-label" text="Event Type:" />
+                                        <ComboBox fx:id="eventTypeCombo" styleClass="user-combo" maxWidth="9999" />
                                     </VBox>
                                     <VBox spacing="5" HBox.hgrow="ALWAYS">
-                                        <Label styleClass="top-muted" text="Last Name:" />
-                                        <TextField fx:id="lastNameField" promptText="Last Name" styleClass="input-web" />
+                                        <Label styleClass="user-form-label" text="Event Date:" />
+                                        <DatePicker fx:id="eventDatePicker" styleClass="user-datepicker" maxWidth="9999" />
+                                    </VBox>
+                                    <VBox spacing="5" HBox.hgrow="ALWAYS">
+                                        <Label styleClass="user-form-label" text="Budget (TND):" />
+                                        <TextField fx:id="budgetField" promptText="Enter budget" styleClass="user-input" />
                                     </VBox>
                                 </HBox>
 
-                                <HBox spacing="15">
+                                <HBox spacing="14">
                                     <VBox spacing="5" HBox.hgrow="ALWAYS">
-                                        <Label styleClass="top-muted" text="Email:" />
-                                        <TextField fx:id="emailField" promptText="Email" styleClass="input-web" />
+                                        <Label styleClass="user-form-label" text="Capacity:" />
+                                        <TextField fx:id="capacityField" promptText="50" styleClass="user-input" />
                                     </VBox>
                                     <VBox spacing="5" HBox.hgrow="ALWAYS">
-                                        <Label styleClass="top-muted" text="Phone:" />
-                                        <TextField fx:id="phoneField" promptText="Phone" styleClass="input-web" />
+                                        <Label styleClass="user-form-label" text="Venue Type:" />
+                                        <ComboBox fx:id="venueTypeFilterComboBox" styleClass="user-combo" maxWidth="9999" />
+                                    </VBox>
+                                    <VBox spacing="5" HBox.hgrow="ALWAYS">
+                                        <Label styleClass="user-form-label" text="City:" />
+                                        <ComboBox fx:id="cityFilterComboBox" styleClass="user-combo" maxWidth="9999" />
                                     </VBox>
                                 </HBox>
 
                                 <VBox spacing="5">
-                                    <Label styleClass="top-muted" text="Address:" />
-                                    <TextField fx:id="addressField" promptText="Address" styleClass="input-web" />
+                                    <Label styleClass="user-form-label" text="Venue:" />
+                                    <ComboBox fx:id="venueComboBox" styleClass="user-combo" maxWidth="9999" />
                                 </VBox>
 
-                                <Button onAction="#updateProfile" styleClass="btn-primary" text="Update Profile" />
+                                <VBox spacing="5">
+                                    <Label styleClass="user-form-label" text="Description:" />
+                                    <TextArea fx:id="descriptionArea" prefRowCount="4"
+                                              promptText="Enter event description"
+                                              styleClass="user-textarea" />
+                                </VBox>
+
+                                <Button fx:id="submitRequestButton" onAction="#submitCustomRequest"
+                                        styleClass="user-btn-apply" text="Submit Request" />
+
+                                <Label styleClass="user-section-title" text="My Pending Requests" />
+                                <TableView fx:id="myRequestsTable" prefHeight="180" styleClass="user-table">
+                                    <columns>
+                                        <TableColumn fx:id="reqTypeColumn"     text="Event Type"   prefWidth="120" />
+                                        <TableColumn fx:id="reqDateColumn"     text="Event Date"   prefWidth="110" />
+                                        <TableColumn fx:id="reqBudgetColumn"   text="Budget (TND)" prefWidth="110" />
+                                        <TableColumn fx:id="reqCapacityColumn" text="Capacity"     prefWidth="90"  />
+                                        <TableColumn fx:id="reqLocationColumn" text="Location"     prefWidth="150" />
+                                        <TableColumn fx:id="reqStatusColumn"   text="Status"       prefWidth="100" />
+                                        <TableColumn fx:id="reqCreatedColumn"  text="Submitted On" prefWidth="120" />
+                                    </columns>
+                                </TableView>
                             </VBox>
 
-                            <VBox spacing="15" styleClass="card-web">
-                                <Label styleClass="top-muted" text="Event Preferences" />
+                            <!-- PAGE: Profile -->
+                            <VBox fx:id="userPageProfile" spacing="16" visible="false" managed="false"
+                                  style="-fx-background-color: #f0e0b0; -fx-padding: 16 24 24 24;">
+                                <Label styleClass="user-section-title" text="My Profile" />
 
-                                <HBox spacing="15">
-                                    <VBox spacing="5" HBox.hgrow="ALWAYS">
-                                        <Label styleClass="top-muted" text="Favorite Categories:" />
-                                        <TextField fx:id="preferredCategoriesCombo" promptText="e.g. Partying,Formation" styleClass="input-web" />
+                                <VBox spacing="14" styleClass="user-card">
+                                    <Label styleClass="user-form-label" text="Personal Information" />
+                                    <HBox spacing="14">
+                                        <VBox spacing="5" HBox.hgrow="ALWAYS">
+                                            <Label styleClass="user-form-label" text="First Name:" />
+                                            <TextField fx:id="firstNameField" promptText="First Name" styleClass="user-input" />
+                                        </VBox>
+                                        <VBox spacing="5" HBox.hgrow="ALWAYS">
+                                            <Label styleClass="user-form-label" text="Last Name:" />
+                                            <TextField fx:id="lastNameField" promptText="Last Name" styleClass="user-input" />
+                                        </VBox>
+                                    </HBox>
+                                    <HBox spacing="14">
+                                        <VBox spacing="5" HBox.hgrow="ALWAYS">
+                                            <Label styleClass="user-form-label" text="Email:" />
+                                            <TextField fx:id="emailField" promptText="Email" styleClass="user-input" />
+                                        </VBox>
+                                        <VBox spacing="5" HBox.hgrow="ALWAYS">
+                                            <Label styleClass="user-form-label" text="Phone:" />
+                                            <TextField fx:id="phoneField" promptText="Phone" styleClass="user-input" />
+                                        </VBox>
+                                    </HBox>
+                                    <VBox spacing="5">
+                                        <Label styleClass="user-form-label" text="Address:" />
+                                        <TextField fx:id="addressField" promptText="Address" styleClass="user-input" />
                                     </VBox>
-                                    <VBox spacing="5" HBox.hgrow="ALWAYS">
-                                        <Label styleClass="top-muted" text="Favorite Locations:" />
-                                        <TextField fx:id="preferredLocationsCombo" promptText="e.g. Tunis,Sfax,Bizert" styleClass="input-web" />
-                                    </VBox>
-                                </HBox>
+                                    <Button onAction="#updateProfile" styleClass="user-btn-apply" text="Update Profile" />
+                                </VBox>
 
-                                <HBox spacing="15">
-                                    <VBox spacing="5" HBox.hgrow="ALWAYS">
-                                        <Label styleClass="top-muted" text="Max Price (TND):" />
-                                        <TextField fx:id="maxPriceField" promptText="Max Price" styleClass="input-web" />
-                                    </VBox>
-                                    <VBox spacing="5" HBox.hgrow="ALWAYS">
-                                        <Label styleClass="top-muted" text="Minimum Rating:" />
-                                        <ComboBox fx:id="minRatingCombo" styleClass="combo-web" />
-                                    </VBox>
-                                </HBox>
-
-                                <Button onAction="#savePreferences" styleClass="btn-success" text="Save Preferences" />
+                                <VBox spacing="14" styleClass="user-card">
+                                    <Label styleClass="user-form-label" text="Event Preferences" />
+                                    <HBox spacing="14">
+                                        <VBox spacing="5" HBox.hgrow="ALWAYS">
+                                            <Label styleClass="user-form-label" text="Favorite Categories:" />
+                                            <TextField fx:id="preferredCategoriesCombo" promptText="e.g. Partying,Formation" styleClass="user-input" />
+                                        </VBox>
+                                        <VBox spacing="5" HBox.hgrow="ALWAYS">
+                                            <Label styleClass="user-form-label" text="Favorite Locations:" />
+                                            <TextField fx:id="preferredLocationsCombo" promptText="e.g. Tunis,Sfax" styleClass="user-input" />
+                                        </VBox>
+                                    </HBox>
+                                    <HBox spacing="14">
+                                        <VBox spacing="5" HBox.hgrow="ALWAYS">
+                                            <Label styleClass="user-form-label" text="Max Price (TND):" />
+                                            <TextField fx:id="maxPriceField" promptText="Max Price" styleClass="user-input" />
+                                        </VBox>
+                                        <VBox spacing="5" HBox.hgrow="ALWAYS">
+                                            <Label styleClass="user-form-label" text="Minimum Rating:" />
+                                            <ComboBox fx:id="minRatingCombo" styleClass="user-combo" maxWidth="9999" />
+                                        </VBox>
+                                    </HBox>
+                                    <Button onAction="#savePreferences" styleClass="user-btn-apply" text="Save Preferences" />
+                                </VBox>
                             </VBox>
 
                         </VBox>
-                    </ScrollPane>
-                </content>
-            </Tab>
+                    </content>
+                </ScrollPane>
+            </VBox>
 
-        </TabPane>
+        </HBox>
     </VBox>
 
     <!-- OVERLAY DIALOG (from remote) -->
@@ -400,7 +393,7 @@
             <VBox maxHeight="400" prefWidth="400" spacing="14" styleClass="dialog-card">
                 <Label fx:id="reviewDialogTitle" styleClass="dialog-title" text="Leave a Review" />
                 <Separator />
-                <Label styleClass="top-muted" text="Rating (1–5):" />
+                <Label styleClass="top-muted" text="Rating (1-5):" />
                 <ComboBox fx:id="reviewRatingCombo" styleClass="combo-web" />
                 <Label styleClass="top-muted" text="Comment:" />
                 <TextArea fx:id="reviewCommentArea" prefRowCount="4"

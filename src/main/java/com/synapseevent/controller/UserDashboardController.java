@@ -133,6 +133,22 @@ public class UserDashboardController {
     @FXML private TextArea reviewCommentArea;
     private Booking selectedBookingForReview;
 
+    // Sidebar nav buttons
+    @FXML private Button userNavHome;
+    @FXML private Button userNavBrowse;
+    @FXML private Button userNavBookings;
+    @FXML private Button userNavRequests;
+    @FXML private Button userNavProfile;
+
+    // Page containers
+    @FXML private VBox userPageHome;
+    @FXML private VBox userPageBookings;
+    @FXML private VBox userPageRequests;
+    @FXML private VBox userPageProfile;
+    @FXML private HBox userPageBrowse;
+
+    @FXML private VBox userPageBrowsePanel;
+
     // For booking confirmation
     private EventInstance selectedEventForBooking;
 
@@ -159,7 +175,19 @@ public class UserDashboardController {
         setupLocationFilter();
 
         // Setup type filter combo
-        typeFilterCombo.getItems().addAll("All", "Anniversary", "Formation", "Paddle", "Partying", "TeamBuilding");
+        typeFilterCombo.getItems().add("All");
+        typeFilterCombo.getItems().addAll("Anniversary", "Formation", "Paddle", "Partying", "TeamBuilding");
+// Add custom event types from DB
+        try {
+            List<CustomEventType> customTypes = customEventTypeService.readAll();
+            for (CustomEventType ct : customTypes) {
+                if (ct.getName() != null && !ct.getName().isBlank()) {
+                    typeFilterCombo.getItems().add(ct.getName());
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         typeFilterCombo.setValue("All");
 
         // Setup featured events table
@@ -201,6 +229,8 @@ public class UserDashboardController {
         loadBookings();
         allEventsTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
         featuredEventsTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+        showUserHome();
+        loadCustomTypeBrowseButtons();
     }
 
     private void setupProfileTab() {
@@ -697,12 +727,14 @@ public class UserDashboardController {
 
     private List<EventInstance> filterByType(String type) {
         return allPublishedEvents.stream()
-            .filter(e -> e.getType() != null && e.getType().equals(type))
-            .filter(e -> e.getDate() != null && !e.getDate().isBefore(LocalDate.now()))
-            .sorted((e1, e2) -> e1.getDate().compareTo(e2.getDate()))
-            .collect(Collectors.toList());
+                .filter(e -> e.getType() != null && e.getType().equalsIgnoreCase(type))
+                .sorted((e1, e2) -> {
+                    if (e1.getDate() == null) return 1;
+                    if (e2.getDate() == null) return -1;
+                    return e1.getDate().compareTo(e2.getDate());
+                })
+                .collect(Collectors.toList());
     }
-
     private void displayEventCards(List<EventInstance> events, String title) {
         categoryTitleLabel.setText(title);
         categoryEventCountLabel.setText(events.size() + " events found");
@@ -722,7 +754,7 @@ public class UserDashboardController {
         }
 
         // Switch to Browse by Type tab
-        categoryTabPane.getSelectionModel().select(1);
+        showUserBrowse();
     }
 
     private VBox createEventCard(EventInstance ei) {
@@ -734,13 +766,13 @@ public class UserDashboardController {
         card.setPrefWidth(280);
         card.setPrefHeight(280);
         card.setStyle(
-                "-fx-background-color: rgba(15, 23, 42, 0.85);" +
-            "-fx-background-radius: 15; " +
-            "-fx-border-radius: 15; " +
-            "-fx-border-color: #e2e8f0; " +
-            "-fx-border-width: 1; " +
-            "-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 2); " +
-            "-fx-padding: 0;"
+                "-fx-background-color: #f0e0b0;" +
+                        "-fx-background-radius: 14;" +
+                        "-fx-border-radius: 14;" +
+                        "-fx-border-color: #8a6a20;" +
+                        "-fx-border-width: 1.5;" +
+                        "-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.18), 10, 0, 0, 3);" +
+                        "-fx-padding: 0;"
         );
 
         // Header with gradient
@@ -758,48 +790,54 @@ public class UserDashboardController {
 
         // Event Name
         Label nameLabel = new Label(ei.getName() != null ? ei.getName() : "Unnamed Event");
-        nameLabel.setStyle("-fx-font-size: 16; -fx-font-weight: bold; -fx-text-fill: #1e293b; -fx-padding: 15 15 5 15;");
+        nameLabel.setStyle("-fx-font-size: 15; -fx-font-weight: bold; -fx-text-fill: #1a3a1a; -fx-font-family: Georgia; -fx-padding: 12 14 4 14;");
         nameLabel.setWrapText(true);
 
         // Date with icon
         Label dateLabel = new Label("Date: " + (ei.getDate() != null ? ei.getDate().toString() : "TBD"));
-        dateLabel.setStyle("-fx-font-size: 13; -fx-text-fill: #64748b; -fx-padding: 5 15;");
-
+        dateLabel.setStyle("-fx-font-size: 12; -fx-text-fill: #5a4010; -fx-padding: 4 14;");
         // Location with icon
         Label locationLabel = new Label("Location: " + (ei.getLocation() != null ? ei.getLocation() : "TBD"));
-        locationLabel.setStyle("-fx-font-size: 13; -fx-text-fill: #64748b; -fx-padding: 5 15;");
+        locationLabel.setStyle("-fx-font-size: 12; -fx-text-fill: #5a4010; -fx-padding: 4 14;");
         locationLabel.setWrapText(true);
 
         // Price
         Label priceLabel = new Label("Price: " + (ei.getPrice() != null ? ei.getPrice() + " TND" : "Free"));
-        priceLabel.setStyle("-fx-font-size: 15; -fx-font-weight: bold; -fx-text-fill: #10b981; -fx-padding: 10 15;");
+        priceLabel.setStyle("-fx-font-size: 14; -fx-font-weight: bold; -fx-text-fill: #7a1a2a; -fx-padding: 8 14;");
 
         // Status badge
         Label statusLabel = new Label(ei.getStatus() != null ? ei.getStatus().toUpperCase() : "AVAILABLE");
-        String statusColor = "available".equalsIgnoreCase(ei.getStatus()) ? "#10b981" : 
-                           "pending".equalsIgnoreCase(ei.getStatus()) ? "#f59e0b" : "#6b7280";
+        String statusColor = "published".equalsIgnoreCase(ei.getStatus()) ? "#1a4a1a" :
+                "available".equalsIgnoreCase(ei.getStatus()) ? "#1a4a1a" :
+                        "pending".equalsIgnoreCase(ei.getStatus()) ? "#8a3a00" : "#5a4010";
         statusLabel.setStyle(
-            "-fx-font-size: 11; " +
-            "-fx-font-weight: bold; " +
-            "-fx-text-fill: white; " +
-            "-fx-background-color: " + statusColor + "; " +
-            "-fx-padding: 4 10; " +
-            "-fx-background-radius: 10;"
+                "-fx-font-size: 11;" +
+                        "-fx-font-weight: bold;" +
+                        "-fx-text-fill: #e8d5a3;" +
+                        "-fx-background-color: " + statusColor + ";" +
+                        "-fx-padding: 4 10;" +
+                        "-fx-background-radius: 10;" +
+                        "-fx-border-color: #c8a040;" +
+                        "-fx-border-width: 1;" +
+                        "-fx-border-radius: 10;"
         );
         HBox statusBox = new HBox(statusLabel);
-        statusBox.setStyle("-fx-padding: 0 15 10 15;");
-
+        statusBox.setStyle("-fx-padding: 0 14 8 14;");
         // Book Button
         Button bookBtn = new Button("Book Now");
         bookBtn.setStyle(
-            "-fx-background-color: " + cardColor + "; " +
-            "-fx-text-fill: white; " +
-            "-fx-font-size: 14; " +
-            "-fx-font-weight: bold; " +
-            "-fx-padding: 12; " +
-            "-fx-background-radius: 10;"
+                "-fx-background-color: " + cardColor + ";" +
+                        "-fx-text-fill: #e8d5a3;" +
+                        "-fx-font-size: 13;" +
+                        "-fx-font-weight: bold;" +
+                        "-fx-padding: 10 20;" +
+                        "-fx-background-radius: 999;" +
+                        "-fx-border-color: #c8a040;" +
+                        "-fx-border-width: 1;" +
+                        "-fx-border-radius: 999;" +
+                        "-fx-cursor: hand;"
         );
-        bookBtn.setPrefHeight(40);
+        bookBtn.setPrefHeight(36);
         bookBtn.setOnAction(e -> showEventDetailsDialog(ei));
 
         VBox content = new VBox(nameLabel, dateLabel, locationLabel, priceLabel, statusBox, bookBtn);
@@ -810,25 +848,25 @@ public class UserDashboardController {
         // Hover effect
         card.setOnMouseEntered(e -> {
             card.setStyle(
-                "-fx-background-color: white; " +
-                "-fx-background-radius: 15; " +
-                "-fx-border-radius: 15; " +
-                "-fx-border-color: " + cardColor + "; " +
-                "-fx-border-width: 2; " +
-                "-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 15, 0, 0, 4); " +
-                "-fx-padding: 0;"
+                    "-fx-background-color: #f5ead8;" +
+                            "-fx-background-radius: 14;" +
+                            "-fx-border-radius: 14;" +
+                            "-fx-border-color: " + cardColor + ";" +
+                            "-fx-border-width: 2;" +
+                            "-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.28), 14, 0, 0, 4);" +
+                            "-fx-padding: 0;"
             );
         });
 
         card.setOnMouseExited(e -> {
             card.setStyle(
-                "-fx-background-color: white; " +
-                "-fx-background-radius: 15; " +
-                "-fx-border-radius: 15; " +
-                "-fx-border-color: #e2e8f0; " +
-                "-fx-border-width: 1; " +
-                "-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 2); " +
-                "-fx-padding: 0;"
+                    "-fx-background-color: #f0e0b0;" +
+                            "-fx-background-radius: 14;" +
+                            "-fx-border-radius: 14;" +
+                            "-fx-border-color: #8a6a20;" +
+                            "-fx-border-width: 1.5;" +
+                            "-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.18), 10, 0, 0, 3);" +
+                            "-fx-padding: 0;"
             );
         });
 
@@ -836,14 +874,14 @@ public class UserDashboardController {
     }
 
     private String getCardColor(String type) {
-        if (type == null) return "#6366f1";
+        if (type == null) return "#7a1a2a";
         switch (type) {
-            case "Partying": return "#ec4899";
-            case "Paddle": return "#14b8a6";
-            case "TeamBuilding": return "#3b82f6";
-            case "Formation": return "#8b5cf6";
-            case "Anniversary": return "#f59e0b";
-            default: return "#6366f1";
+            case "Partying":     return "#7a1a2a";
+            case "Paddle":       return "#1a5a6a";
+            case "TeamBuilding": return "#1a4a1a";
+            case "Formation":    return "#6c4a10";
+            case "Anniversary":  return "#8a3a00";
+            default:             return "#5a3a6a";
         }
     }
 
@@ -1384,6 +1422,48 @@ public class UserDashboardController {
     private void closeReviewDialog() {
         reviewDialogPane.setVisible(false);
         selectedBookingForReview = null;
+    }
+    // ── Sidebar navigation ──────────────────────────────────────
+    private void activateUserNav(Button active) {
+        Button[] all = {userNavHome, userNavBrowse, userNavBookings, userNavRequests, userNavProfile};
+        for (Button b : all) {
+            if (b != null) b.getStyleClass().remove("user-nav-btn-active");
+        }
+        if (active != null) active.getStyleClass().add("user-nav-btn-active");
+    }
+
+    private void showUserPage(javafx.scene.Node page) {
+        javafx.scene.Node[] pages = {userPageHome, userPageBrowse, userPageBookings, userPageRequests, userPageProfile};
+        for (javafx.scene.Node p : pages) {
+            if (p != null) { p.setVisible(false); p.setManaged(false); }
+        }
+        if (page != null) { page.setVisible(true); page.setManaged(true); }
+    }
+
+    @FXML private void showUserHome()     { activateUserNav(userNavHome);     showUserPage(userPageHome); }
+    @FXML private void showUserBrowse()   { activateUserNav(userNavBrowse);   showUserPage(userPageBrowse); }
+    @FXML private void showUserBookings() { activateUserNav(userNavBookings); showUserPage(userPageBookings); }
+    @FXML private void showUserRequests() { activateUserNav(userNavRequests); showUserPage(userPageRequests); }
+    @FXML private void showUserProfile()  { activateUserNav(userNavProfile);  showUserPage(userPageProfile); }
+    private void loadCustomTypeBrowseButtons() {
+        if (userPageBrowsePanel == null) return;
+        try {
+            List<CustomEventType> customTypes = customEventTypeService.readAll();
+            for (CustomEventType ct : customTypes) {
+                if (ct.getName() == null || ct.getName().isBlank()) continue;
+                String typeName = ct.getName();
+                Button btn = new Button(typeName);
+                btn.setMaxWidth(Double.MAX_VALUE);
+                btn.getStyleClass().add("user-browse-btn");
+                btn.setOnAction(e -> {
+                    List<EventInstance> filtered = filterByType(typeName);
+                    displayEventCards(filtered, typeName + " Events");
+                });
+                userPageBrowsePanel.getChildren().add(btn);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }
 
