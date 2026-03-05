@@ -162,12 +162,12 @@
             </GridPane>
             <!-- Entreprise row — framed box only around this section -->
             <HBox alignment="CENTER_LEFT" spacing="16"
-                  style="-fx-background-color: #e8d5a3;
-             -fx-border-color: #8a6a20;
-             -fx-border-width: 1.5;
-             -fx-border-radius: 12;
-             -fx-background-radius: 12;
-             -fx-padding: 10 16 10 16;">
+                  style="-fx-background-color: #DED1C6;
+                    -fx-border-color: #A77693;
+                    -fx-border-width: 1.5;
+                    -fx-border-radius: 12;
+                    -fx-background-radius: 12;
+                    -fx-padding: 10 16 10 16;">
                 <Label text="Entreprise" styleClass="reg-label"
                        style="-fx-font-size: 13px; -fx-font-weight: 800;"
                        HBox.hgrow="NEVER" />

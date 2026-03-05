@@ -780,10 +780,10 @@ public class UserDashboardController {
         card.setPrefWidth(280);
         card.setPrefHeight(280);
         card.setStyle(
-                "-fx-background-color: #f0e0b0;" +
+                "-fx-background-color: #DED1C6;" +
                         "-fx-background-radius: 14;" +
                         "-fx-border-radius: 14;" +
-                        "-fx-border-color: #8a6a20;" +
+                        "-fx-border-color: #2a0b33;" +
                         "-fx-border-width: 1.5;" +
                         "-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.18), 10, 0, 0, 3);" +
                         "-fx-padding: 0;"
@@ -804,34 +804,34 @@ public class UserDashboardController {
 
         // Event Name
         Label nameLabel = new Label(ei.getName() != null ? ei.getName() : "Unnamed Event");
-        nameLabel.setStyle("-fx-font-size: 15; -fx-font-weight: bold; -fx-text-fill: #1a3a1a; -fx-font-family: Georgia; -fx-padding: 12 14 4 14;");
+        nameLabel.setStyle("-fx-font-size: 15; -fx-font-weight: bold; -fx-text-fill: #0F2D4D; -fx-font-family: Georgia; -fx-padding: 12 14 4 14;");
         nameLabel.setWrapText(true);
 
         // Date with icon
         Label dateLabel = new Label("Date: " + (ei.getDate() != null ? ei.getDate().toString() : "TBD"));
-        dateLabel.setStyle("-fx-font-size: 12; -fx-text-fill: #5a4010; -fx-padding: 4 14;");
+        dateLabel.setStyle("-fx-font-size: 12; -fx-text-fill: #174871; -fx-padding: 4 14;");
         // Location with icon
         Label locationLabel = new Label("Location: " + (ei.getLocation() != null ? ei.getLocation() : "TBD"));
-        locationLabel.setStyle("-fx-font-size: 12; -fx-text-fill: #5a4010; -fx-padding: 4 14;");
+        locationLabel.setStyle("-fx-font-size: 12; -fx-text-fill: #174871; -fx-padding: 4 14;");
         locationLabel.setWrapText(true);
 
         // Price
         Label priceLabel = new Label("Price: " + (ei.getPrice() != null ? ei.getPrice() + " TND" : "Free"));
-        priceLabel.setStyle("-fx-font-size: 14; -fx-font-weight: bold; -fx-text-fill: #7a1a2a; -fx-padding: 8 14;");
+        priceLabel.setStyle("-fx-font-size: 14; -fx-font-weight: bold; -fx-text-fill: #A77693; -fx-padding: 8 14;");
 
         // Status badge
         Label statusLabel = new Label(ei.getStatus() != null ? ei.getStatus().toUpperCase() : "AVAILABLE");
-        String statusColor = "published".equalsIgnoreCase(ei.getStatus()) ? "#1a4a1a" :
-                "available".equalsIgnoreCase(ei.getStatus()) ? "#1a4a1a" :
-                        "pending".equalsIgnoreCase(ei.getStatus()) ? "#8a3a00" : "#5a4010";
+        String statusColor = "published".equalsIgnoreCase(ei.getStatus()) ? "#174871" :
+                "available".equalsIgnoreCase(ei.getStatus()) ? "#174871" :
+                        "pending".equalsIgnoreCase(ei.getStatus()) ? "#4b3a7c" : "rgba(70,48,117,0.3)";
         statusLabel.setStyle(
                 "-fx-font-size: 11;" +
                         "-fx-font-weight: bold;" +
-                        "-fx-text-fill: #e8d5a3;" +
+                        "-fx-text-fill: #2a0b33;" +
                         "-fx-background-color: " + statusColor + ";" +
                         "-fx-padding: 4 10;" +
                         "-fx-background-radius: 10;" +
-                        "-fx-border-color: #c8a040;" +
+                        "-fx-border-color: #2a0b33;" +
                         "-fx-border-width: 1;" +
                         "-fx-border-radius: 10;"
         );
@@ -841,12 +841,12 @@ public class UserDashboardController {
         Button bookBtn = new Button("Book Now");
         bookBtn.setStyle(
                 "-fx-background-color: " + cardColor + ";" +
-                        "-fx-text-fill: #e8d5a3;" +
+                        "-fx-text-fill: #2a0b33;" +
                         "-fx-font-size: 13;" +
                         "-fx-font-weight: bold;" +
                         "-fx-padding: 10 20;" +
                         "-fx-background-radius: 999;" +
-                        "-fx-border-color: #c8a040;" +
+                        "-fx-border-color: #2a0b33;" +
                         "-fx-border-width: 1;" +
                         "-fx-border-radius: 999;" +
                         "-fx-cursor: hand;"
@@ -862,7 +862,7 @@ public class UserDashboardController {
         // Hover effect
         card.setOnMouseEntered(e -> {
             card.setStyle(
-                    "-fx-background-color: #f5ead8;" +
+                    "-fx-background-color: #DED1C6;" +
                             "-fx-background-radius: 14;" +
                             "-fx-border-radius: 14;" +
                             "-fx-border-color: " + cardColor + ";" +
@@ -874,7 +874,7 @@ public class UserDashboardController {
 
         card.setOnMouseExited(e -> {
             card.setStyle(
-                    "-fx-background-color: #f0e0b0;" +
+                    "-fx-background-color: #938abd;" +
                             "-fx-background-radius: 14;" +
                             "-fx-border-radius: 14;" +
                             "-fx-border-color: #8a6a20;" +
@@ -888,14 +888,14 @@ public class UserDashboardController {
     }
 
     private String getCardColor(String type) {
-        if (type == null) return "#7a1a2a";
+        if (type == null) return "#A77693";
         switch (type) {
-            case "Partying":     return "#7a1a2a";
-            case "Paddle":       return "#1a5a6a";
-            case "TeamBuilding": return "#1a4a1a";
+            case "Partying":     return "#A77693";
+            case "Paddle":       return "#174871";
+            case "TeamBuilding": return "#0F2D4D";
             case "Formation":    return "#6c4a10";
             case "Anniversary":  return "#8a3a00";
-            default:             return "#5a3a6a";
+            default:             return "#174871";
         }
     }
 

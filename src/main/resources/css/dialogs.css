@@ -3,9 +3,9 @@
     -fx-background-color: rgba(0,0,0,0.55);
 }
 
-/* The dialog “card” */
+/* The dialog "card" */
 .dialog-card {
-    -fx-background-color: #0f172a;           /* deep navy */
+    -fx-background-color: #0F2D4D;
     -fx-background-radius: 16;
     -fx-border-radius: 16;
     -fx-border-color: rgba(255,255,255,0.06);
@@ -68,10 +68,10 @@
 
 /* Info box */
 .info-box {
-    -fx-background-color: rgba(59, 130, 246, 0.10); /* blue tint */
+    -fx-background-color: rgba(23, 72, 113, 0.25);
     -fx-background-radius: 14;
     -fx-border-radius: 14;
-    -fx-border-color: rgba(59,130,246,0.25);
+    -fx-border-color: rgba(23,72,113,0.45);
     -fx-border-width: 1;
     -fx-padding: 12;
 }
@@ -80,7 +80,7 @@
     -fx-min-width: 20;
     -fx-min-height: 20;
     -fx-alignment: center;
-    -fx-background-color: rgba(59,130,246,0.20);
+    -fx-background-color: rgba(23,72,113,0.35);
     -fx-background-radius: 999;
     -fx-text-fill: rgba(255,255,255,0.85);
     -fx-font-weight: 800;
@@ -109,7 +109,7 @@
 }
 
 .btn-primary {
-    -fx-background-color: #3b82f6;
+    -fx-background-color: #A77693;
     -fx-text-fill: white;
     -fx-background-radius: 12;
     -fx-padding: 10 18 10 18;
@@ -117,5 +117,5 @@
     -fx-cursor: hand;
 }
 .btn-primary:hover {
-    -fx-background-color: #2563eb;
+    -fx-background-color: #174871;
 }

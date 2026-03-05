@@ -1,15 +1,13 @@
 .root{
-    -fx-background-color: radial-gradient(center 20% 15%, radius 90%, #1b2b4a 0%, #0b1220 55%, #070b14 100%);
+    -fx-background-color: radial-gradient(center 20% 15%, radius 90%, #174871 0%, #0F2D4D 55%, #0a1e33 100%);
     -fx-font-family: "Segoe UI", "Inter", "System";
 }
-/* This is the web “container” */
 .shell{
     -fx-padding: 64;
     -fx-alignment: center;
     -fx-max-width: 1100;
 }
 
-/* Left content */
 .brand-title{
     -fx-font-size: 40px;
     -fx-font-weight: 800;
@@ -37,10 +35,9 @@
     -fx-font-weight: 500;
 }
 
-/* Card */
 .card{
     -fx-padding: 28;
-    -fx-background-color: rgba(246, 232, 232, 0.07);
+    -fx-background-color: rgba(242, 243, 244, 0.07);
     -fx-background-radius: 18;
     -fx-border-radius: 18;
     -fx-border-color: rgba(255,255,255,0.12);
@@ -75,11 +72,9 @@
 }
 
 .field:focused{
-    -fx-border-color: rgba(124,58,237,0.85); /* violet focus */
+    -fx-border-color: rgba(23,72,113,0.85);
     -fx-background-color: rgba(255,255,255,0.12);
 }
-
-/* Buttons */
 
 .button {
     -fx-background-insets: 0;
@@ -88,44 +83,36 @@
     -fx-faint-focus-color: transparent;
 }
 
-/* Primary */
 .button.btn-primary {
     -fx-background-radius: 12;
     -fx-padding: 12 14;
     -fx-font-size: 13px;
     -fx-font-weight: 800;
     -fx-text-fill: white;
-
-    -fx-background-color: linear-gradient(to right, #8b5cf6, #6d28d9);
+    -fx-background-color: linear-gradient(to right, #A77693, #174871);
     -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.25), 16, 0, 0, 8);
     -fx-cursor: hand;
 }
 
 .button.btn-primary:hover {
-    -fx-background-color: linear-gradient(to right, #a78bfa, #7c3aed);
+    -fx-background-color: linear-gradient(to right, #b88aa8, #1e5a8a);
 }
 
 .button.btn-primary:pressed {
     -fx-translate-y: 1;
 }
 
-/* Ghost / Secondary (FIXED) */
 .button.btn-ghost {
     -fx-background-radius: 12;
     -fx-padding: 12 14;
     -fx-font-size: 13px;
     -fx-font-weight: 800;
-
     -fx-text-fill: rgba(255,255,255,0.92);
-
-    /* IMPORTANT: force non-white background */
     -fx-background-color: rgba(255,255,255,0.06);
     -fx-background-insets: 0;
-
     -fx-border-color: rgba(255,255,255,0.18);
     -fx-border-width: 1;
     -fx-border-radius: 12;
-
     -fx-cursor: hand;
 }
 
@@ -138,13 +125,11 @@
     -fx-translate-y: 1;
 }
 .link{
-    -fx-text-fill: #a5b4fc;
+    -fx-text-fill: #A77693;
     -fx-font-weight: 700;
     -fx-underline: false;
 }
 .link:hover{ -fx-underline: true; }
-
-/* --- Register extras (web clean) --- */
 
 .scroll-clean {
     -fx-background-color: transparent;
@@ -159,7 +144,6 @@
     -fx-padding: 2 2 6 2;
 }
 
-/* Section inside card */
 .section{
     -fx-padding: 14;
     -fx-background-color: rgba(255,255,255,0.05);
@@ -175,13 +159,11 @@
     -fx-letter-spacing: 0.3px;
 }
 
-/* Errors */
 .error{
     -fx-text-fill: #ff6b6b;
     -fx-font-size: 11px;
 }
 
-/* ComboBox look like fields */
 .combo-web {
     -fx-background-color: rgba(255,255,255,0.10);
     -fx-background-radius: 12;
@@ -189,9 +171,8 @@
     -fx-border-color: rgba(255,255,255,0.14);
     -fx-padding: 6 10;
 }
-/* Make ComboBox feel like a premium web input */
 .combo-web:focused {
-    -fx-border-color: rgba(124,58,237,0.85);
+    -fx-border-color: rgba(23,72,113,0.85);
     -fx-background-color: rgba(255,255,255,0.12);
 }
 
@@ -212,9 +193,8 @@
     -fx-font-size: 13px;
 }
 
-/* Dropdown popup */
 .combo-box-popup .list-view {
-    -fx-background-color: rgba(15,23,42,0.98);
+    -fx-background-color: rgba(15,45,77,0.98);
     -fx-background-radius: 12;
     -fx-border-radius: 12;
     -fx-border-color: rgba(255,255,255,0.14);
@@ -222,31 +202,28 @@
 }
 
 .combo-box-popup .list-view .list-cell:hover {
-    -fx-background-color: rgba(124,58,237,0.22);
+    -fx-background-color: rgba(23,72,113,0.22);
 }
 
 .combo-box-popup .list-view .list-cell:selected {
-    -fx-background-color: rgba(124,58,237,0.35);
+    -fx-background-color: rgba(23,72,113,0.35);
     -fx-text-fill: white;
 }
 
-/* Radio web style */
 .radio-web{
     -fx-text-fill: rgba(255,255,255,0.85);
     -fx-font-size: 12px;
     -fx-font-weight: 700;
 }
 
-/* Back to login */
 .button.btn-link{
     -fx-background-color: transparent;
-    -fx-text-fill: #a5b4fc;
+    -fx-text-fill: #A77693;
     -fx-font-weight: 800;
     -fx-underline: false;
     -fx-cursor: hand;
 }
 .button.btn-link:hover{ -fx-underline: true; }
-/*Landing (web)*/
 
 .page{
     -fx-alignment: top-center;
@@ -275,7 +252,7 @@
 }
 
 .hero-kicker{
-    -fx-text-fill: rgba(167,139,250,0.90);
+    -fx-text-fill: rgba(167,118,147,0.90);
     -fx-font-weight: 700;
     -fx-font-size: 11px;
     -fx-letter-spacing: 1.5px;
@@ -341,7 +318,6 @@
     -fx-font-size: 12px;
     -fx-text-fill: rgba(255,255,255,0.68);
 }
-/*  Landing polish (template-like)  */
 
 .preview{
     -fx-padding: 22;
@@ -381,8 +357,8 @@
 .badge{
     -fx-padding: 6 10;
     -fx-background-radius: 999;
-    -fx-background-color: rgba(165,180,252,0.10);
-    -fx-border-color: rgba(165,180,252,0.20);
+    -fx-background-color: rgba(167,118,147,0.10);
+    -fx-border-color: rgba(167,118,147,0.20);
     -fx-border-radius: 999;
     -fx-text-fill: rgba(255,255,255,0.80);
     -fx-font-size: 11px;
@@ -390,7 +366,7 @@
 }
 .web-header {
     -fx-padding: 16 40;
-    -fx-background-color: rgba(8, 10, 18, 0.92);
+    -fx-background-color: rgba(15, 45, 77, 0.92);
     -fx-border-color: rgba(255,255,255,0.06);
     -fx-border-width: 0 0 1 0;
     -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.55), 24, 0, 0, 2);
@@ -427,81 +403,73 @@
     -fx-font-weight: 800;
     -fx-padding: 10 16;
 }
-/* tables */
 .table-web {
-    -fx-background-color: rgba(30, 41, 59, 0.35);
+    -fx-background-color: rgba(23, 72, 113, 0.35);
     -fx-background-radius: 10;
     -fx-border-color: rgba(255,255,255,0.10);
     -fx-border-radius: 10;
 }
 
-/* inputs */
 .input-web, .combo-web, .date-web, .textarea-web {
-    -fx-background-color: rgba(30, 41, 59, 0.75);
+    -fx-background-color: rgba(23, 72, 113, 0.75);
     -fx-text-fill: white;
-    -fx-prompt-text-fill: #64748b;
+    -fx-prompt-text-fill: #94a3b8;
     -fx-background-radius: 8;
     -fx-border-color: rgba(255,255,255,0.14);
     -fx-border-radius: 8;
 }
 
-/* chips for quick picks */
-.button.chip-pink   { -fx-background-color: rgba(236,72,153,0.18); -fx-text-fill: #2a0b33; -fx-border-color: rgba(236,72,153,0.45); -fx-border-width: 1; -fx-border-radius: 999; -fx-background-radius: 999; -fx-font-weight: 700; -fx-font-size: 12px; -fx-padding: 7 16; -fx-cursor: hand; }
-.button.chip-teal   { -fx-background-color: rgba(20,184,166,0.18); -fx-text-fill: #082020; -fx-border-color: rgba(20,184,166,0.45); -fx-border-width: 1; -fx-border-radius: 999; -fx-background-radius: 999; -fx-font-weight: 700; -fx-font-size: 12px; -fx-padding: 7 16; -fx-cursor: hand; }
-.button.chip-blue   { -fx-background-color: rgba(59,130,246,0.18); -fx-text-fill: #0e2337; -fx-border-color: rgba(59,130,246,0.45); -fx-border-width: 1; -fx-border-radius: 999; -fx-background-radius: 999; -fx-font-weight: 700; -fx-font-size: 12px; -fx-padding: 7 16; -fx-cursor: hand; }
-.button.chip-purple { -fx-background-color: rgba(139,92,246,0.18); -fx-text-fill: #1e1437; -fx-border-color: rgba(139,92,246,0.45); -fx-border-width: 1; -fx-border-radius: 999; -fx-background-radius: 999; -fx-font-weight: 700; -fx-font-size: 12px; -fx-padding: 7 16; -fx-cursor: hand; }
-.button.chip-amber  { -fx-background-color: rgba(245,158,11,0.18); -fx-text-fill: #292210; -fx-border-color: rgba(245,158,11,0.45); -fx-border-width: 1; -fx-border-radius: 999; -fx-background-radius: 999; -fx-font-weight: 700; -fx-font-size: 12px; -fx-padding: 7 16; -fx-cursor: hand; }
+.button.chip-pink   { -fx-background-color: rgba(167,118,147,0.18); -fx-text-fill: #0F2D4D; -fx-border-color: rgba(167,118,147,0.45); -fx-border-width: 1; -fx-border-radius: 999; -fx-background-radius: 999; -fx-font-weight: 700; -fx-font-size: 12px; -fx-padding: 7 16; -fx-cursor: hand; }
+.button.chip-teal   { -fx-background-color: rgba(23,72,113,0.18);   -fx-text-fill: #0F2D4D; -fx-border-color: rgba(23,72,113,0.45);   -fx-border-width: 1; -fx-border-radius: 999; -fx-background-radius: 999; -fx-font-weight: 700; -fx-font-size: 12px; -fx-padding: 7 16; -fx-cursor: hand; }
+.button.chip-blue   { -fx-background-color: rgba(15,45,77,0.18);    -fx-text-fill: #0F2D4D; -fx-border-color: rgba(15,45,77,0.45);    -fx-border-width: 1; -fx-border-radius: 999; -fx-background-radius: 999; -fx-font-weight: 700; -fx-font-size: 12px; -fx-padding: 7 16; -fx-cursor: hand; }
+.button.chip-purple { -fx-background-color: rgba(167,118,147,0.18); -fx-text-fill: #0F2D4D; -fx-border-color: rgba(167,118,147,0.45); -fx-border-width: 1; -fx-border-radius: 999; -fx-background-radius: 999; -fx-font-weight: 700; -fx-font-size: 12px; -fx-padding: 7 16; -fx-cursor: hand; }
+.button.chip-amber  { -fx-background-color: rgba(222,209,198,0.18); -fx-text-fill: #0F2D4D; -fx-border-color: rgba(222,209,198,0.65); -fx-border-width: 1; -fx-border-radius: 999; -fx-background-radius: 999; -fx-font-weight: 700; -fx-font-size: 12px; -fx-padding: 7 16; -fx-cursor: hand; }
 
-.button.chip-pink:hover   { -fx-background-color: rgba(96, 28, 61, 0.3); }
-.button.chip-teal:hover   { -fx-background-color: rgb(14, 39, 36); }
-.button.chip-blue:hover   { -fx-background-color: rgba(38, 65, 106, 0.3); }
-.button.chip-purple:hover { -fx-background-color: rgba(70, 48, 117, 0.3); }
-.button.chip-amber:hover  { -fx-background-color: rgba(106, 78, 33, 0.3); }
+.button.chip-pink:hover   { -fx-background-color: rgba(167,118,147,0.30); }
+.button.chip-teal:hover   { -fx-background-color: rgba(23,72,113,0.30); }
+.button.chip-blue:hover   { -fx-background-color: rgba(15,45,77,0.30); }
+.button.chip-purple:hover { -fx-background-color: rgba(167,118,147,0.30); }
+.button.chip-amber:hover  { -fx-background-color: rgba(222,209,198,0.30); }
 
-/* sidebar */
 .side-panel {
-    -fx-background-color: rgba(15, 23, 42, 0.6);
+    -fx-background-color: rgba(15, 45, 77, 0.6);
     -fx-padding: 16;
     -fx-background-radius: 12;
     -fx-border-color: rgba(255,255,255,0.10);
     -fx-border-radius: 12;
 }
 
-/* dialog */
 .dialog-card {
-    -fx-background-color: #0b1220;
+    -fx-background-color: #0F2D4D;
     -fx-padding: 24;
     -fx-background-radius: 16;
     -fx-border-color: rgba(255,255,255,0.12);
     -fx-border-radius: 16;
 }
 .dialog-title { -fx-font-size: 20; -fx-font-weight: 800; -fx-text-fill: white; }
-.dialog-label { -fx-font-weight: 700; -fx-text-fill: #94a3b8; }
+.dialog-label { -fx-font-weight: 700; -fx-text-fill: #DED1C6; }
 .dialog-textarea {
-    -fx-background-color: rgba(30, 41, 59, 0.6);
+    -fx-background-color: rgba(23, 72, 113, 0.6);
     -fx-text-fill: white;
     -fx-background-radius: 10;
 }
-/* REGISTER PAGE — Split card design*/
+/* REGISTER PAGE */
 
-/* Outer page background */
 .register-bg {
     -fx-background-color: linear-gradient(
             to right,
-            #2b2e33 0%,
-            #3a3d42 25%,
-            #6c624e 60%,
-            #c7a96b 100%);
+            #F2F3F4 0%,
+            #DED1C6 40%,
+            #A77693 75%,
+            #174871 100%);
 }
 
-/* The centered card wrapper */
 .auth-card {
     -fx-background-color: transparent;
     -fx-background-radius: 32;
     -fx-border-radius: 32;
 }
 
-/* LEFT PANEL */
 .left-panel {
     -fx-background-radius: 32 0 0 32;
     -fx-background-insets: 0;
@@ -517,42 +485,37 @@
     -fx-background-radius: 32 0 0 32;
     -fx-background-insets: 0;
 }
-/* The beige warm overlay on top of the image */
 .left-overlay {
-    -fx-background-color: rgba(180, 140, 60, 0.45);
+    -fx-background-color: rgba(167, 118, 147, 0.45);
     -fx-background-radius: 32 0 0 32;
     -fx-background-insets: 0;
 }
 
-/* Headline: "Create your Account" */
 .reg-headline {
     -fx-font-family: "Georgia", "Times New Roman", serif;
     -fx-font-size: 34px;
     -fx-font-weight: bold;
-    -fx-text-fill: #17320b;
+    -fx-text-fill: #0F2D4D;
     -fx-wrap-text: true;
 }
 
-/* Subheadline */
 .reg-subhead {
     -fx-font-family: "Georgia", "Times New Roman", serif;
     -fx-font-size: 13px;
-    -fx-text-fill: #17320b;
+    -fx-text-fill: #0F2D4D;
     -fx-wrap-text: true;
     -fx-font-style: italic;
 }
 
-/* "Already have an account ? Login" line */
 .reg-already {
     -fx-font-size: 12px;
-    -fx-text-fill: #712122;
+    -fx-text-fill: #174871;
     -fx-font-weight: 600;
 }
 
-/* Clickable "Login" part inside the already-have label */
 .reg-login-link {
     -fx-background-color: transparent;
-    -fx-text-fill: #712122;
+    -fx-text-fill: #174871;
     -fx-font-weight: 800;
     -fx-font-size: 12px;
     -fx-underline: false;
@@ -564,73 +527,58 @@
     -fx-underline: true;
 }
 
-.reg-login-link:hover {
-    -fx-underline: true;
-}
-
-/* RIGHT PANEL */
 .right-panel {
-    -fx-background-color: #e8d5a3;
+    -fx-background-color: #DED1C6;
     -fx-background-radius: 0 32 32 0;
     -fx-padding: 28 36 28 36;
     -fx-min-width: 440;
 }
-/* "Sign Up" title */
 .reg-form-title {
     -fx-font-family: "Georgia", "Times New Roman", serif;
     -fx-font-size: 30px;
     -fx-font-weight: bold;
-    -fx-text-fill: #17320b;
+    -fx-text-fill: #0F2D4D;
 }
 
-/* Field labels */
 .reg-label {
     -fx-font-size: 12px;
     -fx-font-weight: 700;
-    -fx-text-fill: #471a1a;
+    -fx-text-fill: #174871;
 }
 
-/* PILL FIELDS — TextField, PasswordField */
 .pill-field {
-    -fx-background-color: #e8d5a3;
+    -fx-background-color: #DED1C6;
     -fx-background-radius: 999;
     -fx-border-radius: 999;
-    -fx-border-color: #8a6a20;
+    -fx-border-color: #A77693;
     -fx-border-width: 1.5;
     -fx-padding: 9 18;
     -fx-font-size: 13px;
-    -fx-text-fill: #3a2a10;
-    -fx-prompt-text-fill: #7a6040;
+    -fx-text-fill: #0F2D4D;
+    -fx-prompt-text-fill: #A77693;
     -fx-max-width: 9999;
 }
 .pill-field:focused {
-    -fx-border-color: #5a3010;
+    -fx-border-color: #174871;
     -fx-border-width: 2;
-    -fx-background-color: #f0ddb0;
+    -fx-background-color: #F2F3F4;
 }
 
-.pill-field:focused {
-    -fx-border-color: #5a3010;
-    -fx-border-width: 2;
-    -fx-background-color: rgba(145, 130, 91, 0.34);
-}
-
-/* ComboBox pill style */
 .pill-combo {
-    -fx-background-color: #e8d5a3;
+    -fx-background-color: #DED1C6;
     -fx-background-radius: 999;
     -fx-border-radius: 999;
-    -fx-border-color: #8a6a20;
+    -fx-border-color: #A77693;
     -fx-border-width: 1.5;
     -fx-padding: 8 14;
     -fx-font-size: 13px;
-    -fx-text-fill: #3a2a10;
+    -fx-text-fill: #0F2D4D;
     -fx-max-width: 9999;
     -fx-pref-height: 38;
     -fx-min-height: 38;
 }
 .pill-combo:focused {
-    -fx-border-color: #5a3010;
+    -fx-border-color: #174871;
     -fx-border-width: 2;
 }
 .pill-combo .arrow-button {
@@ -639,31 +587,30 @@
     -fx-padding: 0 8;
 }
 .pill-combo .arrow {
-    -fx-background-color: #5a3010;
+    -fx-background-color: #174871;
 }
 .pill-combo .list-cell {
-    -fx-background-color: #e8d5a3;
-    -fx-text-fill: #3a2a10;
+    -fx-background-color: #DED1C6;
+    -fx-text-fill: #0F2D4D;
     -fx-padding: 8 14;
     -fx-font-size: 13px;
 }
 .combo-box-popup .list-view {
-    -fx-background-color: #e8d5a3;
-    -fx-border-color: #8a6a20;
+    -fx-background-color: #DED1C6;
+    -fx-border-color: #A77693;
     -fx-border-radius: 12;
     -fx-background-radius: 12;
 }
 .combo-box-popup .list-view .list-cell:hover {
-    -fx-background-color: #c8a860;
+    -fx-background-color: #A77693;
 }
-/* CREATE ACCOUNT button */
 .reg-primary-btn {
-    -fx-background-color: #7a1a2a;
+    -fx-background-color: #174871;
     -fx-background-radius: 999;
     -fx-border-radius: 999;
-    -fx-border-color: #6c5a2e;
+    -fx-border-color: #A77693;
     -fx-border-width: 2px;
-    -fx-text-fill: #6c5a2e;
+    -fx-text-fill: #F2F3F4;
     -fx-font-size: 15px;
     -fx-font-weight: 700;
     -fx-padding: 13 0;
@@ -673,16 +620,15 @@
 }
 
 .reg-primary-btn:hover {
-    -fx-background-color: #921f32;
+    -fx-background-color: #1e5a8a;
 }
 
 .reg-primary-btn:pressed {
-    -fx-background-color: #5a1020;
+    -fx-background-color: #0F2D4D;
     -fx-translate-y: 1;
     -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.15), 4, 0, 0, 1);
 }
 
-/* Error labels under fields */
 .reg-error {
     -fx-text-fill: #b00020;
     -fx-font-size: 11px;
@@ -690,22 +636,20 @@
     -fx-padding: 2 4 0 4;
 }
 
-/* Message label (success/fail) */
 .reg-message {
     -fx-font-size: 12px;
     -fx-font-weight: 700;
     -fx-wrap-text: true;
 }
-/*
-  LOGIN PAGE — matching register split-card design*/
 
+/* LOGIN PAGE */
 .login-bg {
     -fx-background-color: linear-gradient(
             to right,
-            #2b2e33 0%,
-            #3a3d42 25%,
-            #6c624e 60%,
-            #c7a96b 100%
+            #F2F3F4 0%,
+            #DED1C6 40%,
+            #A77693 75%,
+            #174871 100%
     );
 }
 
@@ -719,7 +663,7 @@
 }
 
 .login-left-overlay {
-    -fx-background-color: rgba(180, 140, 60, 0.45);
+    -fx-background-color: rgba(167, 118, 147, 0.45);
     -fx-background-radius: 32 0 0 32;
     -fx-background-insets: 0;
 }
@@ -736,27 +680,27 @@
     -fx-font-family: "Georgia", "Times New Roman", serif;
     -fx-font-size: 34px;
     -fx-font-weight: bold;
-    -fx-text-fill: #1a4a1a;
+    -fx-text-fill: #0F2D4D;
     -fx-wrap-text: true;
 }
 
 .login-subhead {
     -fx-font-family: "Georgia", "Times New Roman", serif;
     -fx-font-size: 13px;
-    -fx-text-fill: #1a4a1a;
+    -fx-text-fill: #0F2D4D;
     -fx-wrap-text: true;
     -fx-font-style: italic;
 }
 
 .login-already {
     -fx-font-size: 12px;
-    -fx-text-fill: #471a1a;
+    -fx-text-fill: #174871;
     -fx-font-weight: 600;
 }
 
 .login-create-link {
     -fx-background-color: transparent;
-    -fx-text-fill: #7a1a2a;
+    -fx-text-fill: #A77693;
     -fx-font-weight: 800;
     -fx-font-size: 12px;
     -fx-underline: false;
@@ -770,7 +714,7 @@
 }
 
 .login-right-panel {
-    -fx-background-color: #e8d5a3;
+    -fx-background-color: #DED1C6;
     -fx-background-radius: 0 32 32 0;
     -fx-padding: 48 48 48 48;
     -fx-min-width: 380;
@@ -780,42 +724,42 @@
     -fx-font-family: "Georgia", "Times New Roman", serif;
     -fx-font-size: 30px;
     -fx-font-weight: bold;
-    -fx-text-fill: #1a4a1a;
+    -fx-text-fill: #0F2D4D;
 }
 
 .login-label {
     -fx-font-size: 12px;
     -fx-font-weight: 700;
-    -fx-text-fill: #1a3a1a;
+    -fx-text-fill: #174871;
 }
 
 .login-pill-field {
-    -fx-background-color: #e8d5a3;
+    -fx-background-color: #DED1C6;
     -fx-background-radius: 999;
     -fx-border-radius: 999;
-    -fx-border-color: #8a6a20;
+    -fx-border-color: #A77693;
     -fx-border-width: 1.5;
     -fx-padding: 11 20;
     -fx-font-size: 13px;
-    -fx-text-fill: #3a2a10;
-    -fx-prompt-text-fill: #7a6040;
+    -fx-text-fill: #0F2D4D;
+    -fx-prompt-text-fill: #A77693;
     -fx-max-width: 9999;
     -fx-pref-height: 42;
 }
 
 .login-pill-field:focused {
-    -fx-border-color: #5a3010;
+    -fx-border-color: #174871;
     -fx-border-width: 2;
-    -fx-background-color: rgba(145, 130, 91, 0.34);
+    -fx-background-color: rgba(167, 118, 147, 0.20);
 }
 
 .login-primary-btn {
-    -fx-background-color: #7a1a2a;
+    -fx-background-color: #174871;
     -fx-background-radius: 999;
     -fx-border-radius: 999;
-    -fx-border-color: #6c5a2e;
+    -fx-border-color: #A77693;
     -fx-border-width: 2px;
-    -fx-text-fill: #6c5a2e;
+    -fx-text-fill: #F2F3F4;
     -fx-font-size: 16px;
     -fx-font-weight: 700;
     -fx-padding: 14 0;
@@ -825,12 +769,11 @@
 }
 
 .login-primary-btn:hover {
-    -fx-background-color: #921f32;
+    -fx-background-color: #1e5a8a;
 }
 
 .login-primary-btn:pressed {
-    -fx-background-color: #5a1020;
+    -fx-background-color: #0F2D4D;
     -fx-translate-y: 1;
     -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.15), 4, 0, 0, 1);
 }
-

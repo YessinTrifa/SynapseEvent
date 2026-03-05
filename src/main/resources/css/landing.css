@@ -1,13 +1,11 @@
-
-
-/* ROOT: full-page gradient — navy left → teal center → warm gold right */
+/* ROOT: full-page gradient */
 .landing-root {
     -fx-background-color: linear-gradient(
             to right,
-            #2b2e33 0%,
-            #3a3d42 25%,
-            #6c624e 60%,
-            #c7a96b 100%
+            #F2F3F4 0%,
+            #DED1C6 40%,
+            #A77693 75%,
+            #174871 100%
     );
 }
 
@@ -18,14 +16,14 @@
     -fx-alignment: CENTER_LEFT;
     -fx-spacing: 0;
 }
-/* LOGIN BUTTON — pill with border, top-right */
+/* LOGIN BUTTON */
 .pill-button {
     -fx-background-color: transparent;
-    -fx-border-color: #471a1a;
+    -fx-border-color: #174871;
     -fx-border-width: 2;
     -fx-border-radius: 999;
     -fx-background-radius: 999;
-    -fx-text-fill: #471a1a;
+    -fx-text-fill: #174871;
     -fx-font-family: "Segoe UI", "System";
     -fx-font-size: 15px;
     -fx-font-weight: 700;
@@ -34,20 +32,20 @@
 }
 
 .pill-button:hover {
-    -fx-background-color: rgba(200, 120, 48, 0.12);
-    -fx-border-color: #c85a1a;
+    -fx-background-color: rgba(23, 72, 113, 0.12);
+    -fx-border-color: #A77693;
 }
 
 .pill-button:pressed {
     -fx-translate-y: 1;
-    -fx-background-color: rgba(200, 120, 48, 0.22);
+    -fx-background-color: rgba(23, 72, 113, 0.22);
 }
 
-/* BRAND TITLE — "Synapse" and "Event" */
+/* BRAND TITLE */
 .brand-title {
     -fx-font-family: "Georgia", "Times New Roman", serif;
     -fx-font-size: 150px;
-    -fx-text-fill: #c85a1a;
+    -fx-text-fill: #174871;
     -fx-font-weight: normal;
 }
 
@@ -55,18 +53,18 @@
 .tagline {
     -fx-font-family: "Segoe UI", "System";
     -fx-font-size: 14px;
-    -fx-text-fill: #c87830;
+    -fx-text-fill: #A77693;
     -fx-font-weight: 600;
 }
 
 /* GET STARTED BUTTON */
 .outline-button {
     -fx-background-color: transparent;
-    -fx-border-color: rgba(89, 4, 4, 0.8);
+    -fx-border-color: rgba(23, 72, 113, 0.8);
     -fx-border-width: 2;
     -fx-border-radius: 999;
     -fx-background-radius: 999;
-    -fx-text-fill: #590404;
+    -fx-text-fill: #174871;
     -fx-font-family: "Segoe UI", "System";
     -fx-font-size: 15px;
     -fx-font-weight: 600;
@@ -75,11 +73,11 @@
 }
 
 .outline-button:hover {
-    -fx-background-color: rgba(200, 90, 26, 0.10);
-    -fx-border-color: #c85a1a;
+    -fx-background-color: rgba(167, 118, 147, 0.10);
+    -fx-border-color: #A77693;
 }
 
 .outline-button:pressed {
     -fx-translate-y: 1;
-    -fx-background-color: rgba(200, 90, 26, 0.20);
+    -fx-background-color: rgba(167, 118, 147, 0.20);
 }
