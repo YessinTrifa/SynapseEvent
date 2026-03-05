@@ -80,3 +80,6 @@ target/
 # OS
 .DS_Store
 Thumbs.db
+
+VenueDataLoader.java
+venues.sql
