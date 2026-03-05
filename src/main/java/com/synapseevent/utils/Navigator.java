@@ -132,6 +132,16 @@ public final class Navigator {
         // Reload without touching the stacks
         loadEntry(new NavEntry(current.fxml, current.title));
     }
+    
+    /** Get the current FXML path (including URL parameters). */
+    public String getCurrentPath() {
+        return current != null ? current.fxml : null;
+    }
+    
+    /** Get the current page title. */
+    public String getCurrentTitle() {
+        return current != null ? current.title : null;
+    }
 
     // ── Private helpers ──────────────────────────────────────────────────────
 

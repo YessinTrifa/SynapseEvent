@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.Spinner?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" 
+      fx:controller="com.synapseevent.controller.ReservationPadelDetailsController"
+      style="-fx-background-color: #f8f9fa; -fx-padding: 30;">
+    
+    <!-- Header -->
+    <HBox spacing="15" alignment="CENTER_LEFT" style="-fx-padding: 0 0 25 0;">
+        <Button fx:id="backBtn" text="← Retour" 
+                style="-fx-background-color: #6b7280; -fx-text-fill: white; -fx-padding: 8 16; -fx-border-radius: 6; -fx-background-radius: 6;"
+                onAction="#goBack" />
+        <Label fx:id="titleLabel" text="Détails de l'événement" 
+               style="-fx-font-size: 24; -fx-font-weight: bold; -fx-text-fill: #1e3a8a;" />
+        <Region HBox.hgrow="ALWAYS" />
+    </HBox>
+    
+    <!-- Event Details Card -->
+    <VBox spacing="20" style="-fx-background-color: white; -fx-border-color: #e5e7eb; -fx-border-width: 1; -fx-border-radius: 12; -fx-background-radius: 12; -fx-padding: 25;">
+        
+        <!-- Title and Status -->
+        <VBox spacing="5">
+            <Label fx:id="eventNameLabel" text="" style="-fx-font-size: 20; -fx-font-weight: bold; -fx-text-fill: #1f2937;" />
+            <Label fx:id="statusLabel" text="" style="-fx-font-size: 14; -fx-text-fill: #059669; -fx-font-weight: bold;" />
+        </VBox>
+        
+        <Separator />
+        
+        <!-- Date and Time -->
+        <VBox spacing="8">
+            <Label text="📅 Date et Heure" style="-fx-font-size: 14; -fx-font-weight: bold; -fx-text-fill: #374151;" />
+            <Label fx:id="dateTimeLabel" text="" style="-fx-font-size: 14; -fx-text-fill: #6b7280;" />
+        </VBox>
+        
+        <!-- Location -->
+        <VBox spacing="8">
+            <Label text="📍 Lieu" style="-fx-font-size: 14; -fx-font-weight: bold; -fx-text-fill: #374151;" />
+            <Label fx:id="locationLabel" text="" style="-fx-font-size: 14; -fx-text-fill: #6b7280;" />
+            <Label fx:id="addressLabel" text="" style="-fx-font-size: 13; -fx-text-fill: #9ca3af;" />
+            <Label fx:id="mapLabel" text="" style="-fx-font-size: 13; -fx-text-fill: #3b82f6; -fx-underline: true; -fx-cursor: hand;" />
+        </VBox>
+        
+        <!-- Pricing and Capacity -->
+        <HBox spacing="40">
+            <VBox spacing="8">
+                <Label text="💰 Prix" style="-fx-font-size: 14; -fx-font-weight: bold; -fx-text-fill: #374151;" />
+                <Label fx:id="priceLabel" text="" style="-fx-font-size: 16; -fx-text-fill: #dc2626; -fx-font-weight: bold;" />
+            </VBox>
+            <VBox spacing="8">
+                <Label text="🪑 Places" style="-fx-font-size: 14; -fx-font-weight: bold; -fx-text-fill: #374151;" />
+                <Label fx:id="capacityLabel" text="" style="-fx-font-size: 16; -fx-text-fill: #059669; -fx-font-weight: bold;" />
+            </VBox>
+        </HBox>
+        
+        <Separator />
+        
+        <!-- Description -->
+        <VBox spacing="8">
+            <Label text="📝 Description" style="-fx-font-size: 14; -fx-font-weight: bold; -fx-text-fill: #374151;" />
+            <TextArea fx:id="descriptionArea" editable="false" prefRowCount="4" wrapText="true"
+                      style="-fx-font-size: 14; -fx-text-fill: #6b7280; -fx-background-color: #f9fafb; -fx-border-color: #e5e7eb;" />
+        </VBox>
+        
+        <!-- Action Buttons -->
+        <HBox spacing="15" alignment="CENTER_RIGHT" style="-fx-padding: 15 0 0 0;">
+            <Region HBox.hgrow="ALWAYS" />
+            <Button fx:id="reserveBtn" text="Réserver" 
+                    style="-fx-background-color: #10b981; -fx-text-fill: white; -fx-padding: 12 24; -fx-border-radius: 8; -fx-background-radius: 8; -fx-font-weight: bold; -fx-font-size: 14;"
+                    onAction="#showReservationDialog" />
+        </HBox>
+        
+    </VBox>
+    
+</VBox>

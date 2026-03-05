@@ -54,6 +54,7 @@ CREATE TABLE IF NOT EXISTS Venue (
     name VARCHAR(255) NOT NULL,
     type VARCHAR(50) NOT NULL COMMENT 'CLUB, BEACH, or HOTEL',
     address VARCHAR(500),
+    city VARCHAR(255),
     contact_info VARCHAR(255),
     price_range VARCHAR(10) COMMENT 'TND',
     rating DECIMAL(2,1) DEFAULT 0,
@@ -227,3 +228,30 @@ CREATE TABLE IF NOT EXISTS event_instance (
     status VARCHAR(20) DEFAULT 'draft',
     type VARCHAR(50) NOT NULL
 );
+
+-- Create reservations table for the new reservation system
+CREATE TABLE IF NOT EXISTS reservations (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    event_id BIGINT NOT NULL,
+    user_id BIGINT NOT NULL,
+    seats INT NOT NULL,
+    status VARCHAR(20) DEFAULT 'CONFIRMED',
+    event_type VARCHAR(20) DEFAULT 'PADDLE',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES Utilisateur(id) ON DELETE CASCADE
+);
+
+-- Insert sample data for testing
+INSERT IGNORE INTO Role (id, name) VALUES (1, 'Admin'), (2, 'User');
+INSERT IGNORE INTO Enterprise (id, nom, siret) VALUES (1, 'SynapseEvent', '123456789');
+INSERT IGNORE INTO Utilisateur (id, email, password, nom, prenom, role_id, enterprise_id) 
+VALUES (1, 'admin@synapse.com', '$2a$10$YourHashedPasswordHere', 'Admin', 'User', 1, 1);
+
+INSERT IGNORE INTO Venue (id, name, type, address, city) 
+VALUES (1, 'Paddle Club Tunis', 'CLUB', 'Avenue Habib Bourguiba', 'Tunis'),
+       (2, 'Beach Padel Sousse', 'BEACH', 'Bord de mer', 'Sousse');
+
+INSERT IGNORE INTO PaddleEvent (id, name, date, start_time, end_time, location, capacity, price, status, description) 
+VALUES (1, 'Tournament Padel Elite', '2026-03-15', '09:00:00', '17:00:00', 'Paddle Club Tunis', 20, 50.00, 'published', 'Elite tournament for advanced players'),
+       (2, 'Paddle Initiation', '2026-03-20', '14:00:00', '16:00:00', 'Beach Padel Sousse', 15, 30.00, 'published', 'Perfect introduction to paddle for beginners'),
+       (3, 'Beach Paddle Party', '2026-03-25', '10:00:00', '18:00:00', 'Beach Paddle Sousse', 25, 40.00, 'published', 'Fun beach paddle day with music and food');

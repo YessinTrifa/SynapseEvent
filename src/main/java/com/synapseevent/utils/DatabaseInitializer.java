@@ -112,6 +112,9 @@ public class DatabaseInitializer {
     private static void runMigrations(Connection conn) {
         System.out.println("Running migrations...");
         try {
+            // Venue
+            addColumnIfNotExists(conn, "Venue", "city", "VARCHAR(255)");
+
             // CustomEventRequest
             addColumnIfNotExists(conn, "CustomEventRequest", "budget", "DECIMAL(10,2)");
             addColumnIfNotExists(conn, "CustomEventRequest", "capacity", "INT");

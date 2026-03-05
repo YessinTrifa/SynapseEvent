@@ -200,7 +200,12 @@
                             <!-- PAGE: My Bookings -->
                             <VBox fx:id="userPageBookings" spacing="14" visible="false" managed="false"
                                   style="-fx-background-color: #f0e0b0; -fx-padding: 16 24 24 24;">
-                                <Label styleClass="user-section-title" text="My Booking History" />
+                                <HBox spacing="15" alignment="CENTER_LEFT">
+                                    <Label styleClass="user-section-title" text="My Booking History" />
+                                    <Region HBox.hgrow="ALWAYS" />
+                                    <Button onAction="#openPadelReservation" 
+                                            styleClass="user-btn-apply" text="🏓 Réservation Padel" />
+                                </HBox>
                                 <TableView fx:id="bookingsTable" styleClass="user-table" VBox.vgrow="ALWAYS">
                                     <columns>
                                         <TableColumn fx:id="bookingTypeColumn"    text="Event Name"    />

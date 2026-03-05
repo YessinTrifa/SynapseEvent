@@ -586,7 +586,9 @@ public class UserDashboardController {
     private void showRecommendedByLocation() {
         typeFilterCombo.setValue("Partying");
         applyFilters();
-        categoryTabPane.getSelectionModel().select(0);
+        if (categoryTabPane != null) {
+            categoryTabPane.getSelectionModel().select(0);
+        }
     }
 
     @FXML
@@ -649,8 +651,10 @@ public class UserDashboardController {
         
         allEventsTable.setItems(FXCollections.observableArrayList(filtered));
         
-        // Switch to Home tab to show results
-        categoryTabPane.getSelectionModel().select(0);
+        // Switch to Home tab to show results (if categoryTabPane exists)
+        if (categoryTabPane != null) {
+            categoryTabPane.getSelectionModel().select(0);
+        }
     }
 
     // Browse by Category Actions
@@ -658,35 +662,45 @@ public class UserDashboardController {
     private void browsePartying() {
         typeFilterCombo.setValue("Partying");
         applyFilters();
-        categoryTabPane.getSelectionModel().select(0);
+        if (categoryTabPane != null) {
+            categoryTabPane.getSelectionModel().select(0);
+        }
     }
 
     @FXML
     private void browsePaddle() {
         typeFilterCombo.setValue("Paddle");
         applyFilters();
-        categoryTabPane.getSelectionModel().select(0);
+        if (categoryTabPane != null) {
+            categoryTabPane.getSelectionModel().select(0);
+        }
     }
 
     @FXML
     private void browseTeamBuilding() {
         typeFilterCombo.setValue("TeamBuilding");
         applyFilters();
-        categoryTabPane.getSelectionModel().select(0);
+        if (categoryTabPane != null) {
+            categoryTabPane.getSelectionModel().select(0);
+        }
     }
 
     @FXML
     private void browseFormation() {
         typeFilterCombo.setValue("Formation");
         applyFilters();
-        categoryTabPane.getSelectionModel().select(0);
+        if (categoryTabPane != null) {
+            categoryTabPane.getSelectionModel().select(0);
+        }
     }
 
     @FXML
     private void browseAnniversary() {
         typeFilterCombo.setValue("Anniversary");
         applyFilters();
-        categoryTabPane.getSelectionModel().select(0);
+        if (categoryTabPane != null) {
+            categoryTabPane.getSelectionModel().select(0);
+        }
     }
 
     // Category Browse Methods with Visual Cards
@@ -1445,6 +1459,13 @@ public class UserDashboardController {
     @FXML private void showUserBookings() { activateUserNav(userNavBookings); showUserPage(userPageBookings); }
     @FXML private void showUserRequests() { activateUserNav(userNavRequests); showUserPage(userPageRequests); }
     @FXML private void showUserProfile()  { activateUserNav(userNavProfile);  showUserPage(userPageProfile); }
+    
+    // ── Réservation Padel Integration ──────────────────────────────────────
+    public void openPadelReservation() {
+        // Navigate to Padel Reservation Dashboard
+        Navigator.get().go("/fxml/reservationPadelDashboard.fxml", "Réservation Padel");
+    }
+    
     private void loadCustomTypeBrowseButtons() {
         if (userPageBrowsePanel == null) return;
         try {

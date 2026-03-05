@@ -1,0 +1,9 @@
+@echo off
+echo Setting JAVA_HOME...
+set JAVA_HOME="C:\Program Files\Java\jdk-17"
+
+echo Building project...
+call mvnw.cmd clean package -DskipTests
+
+echo Running application with JavaFX modules...
+call mvnw.cmd javafx:run
