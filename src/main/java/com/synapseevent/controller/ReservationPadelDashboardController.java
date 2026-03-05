@@ -1,7 +1,8 @@
 package com.synapseevent.controller;
 
-import com.synapseevent.dao.PadelEventDAO;
-import com.synapseevent.entities.Event;
+import com.synapseevent.entities.PaddleEvent;
+import com.synapseevent.service.PaddleEventService;
+import java.sql.SQLException;
 import com.synapseevent.utils.EventContext;
 import com.synapseevent.utils.Navigator;
 import javafx.fxml.FXML;
@@ -18,8 +19,8 @@ public class ReservationPadelDashboardController {
     
     @FXML private TilePane eventsTilePane;
     @FXML private Button refreshBtn;
-    
-    private final PadelEventDAO paddleEventDAO = new PadelEventDAO();
+
+    private final PaddleEventService paddleEventService = new PaddleEventService();
     
     @FXML
     public void initialize() {
@@ -33,12 +34,17 @@ public class ReservationPadelDashboardController {
     
     private void loadEvents() {
         eventsTilePane.getChildren().clear();
-        
-        List<Event> events = paddleEventDAO.findPadelEventsAvailable();
-        
-        for (Event event : events) {
-            VBox eventCard = createEventCard(event);
-            eventsTilePane.getChildren().add(eventCard);
+        List<PaddleEvent> events;
+
+        try {
+            events = paddleEventService.getPublishedEvents();
+            for (PaddleEvent event : events) {
+                VBox eventCard = createEventCard(event);
+                eventsTilePane.getChildren().add(eventCard);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return;
         }
         
         if (events.isEmpty()) {
@@ -48,7 +54,7 @@ public class ReservationPadelDashboardController {
         }
     }
     
-    private VBox createEventCard(Event event) {
+    private VBox createEventCard(PaddleEvent event) {
         VBox card = new VBox(10);
         card.setStyle("""
             -fx-background-color: white;
@@ -74,7 +80,7 @@ public class ReservationPadelDashboardController {
         dateTimeLabel.setStyle("-fx-font-size: 13; -fx-text-fill: #6b7280;");
         
         // Location
-        Label locationLabel = new Label(String.format("📍 %s, %s", event.getCity(), event.getLocation()));
+        Label locationLabel = new Label(String.format("📍 %s", event.getLocation()));
         locationLabel.setStyle("-fx-font-size: 13; -fx-text-fill: #6b7280;");
         
         // Available seats

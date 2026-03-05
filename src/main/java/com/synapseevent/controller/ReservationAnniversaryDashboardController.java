@@ -1,7 +1,8 @@
 package com.synapseevent.controller;
 
-import com.synapseevent.dao.AnniversaryEventDAOSimple;
-import com.synapseevent.entities.Event;
+import com.synapseevent.entities.AnniversaryEvent;
+import com.synapseevent.service.AnniversaryEventService;
+import java.sql.SQLException;
 import com.synapseevent.utils.EventContext;
 import com.synapseevent.utils.Navigator;
 import javafx.fxml.FXML;
@@ -18,8 +19,8 @@ public class ReservationAnniversaryDashboardController {
     
     @FXML private TilePane eventsTilePane;
     @FXML private Button refreshBtn;
-    
-    private final AnniversaryEventDAOSimple anniversaryEventDAO = new AnniversaryEventDAOSimple();
+
+    private final AnniversaryEventService anniversaryEventService = new AnniversaryEventService();
     
     @FXML
     public void initialize() {
@@ -33,15 +34,19 @@ public class ReservationAnniversaryDashboardController {
     
     private void loadEvents() {
         eventsTilePane.getChildren().clear();
-        
-        List<Event> events = anniversaryEventDAO.findAnniversaryEventsAvailable();
-        System.out.println("DEBUG: Found " + events.size() + " anniversary events");
-        
-        for (Event event : events) {
-            System.out.println("DEBUG: Loading event: " + event.getName() + " (ID: " + event.getId() + ")");
-            VBox eventCard = createEventCard(event);
-            eventsTilePane.getChildren().add(eventCard);
+        List<AnniversaryEvent> events;
+
+        try {
+            events = anniversaryEventService.getPublishedEvents();
+            for (AnniversaryEvent event : events) {
+                VBox eventCard = createEventCard(event);
+                eventsTilePane.getChildren().add(eventCard);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return;
         }
+        System.out.println("DEBUG: Found " + events.size() + " anniversary events");
         
         if (events.isEmpty()) {
             Label noEventsLabel = new Label("Aucun événement Anniversaire disponible");
@@ -50,7 +55,7 @@ public class ReservationAnniversaryDashboardController {
         }
     }
     
-    private VBox createEventCard(Event event) {
+    private VBox createEventCard(AnniversaryEvent event) {
         VBox card = new VBox(10);
         card.setStyle("""
             -fx-background-color: white;
@@ -76,7 +81,7 @@ public class ReservationAnniversaryDashboardController {
         dateTimeLabel.setStyle("-fx-font-size: 13; -fx-text-fill: #6b7280;");
         
         // Location
-        Label locationLabel = new Label(String.format("📍 %s, %s", event.getCity(), event.getLocation()));
+        Label locationLabel = new Label(String.format("📍 %s", event.getLocation()));
         locationLabel.setStyle("-fx-font-size: 13; -fx-text-fill: #6b7280;");
         
         // Available seats

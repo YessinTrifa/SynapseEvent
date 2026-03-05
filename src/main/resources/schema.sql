@@ -255,5 +255,4 @@ INSERT IGNORE INTO PaddleEvent (id, name, date, start_time, end_time, location, 
 VALUES (1, 'Tournament Padel Elite', '2026-03-15', '09:00:00', '17:00:00', 'Paddle Club Tunis', 20, 50.00, 'published', 'Elite tournament for advanced players'),
        (2, 'Paddle Initiation', '2026-03-20', '14:00:00', '16:00:00', 'Beach Padel Sousse', 15, 30.00, 'published', 'Perfect introduction to paddle for beginners'),
        (3, 'Beach Paddle Party', '2026-03-25', '10:00:00', '18:00:00', 'Beach Paddle Sousse', 25, 40.00, 'published', 'Fun beach paddle day with music and food');
- 
- 
+

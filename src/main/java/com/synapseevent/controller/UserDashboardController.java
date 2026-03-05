@@ -1460,36 +1460,7 @@ public class UserDashboardController {
     @FXML private void showUserRequests() { activateUserNav(userNavRequests); showUserPage(userPageRequests); }
     @FXML private void showUserProfile()  { activateUserNav(userNavProfile);  showUserPage(userPageProfile); }
     
-    // ── Réservation Padel Integration ──────────────────────────────────────
-    public void openPadelReservation() {
-        // Navigate to Padel Reservation Dashboard
-        Navigator.get().go("/fxml/reservationPadelDashboard.fxml", "Réservation Padel");
-    }
-    
-    // ── Réservation Formation Integration ──────────────────────────────────────
-    public void openFormationReservation() {
-        // Navigate to Formation Reservation Dashboard
-        Navigator.get().go("/fxml/reservationFormationDashboard.fxml", "Réservation Formation");
-    }
-    
-    // ── Réservation Team Building Integration ──────────────────────────────────────
-    public void openTeamBuildingReservation() {
-        // Navigate to Team Building Reservation Dashboard
-        Navigator.get().go("/fxml/reservationTeamBuildingDashboard.fxml", "Réservation Team Building");
-    }
-    
-    // ── Réservation Partying Integration ──────────────────────────────────────
-    public void openPartyingReservation() {
-        // Navigate to Partying Reservation Dashboard
-        Navigator.get().go("/fxml/reservationPartyingDashboard.fxml", "Réservation Party");
-    }
-    
-    // ── Réservation Anniversary Integration ──────────────────────────────────────
-    public void openAnniversaryReservation() {
-        // Navigate to Anniversary Reservation Dashboard
-        Navigator.get().go("/fxml/reservationAnniversaryDashboard.fxml", "Réservation Anniversaire");
-    }
-    
+
     private void loadCustomTypeBrowseButtons() {
         if (userPageBrowsePanel == null) return;
         try {

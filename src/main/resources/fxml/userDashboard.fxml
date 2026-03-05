@@ -200,20 +200,6 @@
                             <!-- PAGE: My Bookings -->
                             <VBox fx:id="userPageBookings" spacing="14" visible="false" managed="false"
                                   style="-fx-background-color: transparent; -fx-padding: 16 24 24 24;">
-                                <HBox spacing="15" alignment="CENTER_LEFT">
-                                    <Label styleClass="user-section-title" text="My Booking History" />
-                                    <Region HBox.hgrow="ALWAYS" />
-                                    <Button onAction="#openPadelReservation" 
-                                            styleClass="user-btn-apply" text="🏓 Réservation Padel" />
-                                    <Button onAction="#openFormationReservation" 
-                                            styleClass="user-btn-apply" text="📚 Réservation Formation" />
-                                    <Button onAction="#openTeamBuildingReservation" 
-                                            styleClass="user-btn-apply" text="🤝 Réservation Team Building" />
-                                    <Button onAction="#openPartyingReservation" 
-                                            styleClass="user-btn-apply" text="🎉 Réservation Party" />
-                                    <Button onAction="#openAnniversaryReservation" 
-                                            styleClass="user-btn-apply" text="🎂 Réservation Anniversaire" />
-                                </HBox>
                                 <TableView fx:id="bookingsTable" styleClass="user-table" VBox.vgrow="ALWAYS">
                                     <columns>
                                         <TableColumn fx:id="bookingTypeColumn"    text="Event Name"    />

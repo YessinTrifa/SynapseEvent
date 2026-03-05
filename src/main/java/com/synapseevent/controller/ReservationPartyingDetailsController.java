@@ -1,8 +1,11 @@
 package com.synapseevent.controller;
 
-import com.synapseevent.dao.PartyingEventDAO;
-import com.synapseevent.dao.ReservationDAO;
-import com.synapseevent.entities.Event;
+import com.synapseevent.entities.Booking;
+import com.synapseevent.entities.PartyingEvent;
+import com.synapseevent.service.BookingService;
+import com.synapseevent.service.PartyingEventService;
+import java.sql.SQLException;
+import java.time.LocalDate;
 import com.synapseevent.utils.CurrentUser;
 import com.synapseevent.utils.EventContext;
 import com.synapseevent.utils.Navigator;
@@ -26,10 +29,10 @@ public class ReservationPartyingDetailsController {
     @FXML private TextArea descriptionArea;
     @FXML private Label organizerLabel;
     @FXML private Button reserveBtn;
-    
-    private final PartyingEventDAO partyingEventDAO = new PartyingEventDAO();
-    private final ReservationDAO reservationDAO = new ReservationDAO();
-    private Event currentEvent;
+
+    private final PartyingEventService partyingEventService = new PartyingEventService();
+    private final BookingService bookingService = new BookingService();
+    private PartyingEvent currentEvent;
     
     @FXML
     public void initialize() {
@@ -45,7 +48,13 @@ public class ReservationPartyingDetailsController {
     }
     
     private void loadEventDetails(Long eventId) {
-        currentEvent = partyingEventDAO.findById(eventId.intValue());
+        try {
+            currentEvent = partyingEventService.findbyId(eventId);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            showError("Erreur lors du chargement de l'événement");
+            return;
+        }
         
         if (currentEvent == null) {
             showError("Party non trouvé");
@@ -59,8 +68,8 @@ public class ReservationPartyingDetailsController {
             currentEvent.getDate().toString(),
             currentEvent.getStartTime().toString(),
             currentEvent.getEndTime().toString()));
-        locationLabel.setText(String.format("%s, %s", currentEvent.getLocation(), currentEvent.getCity()));
-        addressLabel.setText(currentEvent.getAddress() != null ? currentEvent.getAddress() : "Adresse non spécifiée");
+        locationLabel.setText(currentEvent.getLocation());
+        addressLabel.setText("Adresse non specifiee");
         priceLabel.setText(String.format("%.2f TND", currentEvent.getPrice()));
         capacityLabel.setText(String.format("%d places disponibles", currentEvent.getCapacity()));
         descriptionArea.setText(currentEvent.getDescription() != null ? currentEvent.getDescription() : "Aucune description");
@@ -138,14 +147,20 @@ public class ReservationPartyingDetailsController {
         }
         
         // Make reservation
-        boolean success = reservationDAO.reserve(currentEvent.getId().intValue(), userId.intValue(), seats, "PARTYING");
-        
-        if (success) {
-            showSuccess(String.format("Réservation réussie ! %d place(s) réservée(s)", seats));
-            // Refresh event details
-            loadEventDetails(currentEvent.getId());
-        } else {
-            showError("Erreur lors de la réservation. Vérifiez la disponibilité.");
+        try {
+            Booking booking = new Booking(userId, "PARTYING", currentEvent.getId(), LocalDate.now(), "confirmed");
+            boolean success = bookingService.ajouter(booking);
+            
+            if (success) {
+                showSuccess(String.format("Réservation réussie ! %d place(s) réservée(s)", seats));
+                // Refresh event details
+                loadEventDetails(currentEvent.getId());
+            } else {
+                showError("Erreur lors de la réservation. Vérifiez la disponibilité.");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            showError("Erreur lors de la reservation.");
         }
     }
     

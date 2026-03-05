@@ -1,25 +1,24 @@
 package com.synapseevent.controller;
 
-import com.synapseevent.dao.FormationEventDAO;
-import com.synapseevent.entities.Event;
+import com.synapseevent.service.FormationEventService;
+import com.synapseevent.entities.FormationEvent;
+import java.sql.SQLException;
 import com.synapseevent.utils.EventContext;
 import com.synapseevent.utils.Navigator;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.TilePane;
 import javafx.scene.layout.VBox;
-import javafx.scene.text.Font;
+
 
 import java.util.List;
 
 public class ReservationFormationDashboardController {
     
     @FXML private TilePane eventsTilePane;
-    @FXML private Button refreshBtn;
-    
-    private final FormationEventDAO formationEventDAO = new FormationEventDAO();
+
+
+    private final FormationEventService formationEventService = new FormationEventService();
     
     @FXML
     public void initialize() {
@@ -33,14 +32,17 @@ public class ReservationFormationDashboardController {
     
     private void loadEvents() {
         eventsTilePane.getChildren().clear();
-        
-        List<Event> events = formationEventDAO.findFormationEventsAvailable();
-        System.out.println("DEBUG: Found " + events.size() + " formation events");
-        
-        for (Event event : events) {
-            System.out.println("DEBUG: Loading event: " + event.getName() + " (ID: " + event.getId() + ")");
-            VBox eventCard = createEventCard(event);
-            eventsTilePane.getChildren().add(eventCard);
+        List<FormationEvent> events;
+
+        try {
+            events = formationEventService.getPublishedEvents();
+            for (FormationEvent event : events) {
+                VBox eventCard = createEventCard(event);
+                eventsTilePane.getChildren().add(eventCard);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return;
         }
         
         if (events.isEmpty()) {
@@ -50,7 +52,7 @@ public class ReservationFormationDashboardController {
         }
     }
     
-    private VBox createEventCard(Event event) {
+    private VBox createEventCard(FormationEvent event) {
         VBox card = new VBox(10);
         card.setStyle("""
             -fx-background-color: white;
@@ -76,7 +78,7 @@ public class ReservationFormationDashboardController {
         dateTimeLabel.setStyle("-fx-font-size: 13; -fx-text-fill: #6b7280;");
         
         // Location
-        Label locationLabel = new Label(String.format("📍 %s, %s", event.getCity(), event.getLocation()));
+        Label locationLabel = new Label(String.format("📍 %s", event.getLocation()));
         locationLabel.setStyle("-fx-font-size: 13; -fx-text-fill: #6b7280;");
         
         // Available seats

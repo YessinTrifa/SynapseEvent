@@ -1,8 +1,11 @@
 package com.synapseevent.controller;
 
-import com.synapseevent.dao.FormationEventDAO;
-import com.synapseevent.dao.ReservationDAO;
-import com.synapseevent.entities.Event;
+import com.synapseevent.entities.Booking;
+import com.synapseevent.entities.FormationEvent;
+import com.synapseevent.service.BookingService;
+import com.synapseevent.service.FormationEventService;
+import java.sql.SQLException;
+import java.time.LocalDate;
 import com.synapseevent.utils.CurrentUser;
 import com.synapseevent.utils.EventContext;
 import com.synapseevent.utils.Navigator;
@@ -24,11 +27,9 @@ public class ReservationFormationDetailsController {
     @FXML private TextArea descriptionArea;
     @FXML private Label organizerLabel;
     @FXML private Button reserveBtn;
-    
-    private final FormationEventDAO formationEventDAO = new FormationEventDAO();
-    private final ReservationDAO reservationDAO = new ReservationDAO();
-    private Event currentEvent;
-    
+    private final FormationEventService formationEventService = new FormationEventService();
+    private final BookingService bookingService = new BookingService();
+    private FormationEvent currentEvent;
     @FXML
     public void initialize() {
         Long eventId = EventContext.getSelectedEventId();
@@ -43,7 +44,13 @@ public class ReservationFormationDetailsController {
     }
     
     private void loadEventDetails(Long eventId) {
-        currentEvent = formationEventDAO.findById(eventId.intValue());
+        try {
+            currentEvent = formationEventService.findbyId(eventId);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            showError("Erreur lors du chargement de l'événement");
+            return;
+        }
         
         if (currentEvent == null) {
             showError("Formation non trouvée");
@@ -57,8 +64,8 @@ public class ReservationFormationDetailsController {
             currentEvent.getDate().toString(),
             currentEvent.getStartTime().toString(),
             currentEvent.getEndTime().toString()));
-        locationLabel.setText(String.format("%s, %s", currentEvent.getLocation(), currentEvent.getCity()));
-        addressLabel.setText(currentEvent.getAddress() != null ? currentEvent.getAddress() : "Adresse non spécifiée");
+        locationLabel.setText(currentEvent.getLocation());
+        addressLabel.setText("Adresse non spécifiée");
         priceLabel.setText(String.format("%.2f TND", currentEvent.getPrice()));
         capacityLabel.setText(String.format("%d places disponibles", currentEvent.getCapacity()));
         descriptionArea.setText(currentEvent.getDescription() != null ? currentEvent.getDescription() : "Aucune description");
@@ -136,15 +143,21 @@ public class ReservationFormationDetailsController {
         }
         
         // Make reservation
-        boolean success = reservationDAO.reserve(currentEvent.getId().intValue(), userId.intValue(), seats);
-        
-        if (success) {
-            showSuccess(String.format("Réservation réussie ! %d place(s) réservée(s)", seats));
-            // Refresh event details
-            loadEventDetails(currentEvent.getId());
-        } else {
-            showError("Erreur lors de la réservation. Vérifiez la disponibilité.");
+        try {
+            Booking booking = new Booking(userId, "FORMATION", currentEvent.getId(), LocalDate.now(), "confirmed");
+            boolean success = bookingService.ajouter(booking);
+            if (success) {
+                showSuccess(String.format("Réservation réussie ! %d place(s) réservée(s)", seats));
+                loadEventDetails(currentEvent.getId());
+            } else {
+                showError("Erreur lors de la réservation. Vérifiez la disponibilité.");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            showError("Erreur lors de la réservation.");
         }
+        
+
     }
     
     private Long getCurrentUserId() {

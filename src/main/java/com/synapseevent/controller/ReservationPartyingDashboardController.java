@@ -1,7 +1,8 @@
 package com.synapseevent.controller;
 
-import com.synapseevent.dao.PartyingEventDAO;
-import com.synapseevent.entities.Event;
+import com.synapseevent.entities.PartyingEvent;
+import com.synapseevent.service.PartyingEventService;
+import java.sql.SQLException;
 import com.synapseevent.utils.EventContext;
 import com.synapseevent.utils.Navigator;
 import javafx.fxml.FXML;
@@ -18,8 +19,8 @@ public class ReservationPartyingDashboardController {
     
     @FXML private TilePane eventsTilePane;
     @FXML private Button refreshBtn;
-    
-    private final PartyingEventDAO partyingEventDAO = new PartyingEventDAO();
+
+    private final PartyingEventService partyingEventService = new PartyingEventService();
     
     @FXML
     public void initialize() {
@@ -33,15 +34,19 @@ public class ReservationPartyingDashboardController {
     
     private void loadEvents() {
         eventsTilePane.getChildren().clear();
-        
-        List<Event> events = partyingEventDAO.findPartyingEventsAvailable();
-        System.out.println("DEBUG: Found " + events.size() + " partying events");
-        
-        for (Event event : events) {
-            System.out.println("DEBUG: Loading event: " + event.getName() + " (ID: " + event.getId() + ")");
-            VBox eventCard = createEventCard(event);
-            eventsTilePane.getChildren().add(eventCard);
+        List<PartyingEvent> events;
+
+        try {
+            events = partyingEventService.getPublishedEvents();
+            for (PartyingEvent event : events) {
+                VBox eventCard = createEventCard(event);
+                eventsTilePane.getChildren().add(eventCard);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return;
         }
+        System.out.println("DEBUG: Found " + events.size() + " partying events");
         
         if (events.isEmpty()) {
             Label noEventsLabel = new Label("Aucun événement Party disponible");
@@ -50,7 +55,7 @@ public class ReservationPartyingDashboardController {
         }
     }
     
-    private VBox createEventCard(Event event) {
+    private VBox createEventCard(PartyingEvent event) {
         VBox card = new VBox(10);
         card.setStyle("""
             -fx-background-color: white;
@@ -76,7 +81,7 @@ public class ReservationPartyingDashboardController {
         dateTimeLabel.setStyle("-fx-font-size: 13; -fx-text-fill: #6b7280;");
         
         // Location
-        Label locationLabel = new Label(String.format("📍 %s, %s", event.getCity(), event.getLocation()));
+        Label locationLabel = new Label(String.format("📍 %s", event.getLocation()));
         locationLabel.setStyle("-fx-font-size: 13; -fx-text-fill: #6b7280;");
         
         // Available seats

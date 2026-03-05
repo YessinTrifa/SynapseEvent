@@ -1,8 +1,10 @@
 package com.synapseevent.controller;
-
-import com.synapseevent.dao.TeamBuildingEventDAO;
-import com.synapseevent.dao.ReservationDAO;
-import com.synapseevent.entities.Event;
+import com.synapseevent.entities.Booking;
+import com.synapseevent.entities.TeamBuildingEvent;
+import com.synapseevent.service.BookingService;
+import com.synapseevent.service.TeamBuildingEventService;
+import java.sql.SQLException;
+import java.time.LocalDate;
 import com.synapseevent.utils.CurrentUser;
 import com.synapseevent.utils.EventContext;
 import com.synapseevent.utils.Navigator;
@@ -24,10 +26,10 @@ public class ReservationTeamBuildingDetailsController {
     @FXML private TextArea descriptionArea;
     @FXML private Label organizerLabel;
     @FXML private Button reserveBtn;
-    
-    private final TeamBuildingEventDAO teamBuildingEventDAO = new TeamBuildingEventDAO();
-    private final ReservationDAO reservationDAO = new ReservationDAO();
-    private Event currentEvent;
+
+    private final TeamBuildingEventService teamBuildingEventService = new TeamBuildingEventService();
+    private final BookingService bookingService = new BookingService();
+    private TeamBuildingEvent currentEvent;
     
     @FXML
     public void initialize() {
@@ -43,7 +45,13 @@ public class ReservationTeamBuildingDetailsController {
     }
     
     private void loadEventDetails(Long eventId) {
-        currentEvent = teamBuildingEventDAO.findById(eventId.intValue());
+        try {
+            currentEvent = teamBuildingEventService.findbyId(eventId);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            showError("Erreur lors du chargement de l'événement");
+            return;
+        }
         
         if (currentEvent == null) {
             showError("Team Building non trouvé");
@@ -57,8 +65,8 @@ public class ReservationTeamBuildingDetailsController {
             currentEvent.getDate().toString(),
             currentEvent.getStartTime().toString(),
             currentEvent.getEndTime().toString()));
-        locationLabel.setText(String.format("%s, %s", currentEvent.getLocation(), currentEvent.getCity()));
-        addressLabel.setText(currentEvent.getAddress() != null ? currentEvent.getAddress() : "Adresse non spécifiée");
+        locationLabel.setText(currentEvent.getLocation());
+        addressLabel.setText("Adresse non specifiee");
         priceLabel.setText(String.format("%.2f TND", currentEvent.getPrice()));
         capacityLabel.setText(String.format("%d places disponibles", currentEvent.getCapacity()));
         descriptionArea.setText(currentEvent.getDescription() != null ? currentEvent.getDescription() : "Aucune description");
@@ -136,14 +144,20 @@ public class ReservationTeamBuildingDetailsController {
         }
         
         // Make reservation
-        boolean success = reservationDAO.reserve(currentEvent.getId().intValue(), userId.intValue(), seats, "TEAMBUILDING");
-        
-        if (success) {
-            showSuccess(String.format("Réservation réussie ! %d place(s) réservée(s)", seats));
-            // Refresh event details
-            loadEventDetails(currentEvent.getId());
-        } else {
-            showError("Erreur lors de la réservation. Vérifiez la disponibilité.");
+        try {
+            Booking booking = new Booking(userId, "TEAMBUILDING", currentEvent.getId(), LocalDate.now(), "confirmed");
+            boolean success = bookingService.ajouter(booking);
+            
+            if (success) {
+                showSuccess(String.format("Réservation réussie ! %d place(s) réservée(s)", seats));
+                // Refresh event details
+                loadEventDetails(currentEvent.getId());
+            } else {
+                showError("Erreur lors de la réservation. Vérifiez la disponibilité.");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            showError("Erreur lors de la r�servation.");
         }
     }
     

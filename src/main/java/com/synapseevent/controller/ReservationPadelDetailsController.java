@@ -1,7 +1,11 @@
 package com.synapseevent.controller;
 
-import com.synapseevent.dao.PadelEventDAO;
-import com.synapseevent.dao.ReservationDAO;
+import com.synapseevent.entities.Booking;
+import com.synapseevent.entities.PaddleEvent;
+import com.synapseevent.service.BookingService;
+import com.synapseevent.service.PaddleEventService;
+import java.sql.SQLException;
+import java.time.LocalDate;
 import com.synapseevent.entities.Event;
 import com.synapseevent.utils.CurrentUser;
 import com.synapseevent.utils.EventContext;
@@ -24,10 +28,10 @@ public class ReservationPadelDetailsController {
     @FXML private Label capacityLabel;
     @FXML private TextArea descriptionArea;
     @FXML private Button reserveBtn;
-    
-    private final PadelEventDAO paddleEventDAO = new PadelEventDAO();
-    private final ReservationDAO reservationDAO = new ReservationDAO();
-    private Event currentEvent;
+
+    private final PaddleEventService paddleEventService = new PaddleEventService();
+    private final BookingService bookingService = new BookingService();
+    private PaddleEvent currentEvent;
     
     @FXML
     public void initialize() {
@@ -40,10 +44,11 @@ public class ReservationPadelDetailsController {
     }
     
     private void loadEventDetails(Long eventId) {
-        currentEvent = paddleEventDAO.findById(eventId.intValue());
-        
-        if (currentEvent == null) {
-            showError("Événement non trouvé");
+        try {
+            currentEvent = paddleEventService.findbyId(eventId);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            showError("Erreur lors du chargement de l'événement");
             return;
         }
         
@@ -54,8 +59,8 @@ public class ReservationPadelDetailsController {
             currentEvent.getDate().toString(),
             currentEvent.getStartTime().toString(),
             currentEvent.getEndTime().toString()));
-        locationLabel.setText(String.format("%s, %s", currentEvent.getLocation(), currentEvent.getCity()));
-        addressLabel.setText(currentEvent.getAddress() != null ? currentEvent.getAddress() : "Adresse non spécifiée");
+        locationLabel.setText(currentEvent.getLocation());
+        addressLabel.setText("Adresse non spécifiée");
         mapLabel.setText(currentEvent.getMap() != null ? "🗺️ " + currentEvent.getMap() : "🗺️ Carte non disponible");
         priceLabel.setText(String.format("%.2f TND", currentEvent.getPrice()));
         capacityLabel.setText(String.format("%d places disponibles", currentEvent.getCapacity()));
@@ -133,14 +138,18 @@ public class ReservationPadelDetailsController {
         }
         
         // Make reservation
-        boolean success = reservationDAO.reserve(currentEvent.getId().intValue(), userId.intValue(), seats);
-        
-        if (success) {
-            showSuccess(String.format("Réservation réussie ! %d place(s) réservée(s)", seats));
-            // Refresh event details
-            loadEventDetails(currentEvent.getId());
-        } else {
-            showError("Erreur lors de la réservation. Vérifiez la disponibilité.");
+        try {
+            Booking booking = new Booking(userId, "PADDLE", currentEvent.getId(), LocalDate.now(), "confirmed");
+            boolean success = bookingService.ajouter(booking);
+            if (success) {
+                showSuccess(String.format("Réservation réussie ! %d place(s) réservée(s)", seats));
+                loadEventDetails(currentEvent.getId());
+            } else {
+                showError("Erreur lors de la réservation. Vérifiez la disponibilité.");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            showError("Erreur lors de la réservation.");
         }
     }
     
