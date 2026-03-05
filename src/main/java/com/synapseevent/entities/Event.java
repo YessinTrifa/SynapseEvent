@@ -18,12 +18,13 @@ public class Event {
     private Double price;
     private String description;
     private String status;
+    private String organizer;
     
     public Event() {}
     
     public Event(Long id, String name, String type, LocalDate date, LocalTime startTime, LocalTime endTime,
                  String location, String city, String address, String map, Integer capacity, 
-                 Double price, String description, String status) {
+                 Double price, String description, String status, String organizer) {
         this.id = id;
         this.name = name;
         this.type = type;
@@ -38,6 +39,7 @@ public class Event {
         this.price = price;
         this.description = description;
         this.status = status;
+        this.organizer = organizer;
     }
 
     public Long getId() { return id; }
@@ -81,4 +83,7 @@ public class Event {
     
     public String getStatus() { return status; }
     public void setStatus(String status) { this.status = status; }
+    
+    public String getOrganizer() { return organizer; }
+    public void setOrganizer(String organizer) { this.organizer = organizer; }
 }

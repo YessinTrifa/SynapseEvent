@@ -1466,6 +1466,12 @@ public class UserDashboardController {
         Navigator.get().go("/fxml/reservationPadelDashboard.fxml", "Réservation Padel");
     }
     
+    // ── Réservation Formation Integration ──────────────────────────────────────
+    public void openFormationReservation() {
+        // Navigate to Formation Reservation Dashboard
+        Navigator.get().go("/fxml/reservationFormationDashboard.fxml", "Réservation Formation");
+    }
+    
     private void loadCustomTypeBrowseButtons() {
         if (userPageBrowsePanel == null) return;
         try {

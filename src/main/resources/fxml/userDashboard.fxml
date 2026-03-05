@@ -205,6 +205,8 @@
                                     <Region HBox.hgrow="ALWAYS" />
                                     <Button onAction="#openPadelReservation" 
                                             styleClass="user-btn-apply" text="🏓 Réservation Padel" />
+                                    <Button onAction="#openFormationReservation" 
+                                            styleClass="user-btn-apply" text="📚 Réservation Formation" />
                                 </HBox>
                                 <TableView fx:id="bookingsTable" styleClass="user-table" VBox.vgrow="ALWAYS">
                                     <columns>
