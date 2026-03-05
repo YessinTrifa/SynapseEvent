@@ -5,6 +5,7 @@ import com.synapseevent.utils.Navigator;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
@@ -15,6 +16,7 @@ import javafx.stage.Stage;
 public class ShellController {
 
     @FXML private StackPane contentHost;
+    @FXML private ScrollPane contentScrollPane;
     @FXML private HBox     navBar;       // the entire top nav bar
     @FXML private Button   backBtn;
     @FXML private Button   forwardBtn;

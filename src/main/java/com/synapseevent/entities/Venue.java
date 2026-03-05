@@ -73,6 +73,16 @@ public class Venue {
 
     public String getAmenities() { return amenities; }
     public void setAmenities(String amenities) { this.amenities = amenities; }
+    
+    // Alias methods for compatibility
+    public String getCity() { return address; }
+    public void setCity(String city) { /* Use address as city */ }
+    public String getPhone() { return contactInfo; }
+    public void setPhone(String phone) { /* Use contactInfo as phone */ }
+    public String getEmail() { return contactInfo; }
+    public void setEmail(String email) { /* Use contactInfo as email */ }
+    public String getImageUrl() { return null; }
+    public void setImageUrl(String imageUrl) { /* Not implemented */ }
 
     @Override
     public String toString() { return name + " (" + type + ")"; }

@@ -115,6 +115,14 @@ public class DatabaseInitializer {
             // Venue
             addColumnIfNotExists(conn, "Venue", "city", "VARCHAR(255)");
 
+            // Court table - create if not exists
+            createTableIfNotExists(conn, "Court",
+                "id BIGINT AUTO_INCREMENT PRIMARY KEY,\n                name VARCHAR(255) NOT NULL,\n                venue_id BIGINT NOT NULL,\n                is_indoor BOOLEAN DEFAULT FALSE,\n                price_per_hour DECIMAL(10,2) NOT NULL,\n                available BOOLEAN DEFAULT TRUE,\n                description TEXT,\n                amenities TEXT,\n                FOREIGN KEY (venue_id) REFERENCES Venue(id) ON DELETE CASCADE");
+
+            // court_reservations table - create if not exists
+            createTableIfNotExists(conn, "court_reservations",
+                "id BIGINT AUTO_INCREMENT PRIMARY KEY,\n                court_id BIGINT NOT NULL,\n                user_id BIGINT NOT NULL,\n                reservation_date DATE NOT NULL,\n                start_time TIME NOT NULL,\n                end_time TIME NOT NULL,\n                total_price DECIMAL(10,2) NOT NULL,\n                status VARCHAR(20) DEFAULT 'CONFIRMED',\n                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,\n                FOREIGN KEY (court_id) REFERENCES Court(id) ON DELETE CASCADE,\n                FOREIGN KEY (user_id) REFERENCES Utilisateur(id) ON DELETE CASCADE");
+
             // CustomEventRequest
             addColumnIfNotExists(conn, "CustomEventRequest", "budget", "DECIMAL(10,2)");
             addColumnIfNotExists(conn, "CustomEventRequest", "capacity", "INT");
@@ -200,6 +208,26 @@ public class DatabaseInitializer {
             rs.close();
         } catch (Exception e) {
             System.err.println("Error checking/adding column " + tableName + "." + columnName + ": " + e.getMessage());
+        }
+    }
+    
+    /**
+     * Helper method to create a table if it doesn't exist.
+     */
+    private static void createTableIfNotExists(Connection conn, String tableName, String definition) {
+        try {
+            ResultSet rs = conn.getMetaData().getTables(null, null, tableName, new String[]{"TABLE"});
+            if (rs.next()) {
+                System.out.println("Table " + tableName + " already exists, skipping.");
+            } else {
+                Statement stmt = conn.createStatement();
+                stmt.execute("CREATE TABLE " + tableName + " (" + definition + ")");
+                stmt.close();
+                System.out.println("Created table " + tableName);
+            }
+            rs.close();
+        } catch (Exception e) {
+            System.err.println("Error creating table " + tableName + ": " + e.getMessage());
         }
     }
 }

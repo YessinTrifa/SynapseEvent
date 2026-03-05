@@ -2,6 +2,7 @@
 
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Region?>
@@ -57,7 +58,11 @@
 
     <!-- CENTER: all page content loads here -->
     <center>
-        <StackPane fx:id="contentHost" />
+        <ScrollPane fx:id="contentScrollPane" fitToWidth="true" fitToHeight="true" 
+                    hbarPolicy="NEVER" vbarPolicy="AS_NEEDED"
+                    style="-fx-background-color: transparent;">
+            <StackPane fx:id="contentHost" />
+        </ScrollPane>
     </center>
 
 </BorderPane>

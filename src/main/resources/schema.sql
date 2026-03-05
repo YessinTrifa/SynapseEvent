@@ -241,6 +241,34 @@ CREATE TABLE IF NOT EXISTS reservations (
     FOREIGN KEY (user_id) REFERENCES Utilisateur(id) ON DELETE CASCADE
 );
 
+-- Create Court table for paddle court reservations
+CREATE TABLE IF NOT EXISTS Court (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    venue_id BIGINT NOT NULL,
+    is_indoor BOOLEAN DEFAULT FALSE,
+    price_per_hour DECIMAL(10,2) NOT NULL,
+    available BOOLEAN DEFAULT TRUE,
+    description TEXT,
+    amenities TEXT,
+    FOREIGN KEY (venue_id) REFERENCES Venue(id) ON DELETE CASCADE
+);
+
+-- Create court_reservations table for court bookings
+CREATE TABLE IF NOT EXISTS court_reservations (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    court_id BIGINT NOT NULL,
+    user_id BIGINT NOT NULL,
+    reservation_date DATE NOT NULL,
+    start_time TIME NOT NULL,
+    end_time TIME NOT NULL,
+    total_price DECIMAL(10,2) NOT NULL,
+    status VARCHAR(20) DEFAULT 'CONFIRMED',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (court_id) REFERENCES Court(id) ON DELETE CASCADE,
+    FOREIGN KEY (user_id) REFERENCES Utilisateur(id) ON DELETE CASCADE
+);
+
 -- Insert sample data for testing
 INSERT IGNORE INTO Role (id, name) VALUES (1, 'Admin'), (2, 'User');
 INSERT IGNORE INTO Enterprise (id, nom, siret) VALUES (1, 'SynapseEvent', '123456789');

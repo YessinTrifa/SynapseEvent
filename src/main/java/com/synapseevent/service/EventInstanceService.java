@@ -211,12 +211,24 @@ public class EventInstanceService implements IService<EventInstance> {
         String sql = "SELECT * FROM event_instance WHERE status = 'published'";
         try (Statement stmt = conn.createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
             while (rs.next()) {
+                LocalDate date = null;
+                if (rs.getDate("date") != null) {
+                    date = rs.getDate("date").toLocalDate();
+                }
+                LocalTime startTime = null;
+                if (rs.getTime("start_time") != null) {
+                    startTime = rs.getTime("start_time").toLocalTime();
+                }
+                LocalTime endTime = null;
+                if (rs.getTime("end_time") != null) {
+                    endTime = rs.getTime("end_time").toLocalTime();
+                }
                 EventInstance instance = new EventInstance(
                     rs.getLong("id"),
                     rs.getString("name"),
-                    rs.getDate("date").toLocalDate(),
-                    rs.getTime("start_time") != null ? rs.getTime("start_time").toLocalTime() : null,
-                    rs.getTime("end_time") != null ? rs.getTime("end_time").toLocalTime() : null,
+                    date,
+                    startTime,
+                    endTime,
                     rs.getString("location"),
                     rs.getObject("capacity") != null ? rs.getInt("capacity") : null,
                     rs.getObject("price") != null ? rs.getDouble("price") : null,

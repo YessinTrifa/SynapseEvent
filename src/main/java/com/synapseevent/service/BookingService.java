@@ -158,6 +158,19 @@ public class BookingService implements IService<Booking> {
 
         return bookings;
     }
+    
+    public boolean cancelBooking(Long bookingId) throws SQLException {
+        if (bookingId == null) return false;
+        
+        Connection conn = db.requireConnection();
+        String sql = "UPDATE Booking SET status = 'CANCELLED' WHERE id = ?";
+        
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setLong(1, bookingId);
+            int res = stmt.executeUpdate();
+            return res > 0;
+        }
+    }
 
     private Booking map(ResultSet rs) throws SQLException {
 

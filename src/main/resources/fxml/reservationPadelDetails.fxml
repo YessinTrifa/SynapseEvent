@@ -2,13 +2,15 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Separator?>
-<?import javafx.scene.control.Spinner?>
-<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
 
 <VBox xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" 
       fx:controller="com.synapseevent.controller.ReservationPadelDetailsController"
@@ -19,63 +21,101 @@
         <Button fx:id="backBtn" text="← Retour" 
                 style="-fx-background-color: #6b7280; -fx-text-fill: white; -fx-padding: 8 16; -fx-border-radius: 6; -fx-background-radius: 6;"
                 onAction="#goBack" />
-        <Label fx:id="titleLabel" text="Détails de l'événement" 
+        <Label fx:id="titleLabel" text="Détails du Court" 
                style="-fx-font-size: 24; -fx-font-weight: bold; -fx-text-fill: #1e3a8a;" />
         <Region HBox.hgrow="ALWAYS" />
     </HBox>
     
-    <!-- Event Details Card -->
+    <!-- Court Details Card -->
     <VBox spacing="20" style="-fx-background-color: white; -fx-border-color: #e5e7eb; -fx-border-width: 1; -fx-border-radius: 12; -fx-background-radius: 12; -fx-padding: 25;">
         
-        <!-- Title and Status -->
+        <!-- Court Name and Type -->
         <VBox spacing="5">
-            <Label fx:id="eventNameLabel" text="" style="-fx-font-size: 20; -fx-font-weight: bold; -fx-text-fill: #1f2937;" />
-            <Label fx:id="statusLabel" text="" style="-fx-font-size: 14; -fx-text-fill: #059669; -fx-font-weight: bold;" />
+            <Label fx:id="courtNameLabel" text="" style="-fx-font-size: 22; -fx-font-weight: bold; -fx-text-fill: #1f2937;" />
+            <Label fx:id="courtTypeLabel" text="" style="-fx-font-size: 16; -fx-font-weight: bold;" />
         </VBox>
         
         <Separator />
         
-        <!-- Date and Time -->
-        <VBox spacing="8">
-            <Label text="📅 Date et Heure" style="-fx-font-size: 14; -fx-font-weight: bold; -fx-text-fill: #374151;" />
-            <Label fx:id="dateTimeLabel" text="" style="-fx-font-size: 14; -fx-text-fill: #6b7280;" />
-        </VBox>
-        
-        <!-- Location -->
+        <!-- Venue Information -->
         <VBox spacing="8">
             <Label text="📍 Lieu" style="-fx-font-size: 14; -fx-font-weight: bold; -fx-text-fill: #374151;" />
-            <Label fx:id="locationLabel" text="" style="-fx-font-size: 14; -fx-text-fill: #6b7280;" />
-            <Label fx:id="addressLabel" text="" style="-fx-font-size: 13; -fx-text-fill: #9ca3af;" />
-            <Label fx:id="mapLabel" text="" style="-fx-font-size: 13; -fx-text-fill: #3b82f6; -fx-underline: true; -fx-cursor: hand;" />
+            <Label fx:id="venueNameLabel" text="" style="-fx-font-size: 15; -fx-text-fill: #1f2937;" />
+            <Label fx:id="venueAddressLabel" text="" style="-fx-font-size: 13; -fx-text-fill: #6b7280;" />
         </VBox>
         
-        <!-- Pricing and Capacity -->
-        <HBox spacing="40">
-            <VBox spacing="8">
-                <Label text="💰 Prix" style="-fx-font-size: 14; -fx-font-weight: bold; -fx-text-fill: #374151;" />
-                <Label fx:id="priceLabel" text="" style="-fx-font-size: 16; -fx-text-fill: #dc2626; -fx-font-weight: bold;" />
+        <!-- Court Type (Indoor/Outdoor) -->
+        <VBox spacing="8">
+            <Label text="🏸 Type de Court" style="-fx-font-size: 14; -fx-font-weight: bold; -fx-text-fill: #374151;" />
+            <Label fx:id="courtTypeDetailLabel" text="" style="-fx-font-size: 14; -fx-text-fill: #6b7280;" />
+        </VBox>
+        
+        <!-- Price -->
+        <VBox spacing="8">
+            <Label text="💰 Prix par heure" style="-fx-font-size: 14; -fx-font-weight: bold; -fx-text-fill: #374151;" />
+            <Label fx:id="priceLabel" text="" style="-fx-font-size: 18; -fx-text-fill: #dc2626; -fx-font-weight: bold;" />
+        </VBox>
+        
+        <!-- Amenities -->
+        <VBox spacing="8">
+            <Label text="✨ Équipements" style="-fx-font-size: 14; -fx-font-weight: bold; -fx-text-fill: #374151;" />
+            <Label fx:id="amenitiesLabel" text="" style="-fx-font-size: 13; -fx-text-fill: #6b7280; -fx-wrap-text: true;" />
+        </VBox>
+        
+        <Separator />
+        
+        <!-- Date and Time Selection -->
+        <VBox spacing="15">
+            <Label text="📅 Réservation" style="-fx-font-size: 16; -fx-font-weight: bold; -fx-text-fill: #374151;" />
+            
+            <!-- Date Picker -->
+            <VBox spacing="5">
+                <Label text="Date:" style="-fx-font-size: 13; -fx-text-fill: #6b7280;" />
+                <DatePicker fx:id="datePicker" promptText="Sélectionner une date" 
+                           style="-fx-font-size: 14; -fx-pref-width: 250;" />
             </VBox>
-            <VBox spacing="8">
-                <Label text="🪑 Places" style="-fx-font-size: 14; -fx-font-weight: bold; -fx-text-fill: #374151;" />
-                <Label fx:id="capacityLabel" text="" style="-fx-font-size: 16; -fx-text-fill: #059669; -fx-font-weight: bold;" />
+            
+            <!-- Available Time Slots Display -->
+            <VBox spacing="5" fx:id="availableSlotsContainer" visible="false">
+                <Label text="🕐 Créneaux disponibles:" style="-fx-font-size: 13; -fx-text-fill: #059669; -fx-font-weight: bold;" />
+                <Label fx:id="availableSlotsLabel" text="" style="-fx-font-size: 12; -fx-text-fill: #6b7280; -fx-wrap-text: true;" />
             </VBox>
-        </HBox>
+            
+            <!-- Time Selection -->
+            <HBox spacing="20">
+                <VBox spacing="5">
+                    <Label text="Heure de début:" style="-fx-font-size: 13; -fx-text-fill: #6b7280;" />
+                    <ComboBox fx:id="startTimeComboBox" promptText="Heure" 
+                             style="-fx-font-size: 14; -fx-pref-width: 120;" />
+                </VBox>
+                <VBox spacing="5">
+                    <Label text="Heure de fin:" style="-fx-font-size: 13; -fx-text-fill: #6b7280;" />
+                    <ComboBox fx:id="endTimeComboBox" promptText="Heure" 
+                             style="-fx-font-size: 14; -fx-pref-width: 120;" />
+                </VBox>
+            </HBox>
+            
+            <!-- Duration and Total Price -->
+            <VBox spacing="8" style="-fx-padding: 10 0 0 0;">
+                <Label fx:id="durationLabel" text="Durée: -" style="-fx-font-size: 14; -fx-text-fill: #374151;" />
+                <Label fx:id="totalPriceLabel" text="Total: - TND" style="-fx-font-size: 16; -fx-font-weight: bold; -fx-text-fill: #dc2626;" />
+            </VBox>
+        </VBox>
         
         <Separator />
         
         <!-- Description -->
         <VBox spacing="8">
             <Label text="📝 Description" style="-fx-font-size: 14; -fx-font-weight: bold; -fx-text-fill: #374151;" />
-            <TextArea fx:id="descriptionArea" editable="false" prefRowCount="4" wrapText="true"
-                      style="-fx-font-size: 14; -fx-text-fill: #6b7280; -fx-background-color: #f9fafb; -fx-border-color: #e5e7eb;" />
+            <Label fx:id="descriptionLabel" text="" style="-fx-font-size: 13; -fx-text-fill: #6b7280; -fx-wrap-text: true;" />
         </VBox>
         
         <!-- Action Buttons -->
         <HBox spacing="15" alignment="CENTER_RIGHT" style="-fx-padding: 15 0 0 0;">
             <Region HBox.hgrow="ALWAYS" />
-            <Button fx:id="reserveBtn" text="Réserver" 
+            <Button fx:id="reserveBtn" text="Réserver ce Court" 
                     style="-fx-background-color: #10b981; -fx-text-fill: white; -fx-padding: 12 24; -fx-border-radius: 8; -fx-background-radius: 8; -fx-font-weight: bold; -fx-font-size: 14;"
-                    onAction="#showReservationDialog" />
+                    onAction="#makeCourtReservation" />
         </HBox>
         
     </VBox>

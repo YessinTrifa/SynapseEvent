@@ -1,17 +1,16 @@
 package com.synapseevent.controller;
 
-import com.synapseevent.entities.Booking;
-import com.synapseevent.entities.FormationEvent;
-import com.synapseevent.service.BookingService;
+import com.synapseevent.service.VenueService;
 import com.synapseevent.service.FormationEventService;
-import java.sql.SQLException;
-import java.time.LocalDate;
+import com.synapseevent.entities.FormationEvent;
 import com.synapseevent.utils.CurrentUser;
 import com.synapseevent.utils.EventContext;
 import com.synapseevent.utils.Navigator;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
+
+import java.sql.SQLException;
 
 public class ReservationFormationDetailsController {
     
@@ -27,9 +26,11 @@ public class ReservationFormationDetailsController {
     @FXML private TextArea descriptionArea;
     @FXML private Label organizerLabel;
     @FXML private Button reserveBtn;
+    
+    private final VenueService venueService = new VenueService();
     private final FormationEventService formationEventService = new FormationEventService();
-    private final BookingService bookingService = new BookingService();
     private FormationEvent currentEvent;
+    
     @FXML
     public void initialize() {
         Long eventId = EventContext.getSelectedEventId();
@@ -45,10 +46,10 @@ public class ReservationFormationDetailsController {
     
     private void loadEventDetails(Long eventId) {
         try {
-            currentEvent = formationEventService.findbyId(eventId);
+            currentEvent = formationEventService.findbyId(eventId.longValue());
         } catch (SQLException e) {
             e.printStackTrace();
-            showError("Erreur lors du chargement de l'événement");
+            showError("Erreur lors du chargement de la formation");
             return;
         }
         
@@ -64,8 +65,8 @@ public class ReservationFormationDetailsController {
             currentEvent.getDate().toString(),
             currentEvent.getStartTime().toString(),
             currentEvent.getEndTime().toString()));
-        locationLabel.setText(currentEvent.getLocation());
-        addressLabel.setText("Adresse non spécifiée");
+        locationLabel.setText(currentEvent.getLocation() != null ? currentEvent.getLocation() : "Lieu non spécifié");
+        addressLabel.setText(currentEvent.getDescription() != null ? currentEvent.getDescription() : "Aucune description");
         priceLabel.setText(String.format("%.2f TND", currentEvent.getPrice()));
         capacityLabel.setText(String.format("%d places disponibles", currentEvent.getCapacity()));
         descriptionArea.setText(currentEvent.getDescription() != null ? currentEvent.getDescription() : "Aucune description");
@@ -142,31 +143,29 @@ public class ReservationFormationDetailsController {
             return;
         }
         
-        // Make reservation
-        try {
-            Booking booking = new Booking(userId, "FORMATION", currentEvent.getId(), LocalDate.now(), "confirmed");
-            boolean success = bookingService.ajouter(booking);
-            if (success) {
-                showSuccess(String.format("Réservation réussie ! %d place(s) réservée(s)", seats));
-                loadEventDetails(currentEvent.getId());
-            } else {
-                showError("Erreur lors de la réservation. Vérifiez la disponibilité.");
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-            showError("Erreur lors de la réservation.");
-        }
+        // Make reservation using VenueService
+        boolean success = venueService.reserveEvent(
+            currentEvent.getId().intValue(), 
+            userId.intValue(), 
+            seats, 
+            "FORMATION"
+        );
         
-
+        if (success) {
+            showSuccess(String.format("Réservation réussie ! %d place(s) réservée(s)", seats));
+            // Refresh event details
+            loadEventDetails(currentEvent.getId());
+        } else {
+            showError("Erreur lors de la réservation. Vérifiez la disponibilité.");
+        }
     }
     
     private Long getCurrentUserId() {
-        // TODO: Récupérer l'ID de l'utilisateur connecté depuis CurrentUser
-        // Pour l'instant, retourne 1 comme demandé
+        // Get the ID of the logged-in user from CurrentUser
         if (CurrentUser.getCurrentUser() != null) {
             return CurrentUser.getCurrentUser().getId();
         }
-        return 1L; // TODO: Remplacer par la vraie logique
+        return 1L; // Default for testing
     }
     
     private void showSuccess(String message) {
