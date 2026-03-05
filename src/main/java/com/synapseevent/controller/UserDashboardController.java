@@ -722,8 +722,244 @@ public class UserDashboardController {
 
     @FXML
     private void showPartyingEvents() {
-        List<EventInstance> filtered = filterByType("Partying");
-        displayEventCards(filtered, "Partying Events");
+        // Show partying options instead of directly showing events
+        displayPartyingOptions();
+    }
+    
+    private void displayPartyingOptions() {
+        categoryTitleLabel.setText("Partying - Choose an option");
+        categoryEventCountLabel.setText("Select how you want to browse party events");
+        eventCardsFlowPane.getChildren().clear();
+
+        // Option 1: See All Events
+        VBox eventsCard = createPartyingOptionCard(
+            "🎉", 
+            "See All Events", 
+            "Browse all available party events in the city",
+            "-fx-background-color: #fef3c7; -fx-border-color: #f59e0b;"
+        );
+        eventsCard.setOnMouseClicked(e -> {
+            List<EventInstance> filtered = filterByType("Partying");
+            displayEventCards(filtered, "Partying Events - All Available");
+        });
+
+        // Option 2: Browse by Venue
+        VBox venueCard = createPartyingOptionCard(
+            "📍", 
+            "Browse by Venue", 
+            "Find parties at specific venues",
+            "-fx-background-color: #e0f2fe; -fx-border-color: #0284c7;"
+        );
+        venueCard.setOnMouseClicked(e -> {
+            showPartyingByVenue();
+        });
+
+        // Option 3: Browse by Type of Party
+        VBox typeCard = createPartyingOptionCard(
+            "🎊", 
+            "Browse by Type of Party", 
+            "Explore parties by theme or style",
+            "-fx-background-color: #fce7f3; -fx-border-color: #db2777;"
+        );
+        typeCard.setOnMouseClicked(e -> {
+            showPartyingByType();
+        });
+
+        eventCardsFlowPane.getChildren().addAll(eventsCard, venueCard, typeCard);
+        showUserBrowse();
+    }
+    
+    private VBox createPartyingOptionCard(String icon, String title, String description, String style) {
+        VBox card = new VBox();
+        card.setPrefWidth(260);
+        card.setPrefHeight(180);
+        card.setStyle(
+            style +
+            "-fx-background-radius: 14;" +
+            "-fx-border-radius: 14;" +
+            "-fx-border-width: 2;" +
+            "-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.18), 10, 0, 0, 3);" +
+            "-fx-padding: 0;" +
+            "-fx-cursor: hand;"
+        );
+
+        // Header with icon
+        Label header = new Label(icon + " " + title);
+        header.setStyle(
+            "-fx-font-size: 18; " +
+            "-fx-font-weight: bold; " +
+            "-fx-text-fill: #1f2937; " +
+            "-fx-padding: 25;"
+        );
+        header.setAlignment(Pos.CENTER);
+        header.setTextAlignment(TextAlignment.CENTER);
+
+        // Description
+        Label descLabel = new Label(description);
+        descLabel.setStyle(
+            "-fx-font-size: 13; " +
+            "-fx-text-fill: #4b5563; " +
+            "-fx-padding: 0 20 20 20;"
+        );
+        descLabel.setAlignment(Pos.CENTER);
+        descLabel.setTextAlignment(TextAlignment.CENTER);
+        descLabel.setWrapText(true);
+
+        card.getChildren().addAll(header, descLabel);
+        return card;
+    }
+    
+    private void showPartyingByVenue() {
+        // Filter partying events by venue
+        List<EventInstance> partyingEvents = filterByType("Partying");
+        
+        // Group by venue (location)
+        Map<String, List<EventInstance>> eventsByVenue = partyingEvents.stream()
+            .collect(Collectors.groupingBy(EventInstance::getLocation));
+        
+        categoryTitleLabel.setText("Partying - Browse by Venue");
+        categoryEventCountLabel.setText("Select a venue to see parties");
+        eventCardsFlowPane.getChildren().clear();
+
+        for (Map.Entry<String, List<EventInstance>> entry : eventsByVenue.entrySet()) {
+            String venue = entry.getKey();
+            List<EventInstance> events = entry.getValue();
+            
+            VBox venueCard = createVenueCard(venue, events.size());
+            final String venueName = venue;
+            venueCard.setOnMouseClicked(e -> {
+                displayEventCards(events, "Partying at " + venueName);
+            });
+            eventCardsFlowPane.getChildren().add(venueCard);
+        }
+        
+        if (eventsByVenue.isEmpty()) {
+            Label noVenuesLabel = new Label("No venues found for party events");
+            noVenuesLabel.setStyle("-fx-font-size: 16; -fx-text-fill: #6b7280;");
+            eventCardsFlowPane.getChildren().add(noVenuesLabel);
+        }
+        
+        showUserBrowse();
+    }
+    
+    private VBox createVenueCard(String venueName, int eventCount) {
+        VBox card = new VBox();
+        card.setPrefWidth(260);
+        card.setPrefHeight(120);
+        card.setStyle(
+            "-fx-background-color: #e0f2fe; " +
+            "-fx-border-color: #0284c7; " +
+            "-fx-background-radius: 14;" +
+            "-fx-border-radius: 14;" +
+            "-fx-border-width: 2;" +
+            "-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.18), 10, 0, 0, 3);" +
+            "-fx-padding: 20;" +
+            "-fx-cursor: hand;"
+        );
+
+        Label header = new Label("📍 " + venueName);
+        header.setStyle(
+            "-fx-font-size: 16; " +
+            "-fx-font-weight: bold; " +
+            "-fx-text-fill: #1f2937;"
+        );
+
+        Label countLabel = new Label(eventCount + " events available");
+        countLabel.setStyle(
+            "-fx-font-size: 13; " +
+            "-fx-text-fill: #6b7280; " +
+            "-fx-padding: 10 0 0 0;"
+        );
+
+        card.getChildren().addAll(header, countLabel);
+        return card;
+    }
+    
+    private void showPartyingByType() {
+        // Browse by type of party (theme/music type)
+        categoryTitleLabel.setText("Partying - Browse by Type of Party");
+        categoryEventCountLabel.setText("Select a party type to explore");
+        eventCardsFlowPane.getChildren().clear();
+
+        // Party types/themes available
+        String[] partyTypes = {
+            "Birthday Party",
+            "New Year's Eve",
+            "Holiday Celebration",
+            "Latin Night",
+            "Retro Night (80s/90s)",
+            "Open Mic Night",
+            "Corporate Gala",
+            "Graduation Party",
+            "Bachelor/Bachelorette",
+            "Summer Bash",
+            "Halloween",
+            "Ladies Night",
+            "Gentlemen's Night",
+            "Karaoke Night",
+            "Bonfire Party"
+        };
+
+        String[] partyIcons = {
+            "🎂", "🎆", "🎄", "💃", "🕺", "🎤", "👔", "🎓", "💍", "🌴", "🎃", "💜", "🤵", "🔥", "🎤"
+        };
+
+        for (int i = 0; i < partyTypes.length; i++) {
+            String partyType = partyTypes[i];
+            String icon = partyIcons[i];
+            
+            VBox typeCard = createPartyTypeCard(icon, partyType);
+            final String type = partyType;
+            typeCard.setOnMouseClicked(evt -> {
+                // Filter events by this party type
+                List<EventInstance> allPartying = filterByType("Partying");
+                List<EventInstance> filtered = allPartying.stream()
+                    .filter(ev -> ev.getDescription() != null && 
+                        (ev.getDescription().contains(type) || 
+                         (ev.getName() != null && ev.getName().contains(type))))
+                    .collect(Collectors.toList());
+                
+                if (filtered.isEmpty()) {
+                    // If no specific match, show all partying events
+                    displayEventCards(allPartying, "Partying Events - " + type);
+                } else {
+                    displayEventCards(filtered, "Partying Events - " + type);
+                }
+            });
+            eventCardsFlowPane.getChildren().add(typeCard);
+        }
+        
+        showUserBrowse();
+    }
+    
+    private VBox createPartyTypeCard(String icon, String partyType) {
+        VBox card = new VBox();
+        card.setPrefWidth(200);
+        card.setPrefHeight(100);
+        card.setStyle(
+            "-fx-background-color: #fce7f3; " +
+            "-fx-border-color: #db2777; " +
+            "-fx-background-radius: 14;" +
+            "-fx-border-radius: 14;" +
+            "-fx-border-width: 2;" +
+            "-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.18), 10, 0, 0, 3);" +
+            "-fx-padding: 15;" +
+            "-fx-cursor: hand;"
+        );
+
+        Label header = new Label(icon + "\n" + partyType);
+        header.setStyle(
+            "-fx-font-size: 14; " +
+            "-fx-font-weight: bold; " +
+            "-fx-text-fill: #1f2937; " +
+            "-fx-text-alignment: center;"
+        );
+        header.setAlignment(Pos.CENTER);
+        header.setTextAlignment(TextAlignment.CENTER);
+        header.setWrapText(true);
+
+        card.getChildren().add(header);
+        return card;
     }
 
     @FXML
