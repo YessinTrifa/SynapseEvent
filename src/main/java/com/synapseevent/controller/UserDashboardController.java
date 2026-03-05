@@ -1461,9 +1461,224 @@ public class UserDashboardController {
 
     @FXML
     private void showFormationEvents() {
-        // Show formation events for direct booking
-        List<EventInstance> filtered = filterByType("Formation");
-        displayEventCards(filtered, "Formation Events");
+        // Show formation options instead of directly showing events
+        displayFormationOptions();
+    }
+    
+    private void displayFormationOptions() {
+        categoryTitleLabel.setText("Formation - Choose an option");
+        categoryEventCountLabel.setText("Select how you want to browse training sessions");
+        eventCardsFlowPane.getChildren().clear();
+
+        // Option 1: See All Events
+        VBox eventsCard = createFormationOptionCard(
+            "📚", 
+            "See All Sessions", 
+            "Browse all available training sessions",
+            "-fx-background-color: #dbeafe; -fx-border-color: #2563eb;"
+        );
+        eventsCard.setOnMouseClicked(e -> {
+            List<EventInstance> filtered = filterByType("Formation");
+            displayEventCards(filtered, "Formation Sessions - All Available");
+        });
+
+        // Option 2: Browse by Training Center (Venue)
+        VBox venueCard = createFormationOptionCard(
+            "🏢", 
+            "Browse by Training Center", 
+            "Find training sessions at specific centers",
+            "-fx-background-color: #d1fae5; -fx-border-color: #059669;"
+        );
+        venueCard.setOnMouseClicked(e -> {
+            showFormationByVenue();
+        });
+
+        // Option 3: Browse by Trainer
+        VBox trainerCard = createFormationOptionCard(
+            "👨‍🏫", 
+            "Browse by Trainer", 
+            "Find trainers and their sessions",
+            "-fx-background-color: #fef3c7; -fx-border-color: #d97706;"
+        );
+        trainerCard.setOnMouseClicked(e -> {
+            showFormationByTrainer();
+        });
+
+        eventCardsFlowPane.getChildren().addAll(eventsCard, venueCard, trainerCard);
+        showUserBrowse();
+    }
+    
+    private VBox createFormationOptionCard(String icon, String title, String description, String style) {
+        VBox card = new VBox();
+        card.setPrefWidth(260);
+        card.setPrefHeight(180);
+        card.setStyle(
+            style +
+            "-fx-background-radius: 14;" +
+            "-fx-border-radius: 14;" +
+            "-fx-border-width: 2;" +
+            "-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.18), 10, 0, 0, 3);" +
+            "-fx-padding: 0;" +
+            "-fx-cursor: hand;"
+        );
+
+        // Header with icon
+        Label header = new Label(icon + " " + title);
+        header.setStyle(
+            "-fx-font-size: 18; " +
+            "-fx-font-weight: bold; " +
+            "-fx-text-fill: #1f2937; " +
+            "-fx-padding: 25;"
+        );
+        header.setAlignment(Pos.CENTER);
+        header.setTextAlignment(TextAlignment.CENTER);
+
+        // Description
+        Label descLabel = new Label(description);
+        descLabel.setStyle(
+            "-fx-font-size: 13; " +
+            "-fx-text-fill: #4b5563; " +
+            "-fx-padding: 0 20 20 20;"
+        );
+        descLabel.setAlignment(Pos.CENTER);
+        descLabel.setTextAlignment(TextAlignment.CENTER);
+        descLabel.setWrapText(true);
+
+        card.getChildren().addAll(header, descLabel);
+        return card;
+    }
+    
+    private void showFormationByVenue() {
+        // Filter formation events by venue/training center
+        List<EventInstance> formationEvents = filterByType("Formation");
+        
+        // Group by venue (location)
+        Map<String, List<EventInstance>> eventsByVenue = formationEvents.stream()
+            .collect(Collectors.groupingBy(EventInstance::getLocation));
+        
+        categoryTitleLabel.setText("Formation - Browse by Training Center");
+        categoryEventCountLabel.setText("Select a training center to see sessions");
+        eventCardsFlowPane.getChildren().clear();
+
+        for (Map.Entry<String, List<EventInstance>> entry : eventsByVenue.entrySet()) {
+            String venue = entry.getKey();
+            List<EventInstance> events = entry.getValue();
+            
+            VBox venueCard = createTrainingCenterCard(venue, events.size());
+            final String venueName = venue;
+            venueCard.setOnMouseClicked(e -> {
+                displayEventCards(events, "Formation at " + venueName);
+            });
+            eventCardsFlowPane.getChildren().add(venueCard);
+        }
+        
+        if (eventsByVenue.isEmpty()) {
+            Label noVenuesLabel = new Label("No training centers found for formation events");
+            noVenuesLabel.setStyle("-fx-font-size: 16; -fx-text-fill: #6b7280;");
+            eventCardsFlowPane.getChildren().add(noVenuesLabel);
+        }
+        
+        showUserBrowse();
+    }
+    
+    private VBox createTrainingCenterCard(String centerName, int eventCount) {
+        VBox card = new VBox();
+        card.setPrefWidth(260);
+        card.setPrefHeight(120);
+        card.setStyle(
+            "-fx-background-color: #d1fae5; " +
+            "-fx-border-color: #059669; " +
+            "-fx-background-radius: 14;" +
+            "-fx-border-radius: 14;" +
+            "-fx-border-width: 2;" +
+            "-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.18), 10, 0, 0, 3);" +
+            "-fx-padding: 20;" +
+            "-fx-cursor: hand;"
+        );
+
+        Label header = new Label("🏢 " + centerName);
+        header.setStyle(
+            "-fx-font-size: 16; " +
+            "-fx-font-weight: bold; " +
+            "-fx-text-fill: #1f2937;"
+        );
+
+        Label countLabel = new Label(eventCount + " sessions available");
+        countLabel.setStyle(
+            "-fx-font-size: 13; " +
+            "-fx-text-fill: #6b7280; " +
+            "-fx-padding: 10 0 0 0;"
+        );
+
+        card.getChildren().addAll(header, countLabel);
+        return card;
+    }
+    
+    private void showFormationByTrainer() {
+        // Browse by trainer (organizer)
+        List<EventInstance> formationEvents = filterByType("Formation");
+        
+        // Group by trainer (organizer)
+        Map<String, List<EventInstance>> eventsByTrainer = formationEvents.stream()
+            .filter(e -> e.getOrganizer() != null && !e.getOrganizer().isEmpty())
+            .collect(Collectors.groupingBy(EventInstance::getOrganizer));
+        
+        categoryTitleLabel.setText("Formation - Browse by Trainer");
+        categoryEventCountLabel.setText("Select a trainer to see their sessions");
+        eventCardsFlowPane.getChildren().clear();
+
+        for (Map.Entry<String, List<EventInstance>> entry : eventsByTrainer.entrySet()) {
+            String trainer = entry.getKey();
+            List<EventInstance> events = entry.getValue();
+            
+            VBox trainerCard = createTrainerCard(trainer, events.size());
+            final String trainerName = trainer;
+            trainerCard.setOnMouseClicked(e -> {
+                displayEventCards(events, "Formation with " + trainerName);
+            });
+            eventCardsFlowPane.getChildren().add(trainerCard);
+        }
+        
+        if (eventsByTrainer.isEmpty()) {
+            Label noTrainersLabel = new Label("No trainers found for formation events");
+            noTrainersLabel.setStyle("-fx-font-size: 16; -fx-text-fill: #6b7280;");
+            eventCardsFlowPane.getChildren().add(noTrainersLabel);
+        }
+        
+        showUserBrowse();
+    }
+    
+    private VBox createTrainerCard(String trainerName, int eventCount) {
+        VBox card = new VBox();
+        card.setPrefWidth(260);
+        card.setPrefHeight(120);
+        card.setStyle(
+            "-fx-background-color: #fef3c7; " +
+            "-fx-border-color: #d97706; " +
+            "-fx-background-radius: 14;" +
+            "-fx-border-radius: 14;" +
+            "-fx-border-width: 2;" +
+            "-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.18), 10, 0, 0, 3);" +
+            "-fx-padding: 20;" +
+            "-fx-cursor: hand;"
+        );
+
+        Label header = new Label("👨‍🏫 " + trainerName);
+        header.setStyle(
+            "-fx-font-size: 16; " +
+            "-fx-font-weight: bold; " +
+            "-fx-text-fill: #1f2937;"
+        );
+
+        Label countLabel = new Label(eventCount + " sessions available");
+        countLabel.setStyle(
+            "-fx-font-size: 13; " +
+            "-fx-text-fill: #6b7280; " +
+            "-fx-padding: 10 0 0 0;"
+        );
+
+        card.getChildren().addAll(header, countLabel);
+        return card;
     }
 
     @FXML
