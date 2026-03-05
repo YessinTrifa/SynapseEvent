@@ -29,6 +29,16 @@
     <!-- Court Details Card -->
     <VBox spacing="20" style="-fx-background-color: white; -fx-border-color: #e5e7eb; -fx-border-width: 1; -fx-border-radius: 12; -fx-background-radius: 12; -fx-padding: 25;">
         
+        <!-- Event Labels (hidden by default, shown when viewing events) -->
+        <VBox spacing="5" visible="false" managed="false">
+            <Label fx:id="eventNameLabel" text="" style="-fx-font-size: 22; -fx-font-weight: bold; -fx-text-fill: #1f2937;" />
+            <Label fx:id="statusLabel" text="" style="-fx-font-size: 16; -fx-font-weight: bold;" />
+            <Label fx:id="dateTimeLabel" text="" style="-fx-font-size: 15; -fx-text-fill: #374151;" />
+            <Label fx:id="locationLabel" text="" style="-fx-font-size: 14; -fx-text-fill: #6b7280;" />
+            <Label fx:id="addressLabel" text="" style="-fx-font-size: 13; -fx-text-fill: #6b7280;" />
+            <Label fx:id="mapLabel" text="" style="-fx-font-size: 13; -fx-text-fill: #059669;" />
+        </VBox>
+        
         <!-- Court Name and Type -->
         <VBox spacing="5">
             <Label fx:id="courtNameLabel" text="" style="-fx-font-size: 22; -fx-font-weight: bold; -fx-text-fill: #1f2937;" />

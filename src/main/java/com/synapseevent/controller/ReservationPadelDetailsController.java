@@ -1,8 +1,9 @@
 package com.synapseevent.controller;
 
-import com.synapseevent.dao.PadelEventDAO;
-import com.synapseevent.dao.ReservationDAO;
+import com.synapseevent.entities.Court;
 import com.synapseevent.entities.Event;
+import com.synapseevent.service.PaddleEventService;
+import com.synapseevent.service.VenueService;
 import com.synapseevent.utils.CurrentUser;
 import com.synapseevent.utils.EventContext;
 import com.synapseevent.utils.Navigator;
@@ -39,8 +40,20 @@ public class ReservationPadelDetailsController {
     @FXML private Label totalPriceLabel;
     @FXML private Button reserveBtn;
     
-    private final PadelEventDAO paddleEventDAO = new PadelEventDAO();
-    private final ReservationDAO reservationDAO = new ReservationDAO();
+    @FXML private Label availableSlotsLabel;
+    @FXML private VBox availableSlotsContainer;
+    
+    // Event fields (for event reservations)
+    @FXML private Label eventNameLabel;
+    @FXML private Label statusLabel;
+    @FXML private Label dateTimeLabel;
+    @FXML private Label locationLabel;
+    @FXML private Label addressLabel;
+    @FXML private Label mapLabel;
+    
+    private final PaddleEventService paddleEventService = new PaddleEventService();
+    private final VenueService venueService = new VenueService();
+    private Court currentCourt;
     private Event currentEvent;
     
     @FXML
@@ -158,7 +171,7 @@ public class ReservationPadelDetailsController {
     }
     
     private void loadEventDetails(Long eventId) {
-        currentEvent = paddleEventDAO.findById(eventId.intValue());
+        currentEvent = paddleEventService.findEventById(eventId.intValue());
         
         if (currentEvent == null) {
             showError("Événement non trouvé");
@@ -378,7 +391,7 @@ public class ReservationPadelDetailsController {
         }
         
         // Make reservation
-        boolean success = reservationDAO.reserve(currentEvent.getId().intValue(), userId.intValue(), seats);
+        boolean success = paddleEventService.reserve(currentEvent.getId().intValue(), userId.intValue(), seats);
         
         if (success) {
             showSuccess(String.format("Réservation réussie ! %d place(s) réservée(s)", seats));
