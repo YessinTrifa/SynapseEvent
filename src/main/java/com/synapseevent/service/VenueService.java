@@ -401,7 +401,7 @@ public class VenueService implements IService<Venue> {
         }
         
         List<String> bookedSlots = new ArrayList<>();
-        String sql = "SELECT start_time, end_time FROM court_reservation " +
+        String sql = "SELECT start_time, end_time FROM court_reservations " +
                      "WHERE court_id = ? AND reservation_date = ? AND status != 'cancelled'";
         
         try (Connection cnx = MaConnection.getInstance().getConnection();
@@ -457,7 +457,7 @@ public class VenueService implements IService<Venue> {
         
         // Get booked slots
         List<String> bookedSlots = new ArrayList<>();
-        String sql = "SELECT start_time, end_time FROM court_reservation " +
+        String sql = "SELECT start_time, end_time FROM court_reservations " +
                      "WHERE court_id = ? AND reservation_date = ? AND status != 'cancelled'";
         
         try (Connection cnx = MaConnection.getInstance().getConnection();

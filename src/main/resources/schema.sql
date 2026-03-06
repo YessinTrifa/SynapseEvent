@@ -48,15 +48,15 @@ CREATE TABLE IF NOT EXISTS Utilisateur (
     FOREIGN KEY (enterprise_id) REFERENCES Enterprise(id) ON DELETE CASCADE
 );
 
--- Create venue table (for party locations: clubs, beaches, hotels)
+-- Create venue table (for party locations: clubs, beaches, hotels, bars, restaurants)
 CREATE TABLE IF NOT EXISTS Venue (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
-    type VARCHAR(50) NOT NULL COMMENT 'CLUB, BEACH, or HOTEL',
+    type VARCHAR(50) NOT NULL COMMENT 'CLUB, BEACH, HOTEL, BAR, or RESTAURANT',
     address VARCHAR(500),
     city VARCHAR(255),
     contact_info VARCHAR(255),
-    price_range VARCHAR(10) COMMENT 'TND',
+    price_range VARCHAR(50) COMMENT 'TND',
     rating DECIMAL(2,1) DEFAULT 0,
     description TEXT,
     amenities TEXT
@@ -299,14 +299,94 @@ INSERT IGNORE INTO Enterprise (id, nom, siret) VALUES (1, 'SynapseEvent', '12345
 INSERT IGNORE INTO Utilisateur (id, email, password, nom, prenom, role_id, enterprise_id) 
 VALUES (1, 'admin@synapse.com', '$2a$10$YourHashedPasswordHere', 'Admin', 'User', 1, 1);
 
-INSERT IGNORE INTO Venue (id, name, type, address, city) 
-VALUES (1, 'Paddle Club Tunis', 'CLUB', 'Avenue Habib Bourguiba', 'Tunis'),
-       (2, 'Beach Padel Sousse', 'BEACH', 'Bord de mer', 'Sousse');
+INSERT IGNORE INTO Venue (id, name, type, address, city, contact_info, price_range, rating, description, amenities) VALUES
+(1, 'Rooftop Bellezza Event', 'HOTEL', 'Tunis', 'Tunis', 'Contact via venue', '1500-3500', 4.5, 'Birthday, Anniversary, Reception venue with rooftop setting', 'Rooftop access, Catering options, Sound system'),
+(2, 'Salle Blanche', 'HOTEL', 'Tunis', 'Tunis', 'Contact via venue', '3000-7000', 4.8, 'Weddings, Large parties, Receptions - elegant ballroom', 'Ballroom, Catering, Valet parking, DJ booth'),
+(3, 'Salle des fêteS Queen', 'HOTEL', 'Tunis', 'Tunis', 'Contact via venue', '4000-10000', 4.7, 'Weddings, Big celebrations - capacity ~350 guests', 'Large hall, Stage, Kitchen, Parking, Air conditioning'),
+(4, 'Massaya Odéon', 'HOTEL', 'Gammarth, Tunis', 'Tunis', 'Contact via venue', '3000-8000', 4.3, 'Weddings, Parties venue', 'Garden, Indoor space, Catering available'),
+(5, 'La Perle du Lac', 'HOTEL', 'Lac 1, Tunis', 'Tunis', 'Contact via venue', '2500-6000', 4.4, 'Parties, Anniversaries by the lake', 'Lake view, Terrace, Catering, Parking'),
+(6, 'Espace Dream', 'HOTEL', 'Lac 1, Tunis', 'Tunis', 'Contact via venue', '2000-5000', 4.2, 'Small/medium events, celebrations', 'Modern space, Audio/Video equipment, WiFi'),
+(7, 'Le Doyen', 'HOTEL', 'Lac 1, Tunis', 'Tunis', 'Contact via venue', '3000-8000', 4.6, 'Receptions, private events', 'Private venue, Catering, Valet, Security'),
+(8, 'Marillot', 'BAR', 'Centre Urbain Nord, Tunis', 'Tunis', 'Contact via venue', '24-600', 4.0, 'Bar, Restaurant, events', 'Bar, Restaurant seating, Event space'),
+(9, 'Canette', 'BAR', 'Lafayette, Tunis', 'Tunis', 'Contact via venue', '10-350', 3.8, 'BAR', 'Bar seating, Drinks, Atmosphere'),
+(10, 'Follamour', 'RESTAURANT', 'Gammarth, Tunis', 'Tunis', 'Contact via venue', '20-1500', 4.1, 'Lounge, private events', 'Lounge seating, Private rooms, Catering'),
+(11, 'Jolene', 'RESTAURANT', 'Gammarth, Tunis', 'Tunis', 'Contact via venue', '30-2300', 4.2, 'Lounge, events', 'Lounge, Event space, Bar, Music system'),
+(12, 'Domaine Tarenti', 'HOTEL', 'Near Tunis', 'Tunis', 'Contact via venue', 'Custom', 4.4, 'Team building, Corporate retreats, Workshops, Outdoor activities', 'Outdoor activities, Meeting rooms, Accommodation, Team building equipment'),
+(13, 'Meeting & Training Rooms (Spaces/Regus)', 'HOTEL', 'Ben Arous, Mégrine, Hammamet, etc.', 'Tunis', 'Contact via venue', '500-2000', 4.0, 'Trainings, Workshops, Meetings', 'Conference rooms, Projector, WiFi, Whiteboard'),
+(14, 'Hotel Conference Rooms', 'HOTEL', 'Tunis/Grand Tunis', 'Tunis', 'Contact via venue', '1000-5000', 4.3, 'Seminars, Trainings, Conferences', 'Conference hall, Catering, A/V equipment, Parking'),
+(15, 'Conference & Congress Centres', 'HOTEL', 'Tunis/Grand Tunis', 'Tunis', 'Contact via venue', 'Custom', 4.5, 'Large conferences, seminars, corporate launches', 'Large halls, Multiple rooms, Catering, Interpretation services, Stage'),
+(16, 'Landscapes of Cap Bon', 'BEACH', 'Cap Bon Region', 'Nabeul', 'Contact via venue', 'Custom', 4.6, 'Outdoor team building (nature, challenge activities)', 'Nature trails, Team challenges, Outdoor activities, Guide services'),
+(17, 'Djerba Explore Centre', 'BEACH', 'Djerba', 'Djerba', 'Contact via venue', 'Custom', 4.7, 'Gala evenings, concerts, workshops, team activities', 'Event spaces, Workshops, Activities, Accommodation nearby'),
+(18, 'Arena Paddle Court', 'CLUB', 'Tunis', 'Tunis', 'Contact via venue', 'Custom', 4.3, 'Paddle court for events and training', 'Paddle court, Equipment rental, Lighting'),
+(19, 'Paddle Court Marsa', 'CLUB', 'Marsa, Tunis', 'Tunis', 'Contact via venue', 'Custom', 4.4, 'Paddle court for events and training', 'Paddle court, Equipment rental, Changing rooms'),
+(20, 'Paddle LAC', 'CLUB', 'Lac, Tunis', 'Tunis', 'Contact via venue', 'Custom', 4.2, 'Paddle court for events and training', 'Paddle court, Equipment rental, Parking');
 
-INSERT IGNORE INTO PaddleEvent (id, name, date, start_time, end_time, location, capacity, price, status, description) 
-VALUES (1, 'Tournament Padel Elite', '2026-03-15', '09:00:00', '17:00:00', 'Paddle Club Tunis', 20, 50.00, 'published', 'Elite tournament for advanced players'),
-       (2, 'Paddle Initiation', '2026-03-20', '14:00:00', '16:00:00', 'Beach Padel Sousse', 15, 30.00, 'published', 'Perfect introduction to paddle for beginners'),
-       (3, 'Beach Paddle Party', '2026-03-25', '10:00:00', '18:00:00', 'Beach Paddle Sousse', 25, 40.00, 'published', 'Fun beach paddle day with music and food');
+INSERT IGNORE INTO PaddleEvent (id, name, date, start_time, end_time, location, capacity, price, organizer, description, status, disponibilite) VALUES
+(1, 'Tournament Padel Elite', '2026-03-15', '09:00:00', '17:00:00', 'Paddle Club Tunis', 20, 50.00, 'SynapseEvent', 'Elite tournament for advanced players', 'published', TRUE),
+(2, 'Paddle Initiation', '2026-03-20', '14:00:00', '16:00:00', 'Beach Padel Sousse', 15, 30.00, 'SynapseEvent', 'Perfect introduction to paddle for beginners', 'published', TRUE),
+(3, 'Beach Paddle Party', '2026-03-25', '10:00:00', '18:00:00', 'Beach Paddle Sousse', 25, 40.00, 'SynapseEvent', 'Fun beach paddle day with music and food', 'published', TRUE),
+(4, 'Arena Paddle Championship', '2026-04-20', '09:00:00', '18:00:00', 'Arena Paddle Court', 24, 80.00, 'SynapseEvent', 'Competitive paddle tournament for all levels', 'published', TRUE),
+(5, 'Morning Paddle Training', '2026-04-18', '07:00:00', '09:00:00', 'Paddle Court Marsa', 12, 40.00, 'SynapseEvent', 'Professional paddle coaching session', 'published', TRUE),
+(6, 'Weekend Paddle Social', '2026-04-26', '10:00:00', '14:00:00', 'Paddle LAC', 16, 50.00, 'SynapseEvent', 'Casual paddle game with fellow enthusiasts', 'published', TRUE),
+(7, 'Paddle for Beginners', '2026-05-05', '15:00:00', '17:00:00', 'Arena Paddle Court', 10, 30.00, 'SynapseEvent', 'Learn paddle from scratch', 'published', TRUE),
+(8, 'Sunset Paddle Session', '2026-05-15', '18:00:00', '20:00:00', 'Paddle Court Marsa', 12, 45.00, 'SynapseEvent', 'Enjoy paddle during sunset', 'published', TRUE),
+(9, 'LAC Paddle Open', '2026-06-01', '09:00:00', '17:00:00', 'Paddle LAC', 20, 70.00, 'SynapseEvent', 'Annual paddle open tournament', 'published', TRUE);
+
+-- Insert PartyingEvent data from venues.sql
+INSERT IGNORE INTO PartyingEvent (name, date, start_time, end_time, venue_id, capacity, price, organizer, description, status, theme, music_type, age_restriction) VALUES
+('Summer Birthday Bash', '2026-04-15', '20:00:00', '02:00:00', 1, 80, 150.00, 'SynapseEvent', 'Celebrate your birthday with stunning rooftop views', 'published', 'Summer Night', 'Mixed', 18),
+('Elegant Wedding Reception', '2026-05-20', '18:00:00', '04:00:00', 2, 200, 5000.00, 'SynapseEvent', 'A grand wedding reception in an elegant ballroom', 'published', 'White Wedding', 'Classical & Oriental', 18),
+('Golden Anniversary Gala', '2026-06-10', '19:00:00', '23:00:00', 5, 100, 3000.00, 'SynapseEvent', 'Celebrate 50 years of excellence with lake views', 'published', 'Golden Night', 'Jazz & Lounge', 18),
+('Royal Wedding Celebration', '2026-07-25', '17:00:00', '05:00:00', 3, 350, 8000.00, 'SynapseEvent', 'A royal wedding celebration for up to 350 guests', 'published', 'Royal', 'Oriental & Western', 18),
+('End of Year Corporate Party', '2026-12-31', '20:00:00', '03:00:00', 7, 120, 4500.00, 'SynapseEvent', 'Exclusive corporate year-end celebration', 'published', 'Gala', 'DJ & Live Music', 18),
+('Kids Birthday Party', '2026-04-20', '14:00:00', '18:00:00', 6, 30, 500.00, 'SynapseEvent', 'Fun birthday celebration for children', 'published', 'Superheroes', 'Kids Music', 0),
+('Engagement Party', '2026-05-05', '19:00:00', '23:00:00', 4, 80, 2500.00, 'SynapseEvent', 'Celebrate your engagement in a beautiful garden setting', 'published', 'Romantic', 'Acoustic & Lounge', 18),
+('Jazz Night at Marillot', '2026-04-12', '21:00:00', '02:00:00', 8, 50, 50.00, 'SynapseEvent', 'Enjoy live jazz performances with fine drinks', 'published', 'Jazz Evening', 'Live Jazz', 18),
+('80s Retro Night', '2026-04-25', '22:00:00', '03:00:00', 9, 40, 30.00, 'SynapseEvent', 'Travel back to the 80s with retro vibes', 'published', '80s Retro', 'Retro Hits', 18),
+('Exclusive Lounge Party', '2026-05-15', '20:00:00', '02:00:00', 10, 60, 200.00, 'SynapseEvent', 'An exclusive evening in a luxury lounge', 'published', 'Elegant', 'Deep House', 18),
+('Sunday Brunch Party', '2026-04-27', '12:00:00', '17:00:00', 11, 45, 80.00, 'SynapseEvent', 'Relaxed Sunday brunch with music and drinks', 'published', 'Chillout', 'Acoustic', 18);
+
+-- Insert FormationEvent data from venues.sql
+INSERT IGNORE INTO FormationEvent (name, date, start_time, end_time, location, capacity, price, organizer, description, status) VALUES
+('Leadership Excellence Workshop', '2026-04-18', '09:00:00', '17:00:00', 'Hotel Conference Rooms', 30, 350.00, 'SynapseEvent', 'Develop leadership skills for managers', 'published'),
+('Digital Marketing Masterclass', '2026-05-10', '10:00:00', '16:00:00', 'Meeting & Training Rooms (Spaces/Regus)', 20, 250.00, 'SynapseEvent', 'Learn latest digital marketing strategies', 'published'),
+('PMP Certification Prep Course', '2026-06-05', '08:00:00', '18:00:00', 'Conference & Congress Centres', 40, 800.00, 'SynapseEvent', 'Comprehensive project management certification', 'published'),
+('Effective Team Building', '2026-04-25', '09:00:00', '17:00:00', 'Domaine Tarenti', 25, 400.00, 'SynapseEvent', 'Interactive workshop to improve team cohesion', 'published'),
+('Customer Service Excellence', '2026-05-22', '09:00:00', '13:00:00', 'Hotel Conference Rooms', 25, 150.00, 'SynapseEvent', 'Enhance customer service skills', 'published'),
+('Modern HR Practices', '2026-06-15', '10:00:00', '16:00:00', 'Meeting & Training Rooms (Spaces/Regus)', 15, 300.00, 'SynapseEvent', 'Latest trends in human resources management', 'published');
+
+-- Insert TeamBuildingEvent data from venues.sql
+INSERT IGNORE INTO TeamBuildingEvent (name, date, start_time, end_time, location, capacity, price, organizer, description, status) VALUES
+('Cap Bon Adventure Challenge', '2026-05-02', '08:00:00', '18:00:00', 'Landscapes of Cap Bon', 50, 450.00, 'SynapseEvent', 'Outdoor team building with nature challenges', 'published'),
+('Corporate Team Retreat', '2026-06-12', '09:00:00', '17:00:00', 'Domaine Tarenti', 40, 600.00, 'SynapseEvent', 'Team building and strategy sessions', 'published'),
+('Djerba Team Experience', '2026-07-10', '09:00:00', '18:00:00', 'Djerba Explore Centre', 60, 550.00, 'SynapseEvent', 'Team activities in Djerba with gala evening', 'published'),
+('Outdoor Problem Solving', '2026-05-30', '10:00:00', '16:00:00', 'Landscapes of Cap Bon', 30, 350.00, 'SynapseEvent', 'Team challenges and problem solving exercises', 'published'),
+('Leadership in Nature', '2026-06-20', '08:00:00', '17:00:00', 'Domaine Tarenti', 25, 500.00, 'SynapseEvent', 'Leadership development through outdoor activities', 'published');
+
+-- Insert AnniversaryEvent data from venues.sql
+INSERT IGNORE INTO AnniversaryEvent (name, date, start_time, end_time, location, capacity, price, organizer, category, description, status) VALUES
+('Company 10th Anniversary', '2026-06-20', '19:00:00', '23:00:00', 'Le Doyen', 100, 5000.00, 'SynapseEvent', 'Corporate', 'Celebrate 10 years of success', 'published'),
+('Silver Wedding Anniversary', '2026-07-15', '19:00:00', '23:00:00', 'La Perle du Lac', 80, 3500.00, 'SynapseEvent', 'Wedding', 'Celebrate 25 years of marriage', 'published'),
+('50th Birthday Celebration', '2026-08-10', '18:00:00', '02:00:00', 'Salle Blanche', 150, 6000.00, 'SynapseEvent', 'Birthday', 'Golden birthday milestone celebration', 'published');
+
+-- Insert event_instance data from venues.sql
+INSERT IGNORE INTO event_instance (name, date, start_time, end_time, location, capacity, price, organizer, description, status, type) VALUES
+('New Year Eve Gala', '2026-12-31', '20:00:00', '04:00:00', 'Salle des fêteS Queen', 350, 250.00, 'SynapseEvent', 'Grand New Year celebration', 'published', 'PARTY'),
+('Summer Pool Party', '2026-07-15', '14:00:00', '22:00:00', 'Massaya Odéon', 100, 100.00, 'SynapseEvent', 'Cool summer pool party', 'published', 'PARTY'),
+('Halloween Night', '2026-10-31', '21:00:00', '03:00:00', 'Marillot', 80, 60.00, 'SynapseEvent', 'Spooky Halloween celebration', 'published', 'PARTY'),
+('Tech Innovation Summit', '2026-09-15', '09:00:00', '18:00:00', 'Conference & Congress Centres', 200, 150.00, 'SynapseEvent', 'Annual technology innovation conference', 'published', 'CORPORATE'),
+('Startup Pitch Day', '2026-06-25', '10:00:00', '17:00:00', 'Hotel Conference Rooms', 50, 0.00, 'SynapseEvent', 'Startup pitch competition', 'published', 'CORPORATE'),
+('Paddle Charity Match', '2026-05-20', '10:00:00', '16:00:00', 'Arena Paddle Court', 30, 25.00, 'SynapseEvent', 'Charity paddle tournament', 'published', 'SPORTS'),
+('Weekend Beach Party', '2026-04-05', '15:00:00', '23:00:00', 'Costa del Sol', 150, 80.00, 'SynapseEvent', 'Beach party with DJ and drinks', 'published', 'Partying'),
+('Neon Night Club Event', '2026-04-12', '22:00:00', '03:00:00', 'The Club', 200, 100.00, 'SynapseEvent', 'Neon themed party night', 'published', 'Partying'),
+('Weekend Padel Tournament', '2026-04-20', '09:00:00', '17:00:00', 'Paddle Club Tunis', 24, 45.00, 'SynapseEvent', 'Weekend padel tournament for all levels', 'published', 'Paddle'),
+('Paddle Beginner Workshop', '2026-04-25', '10:00:00', '12:00:00', 'Beach Padel Sousse', 12, 25.00, 'SynapseEvent', 'Learn padel basics with professional coaches', 'published', 'Paddle'),
+('Corporate Team Building Day', '2026-05-15', '09:00:00', '18:00:00', 'La Villa Hotel', 50, 150.00, 'SynapseEvent', 'Team building activities and workshops', 'published', 'TeamBuilding'),
+('Outdoor Adventure Challenge', '2026-06-01', '08:00:00', '17:00:00', 'Sahara Resort', 40, 200.00, 'SynapseEvent', 'Adventure and team bonding in the desert', 'published', 'TeamBuilding'),
+('Leadership Skills Workshop', '2026-05-10', '09:00:00', '16:00:00', 'Business Center', 30, 300.00, 'SynapseEvent', 'Professional leadership development course', 'published', 'Formation'),
+('Digital Marketing Training', '2026-05-22', '10:00:00', '17:00:00', 'Tech Hub Tunis', 25, 250.00, 'SynapseEvent', 'Learn modern digital marketing strategies', 'published', 'Formation'),
+('Company 10th Anniversary Gala', '2026-07-01', '19:00:00', '23:00:00', 'Grand Hotel', 300, 200.00, 'SynapseEvent', 'Celebrating a decade of excellence', 'published', 'Anniversary'),
+('Silver Jubilee Celebration', '2026-08-15', '18:00:00', '02:00:00', 'Royal Palace', 200, 500.00, 'SynapseEvent', '25th anniversary celebration', 'published', 'Anniversary');
 
 -- Insert TeamBuildingActivity sample data
 INSERT IGNORE INTO TeamBuildingActivity (id, name, description, category, duration_minutes, price_per_person, min_participants, max_participants) VALUES
@@ -325,4 +405,15 @@ INSERT IGNORE INTO TeamBuildingActivity (id, name, description, category, durati
 (13, 'Trust Falls', 'Classic team building trust exercise', 'Team Building', 60, 0.00, 10, 50),
 (14, 'Problem Solving Games', 'Brain teasers and problem solving', 'Team Building', 90, 10.00, 8, 30),
 (15, 'Corporate Workshop', 'Professional team building workshop', 'Team Building', 240, 35.00, 10, 40);
+
+-- Insert Court data for paddle courts
+INSERT IGNORE INTO Court (name, venue_id, is_indoor, price_per_hour, available, description, amenities) VALUES
+('Arena Court 1', 18, TRUE, 50.00, TRUE, 'Indoor paddle court at Arena', 'Paddle equipment, Changing rooms, Showers'),
+('Arena Court 2', 18, TRUE, 50.00, TRUE, 'Indoor paddle court at Arena', 'Paddle equipment, Changing rooms, Showers'),
+('Arena Court 3', 18, FALSE, 40.00, TRUE, 'Outdoor paddle court at Arena', 'Paddle equipment, Terrace, Seating'),
+('Marsa Court 1', 19, TRUE, 45.00, TRUE, 'Indoor paddle court at Marsa', 'Paddle equipment, Changing rooms'),
+('Marsa Court 2', 19, FALSE, 35.00, TRUE, 'Outdoor paddle court at Marsa', 'Paddle equipment, Garden view'),
+('LAC Court 1', 20, TRUE, 48.00, TRUE, 'Indoor paddle court at LAC', 'Paddle equipment, Modern facilities'),
+('LAC Court 2', 20, TRUE, 48.00, TRUE, 'Indoor paddle court at LAC', 'Paddle equipment, Modern facilities'),
+('LAC Court 3', 20, FALSE, 38.00, TRUE, 'Outdoor paddle court at LAC', 'Paddle equipment, Lake view, Parking');
 
