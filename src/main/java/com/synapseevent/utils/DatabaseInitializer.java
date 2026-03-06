@@ -161,6 +161,48 @@ public class DatabaseInitializer {
             addColumnIfNotExists(conn, "TeamBuildingEvent", "organizer", "VARCHAR(255)");
             addColumnIfNotExists(conn, "TeamBuildingEvent", "description", "TEXT");
             addColumnIfNotExists(conn, "TeamBuildingEvent", "status", "VARCHAR(50)");
+            addColumnIfNotExists(conn, "TeamBuildingEvent", "is_pack", "BOOLEAN DEFAULT FALSE");
+            addColumnIfNotExists(conn, "TeamBuildingEvent", "activities", "TEXT");
+            
+            // TeamBuildingActivity table for games and activities
+            createTableIfNotExists(conn, "TeamBuildingActivity",
+                "id BIGINT AUTO_INCREMENT PRIMARY KEY, " +
+                "name VARCHAR(255) NOT NULL, " +
+                "description TEXT, " +
+                "category VARCHAR(100), " +
+                "duration_minutes INT, " +
+                "price_per_person DECIMAL(10,2), " +
+                "min_participants INT DEFAULT 1, " +
+                "max_participants INT DEFAULT 100, " +
+                "is_active BOOLEAN DEFAULT TRUE");
+            
+            // Insert TeamBuildingActivity sample data if table is empty
+            try {
+                ResultSet rs = conn.createStatement().executeQuery("SELECT COUNT(*) as cnt FROM TeamBuildingActivity");
+                if (rs.next() && rs.getInt("cnt") == 0) {
+                    System.out.println("Inserting TeamBuildingActivity sample data...");
+                    Statement stmt = conn.createStatement();
+                    stmt.execute("INSERT INTO TeamBuildingActivity (name, description, category, duration_minutes, price_per_person, min_participants, max_participants) VALUES " +
+                        "('Escape Room Challenge', 'Solve puzzles and escape within time limit', 'Indoor', 60, 25.00, 4, 20), " +
+                        "('Laser Tag', 'Team-based laser tag combat game', 'Indoor', 90, 30.00, 10, 30), " +
+                        "('Bowling Tournament', 'Competitive bowling with scoring', 'Indoor', 120, 20.00, 8, 40), " +
+                        "('Karting Race', 'Go-kart racing competition', 'Outdoor', 60, 35.00, 8, 24), " +
+                        "('Treasure Hunt', 'Outdoor adventure with clues and challenges', 'Outdoor', 180, 15.00, 10, 50), " +
+                        "('Paintball', 'Team combat with paintball markers', 'Outdoor', 120, 40.00, 10, 30), " +
+                        "('Cooking Class', 'Learn to cook with professional chef', 'Culinary', 180, 50.00, 6, 20), " +
+                        "('Wine Tasting', 'Tasting and learning about wines', 'Culinary', 90, 45.00, 8, 25), " +
+                        "('Team Cooking Challenge', 'Groups compete in cooking challenge', 'Culinary', 150, 55.00, 8, 30), " +
+                        "('Outdoor Camping', 'Overnight camping with team activities', 'Adventure', 1440, 80.00, 10, 40), " +
+                        "('Hiking Adventure', 'Group hiking with team challenges', 'Adventure', 240, 25.00, 8, 30), " +
+                        "('Rafting', 'White water rafting experience', 'Adventure', 180, 60.00, 8, 20), " +
+                        "('Trust Falls', 'Classic team building trust exercise', 'Team Building', 60, 0.00, 10, 50), " +
+                        "('Problem Solving Games', 'Brain teasers and problem solving', 'Team Building', 90, 10.00, 8, 30), " +
+                        "('Corporate Workshop', 'Professional team building workshop', 'Team Building', 240, 35.00, 10, 40)");
+                    System.out.println("TeamBuildingActivity sample data inserted.");
+                }
+            } catch (Exception e) {
+                System.out.println("Could not insert TeamBuildingActivity data: " + e.getMessage());
+            }
 
             // AnniversaryEvent
             addColumnIfNotExists(conn, "AnniversaryEvent", "start_time", "TIME");

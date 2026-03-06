@@ -17,8 +17,8 @@ public class TeamBuildingEventService implements IService<TeamBuildingEvent> {
         Connection conn = db.requireConnection();
 
         String sql = "INSERT INTO TeamBuildingEvent " +
-                "(name, date, start_time, end_time, location, capacity, price, organizer, description, status) " +
-                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                "(name, date, start_time, end_time, location, capacity, price, organizer, description, status, is_pack, activities) " +
+                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
         try (PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
 
@@ -37,6 +37,8 @@ public class TeamBuildingEventService implements IService<TeamBuildingEvent> {
             stmt.setString(8, event.getOrganizer());
             stmt.setString(9, event.getDescription());
             stmt.setString(10, event.getStatus());
+            stmt.setBoolean(11, event.getIsPack() != null ? event.getIsPack() : false);
+            stmt.setString(12, event.getActivities());
 
             int res = stmt.executeUpdate();
 
@@ -104,7 +106,7 @@ public class TeamBuildingEventService implements IService<TeamBuildingEvent> {
         Connection conn = db.requireConnection();
 
         String sql = "UPDATE TeamBuildingEvent SET " +
-                "name = ?, date = ?, start_time = ?, end_time = ?, location = ?, capacity = ?, price = ?, organizer = ?, description = ?, status = ? " +
+                "name = ?, date = ?, start_time = ?, end_time = ?, location = ?, capacity = ?, price = ?, organizer = ?, description = ?, status = ?, is_pack = ?, activities = ? " +
                 "WHERE id = ?";
 
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -126,8 +128,10 @@ public class TeamBuildingEventService implements IService<TeamBuildingEvent> {
             stmt.setString(8, event.getOrganizer());
             stmt.setString(9, event.getDescription());
             stmt.setString(10, event.getStatus());
+            stmt.setBoolean(11, event.getIsPack() != null ? event.getIsPack() : false);
+            stmt.setString(12, event.getActivities());
 
-            stmt.setLong(11, event.getId());
+            stmt.setLong(13, event.getId());
 
             int res = stmt.executeUpdate();
             return res > 0;
@@ -171,7 +175,7 @@ public class TeamBuildingEventService implements IService<TeamBuildingEvent> {
         Time st = rs.getTime("start_time");
         Time et = rs.getTime("end_time");
 
-        return new TeamBuildingEvent(
+        TeamBuildingEvent event = new TeamBuildingEvent(
                 rs.getLong("id"),
                 rs.getString("name"),
                 rs.getDate("date") != null ? rs.getDate("date").toLocalDate() : null,
@@ -184,5 +188,18 @@ public class TeamBuildingEventService implements IService<TeamBuildingEvent> {
                 rs.getString("description"),
                 rs.getString("status")
         );
+        
+        // Handle columns that may not exist in older databases
+        try {
+            event.setIsPack(rs.getBoolean("is_pack"));
+        } catch (SQLException e) {
+            event.setIsPack(false);
+        }
+        try {
+            event.setActivities(rs.getString("activities"));
+        } catch (SQLException e) {
+            event.setActivities(null);
+        }
+        return event;
     }
 }

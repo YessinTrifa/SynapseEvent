@@ -148,8 +148,32 @@ CREATE TABLE IF NOT EXISTS TeamBuildingEvent (
     price DOUBLE,
     organizer VARCHAR(255),
     description TEXT,
-    status VARCHAR(50)
+    status VARCHAR(50),
+    is_pack BOOLEAN DEFAULT FALSE,
+    activities TEXT
     );
+
+-- Create TeamBuildingActivity table for games and activities
+CREATE TABLE IF NOT EXISTS TeamBuildingActivity (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    description TEXT,
+    category VARCHAR(100),
+    duration_minutes INT,
+    price_per_person DECIMAL(10,2),
+    min_participants INT DEFAULT 1,
+    max_participants INT DEFAULT 100,
+    is_active BOOLEAN DEFAULT TRUE
+);
+
+-- Create linking table for TeamBuildingEvent and activities (for packs)
+CREATE TABLE IF NOT EXISTS TeamBuildingEventActivity (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    event_id BIGINT NOT NULL,
+    activity_id BIGINT NOT NULL,
+    FOREIGN KEY (event_id) REFERENCES TeamBuildingEvent(id) ON DELETE CASCADE,
+    FOREIGN KEY (activity_id) REFERENCES TeamBuildingActivity(id) ON DELETE CASCADE
+);
 
 -- Create Booking table
 CREATE TABLE IF NOT EXISTS Booking (
@@ -283,4 +307,22 @@ INSERT IGNORE INTO PaddleEvent (id, name, date, start_time, end_time, location, 
 VALUES (1, 'Tournament Padel Elite', '2026-03-15', '09:00:00', '17:00:00', 'Paddle Club Tunis', 20, 50.00, 'published', 'Elite tournament for advanced players'),
        (2, 'Paddle Initiation', '2026-03-20', '14:00:00', '16:00:00', 'Beach Padel Sousse', 15, 30.00, 'published', 'Perfect introduction to paddle for beginners'),
        (3, 'Beach Paddle Party', '2026-03-25', '10:00:00', '18:00:00', 'Beach Paddle Sousse', 25, 40.00, 'published', 'Fun beach paddle day with music and food');
+
+-- Insert TeamBuildingActivity sample data
+INSERT IGNORE INTO TeamBuildingActivity (id, name, description, category, duration_minutes, price_per_person, min_participants, max_participants) VALUES
+(1, 'Escape Room Challenge', 'Solve puzzles and escape within time limit', 'Indoor', 60, 25.00, 4, 20),
+(2, 'Laser Tag', 'Team-based laser tag combat game', 'Indoor', 90, 30.00, 10, 30),
+(3, 'Bowling Tournament', 'Competitive bowling with scoring', 'Indoor', 120, 20.00, 8, 40),
+(4, 'Karting Race', 'Go-kart racing competition', 'Outdoor', 60, 35.00, 8, 24),
+(5, 'Treasure Hunt', 'Outdoor adventure with clues and challenges', 'Outdoor', 180, 15.00, 10, 50),
+(6, 'Paintball', 'Team combat with paintball markers', 'Outdoor', 120, 40.00, 10, 30),
+(7, 'Cooking Class', 'Learn to cook with professional chef', 'Culinary', 180, 50.00, 6, 20),
+(8, 'Wine Tasting', 'Tasting and learning about wines', 'Culinary', 90, 45.00, 8, 25),
+(9, 'Team Cooking Challenge', 'Groups compete in cooking challenge', 'Culinary', 150, 55.00, 8, 30),
+(10, 'Outdoor Camping', 'Overnight camping with team activities', 'Adventure', 1440, 80.00, 10, 40),
+(11, 'Hiking Adventure', 'Group hiking with team challenges', 'Adventure', 240, 25.00, 8, 30),
+(12, 'Rafting', 'White water rafting experience', 'Adventure', 180, 60.00, 8, 20),
+(13, 'Trust Falls', 'Classic team building trust exercise', 'Team Building', 60, 0.00, 10, 50),
+(14, 'Problem Solving Games', 'Brain teasers and problem solving', 'Team Building', 90, 10.00, 8, 30),
+(15, 'Corporate Workshop', 'Professional team building workshop', 'Team Building', 240, 35.00, 10, 40);
 

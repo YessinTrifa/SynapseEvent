@@ -7,6 +7,7 @@ import com.synapseevent.utils.EventContext;
 import com.synapseevent.utils.Navigator;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
@@ -1455,8 +1456,359 @@ public class UserDashboardController {
 
     @FXML
     private void showTeamBuildingEvents() {
-        List<EventInstance> filtered = filterByType("TeamBuilding");
-        displayEventCards(filtered, "Team Building Events");
+        // Show team building options: existing events OR custom request
+        displayTeamBuildingOptions();
+    }
+    
+    private void displayTeamBuildingOptions() {
+        categoryTitleLabel.setText("Team Building - Choose an option");
+        categoryEventCountLabel.setText("Select how you want to book team building");
+        eventCardsFlowPane.getChildren().clear();
+
+        // Option 1: Browse Existing Events (Packs)
+        VBox eventsCard = createFormationOptionCard(
+            "🎯", 
+            "Browse Existing Packs", 
+            "Choose from pre-made team building packages",
+            "-fx-background-color: #dbeafe; -fx-border-color: #2563eb;"
+        );
+        eventsCard.setOnMouseClicked(e -> {
+            List<EventInstance> filtered = filterByType("TeamBuilding");
+            displayEventCards(filtered, "Team Building - Available Packs");
+        });
+
+        // Option 2: Request Custom Team Building
+        VBox customCard = createFormationOptionCard(
+            "✨", 
+            "Request Custom Team Building", 
+            "Create your own team building with selected activities",
+            "-fx-background-color: #fef3c7; -fx-border-color: #d97706;"
+        );
+        customCard.setOnMouseClicked(e -> {
+            showCustomTeamBuildingRequest();
+        });
+
+        eventCardsFlowPane.getChildren().addAll(eventsCard, customCard);
+        showUserBrowse();
+    }
+    
+    private void showCustomTeamBuildingRequest() {
+        // Show custom team building request form
+        categoryTitleLabel.setText("Request Custom Team Building");
+        categoryEventCountLabel.setText("Fill in the form to request a custom team building");
+        eventCardsFlowPane.getChildren().clear();
+        
+        // Create a form VBox for custom request
+        VBox formBox = new VBox();
+        formBox.setPrefWidth(500);
+        formBox.setStyle(
+            "-fx-background-color: white; " +
+            "-fx-background-radius: 14; " +
+            "-fx-padding: 30;"
+        );
+        
+        Label titleLabel = new Label("Custom Team Building Request");
+        titleLabel.setStyle("-fx-font-size: 20; -fx-font-weight: bold; -fx-text-fill: #1f2937;");
+        
+        // Venue selection
+        Label venueLabel = new Label("Select Venue:");
+        venueLabel.setStyle("-fx-font-weight: bold; -fx-text-fill: #374151; -fx-padding: 10 0 5 0;");
+        ComboBox<Venue> venueCombo = new ComboBox<>();
+        try {
+            venueCombo.setItems(FXCollections.observableArrayList(new VenueService().readAll()));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        venueCombo.setPrefWidth(400);
+        
+        // Date selection
+        Label dateLabel = new Label("Select Date:");
+        dateLabel.setStyle("-fx-font-weight: bold; -fx-text-fill: #374151; -fx-padding: 10 0 5 0;");
+        DatePicker datePicker = new DatePicker();
+        datePicker.setPrefWidth(400);
+        
+        // Capacity
+        Label capacityLabel = new Label("Number of Participants:");
+        capacityLabel.setStyle("-fx-font-weight: bold; -fx-text-fill: #374151; -fx-padding: 10 0 5 0;");
+        TextField capacityField = new TextField();
+        capacityField.setPromptText("Enter number of participants");
+        capacityField.setPrefWidth(400);
+        
+        // Activities selection - using CheckBoxes for easy selection
+        Label activitiesLabel = new Label("Select Activities:");
+        activitiesLabel.setStyle("-fx-font-weight: bold; -fx-text-fill: #374151; -fx-padding: 10 0 5 0;");
+        
+        VBox activitiesBox = new VBox(8);
+        activitiesBox.setStyle("-fx-padding: 5; -fx-background-color: #f9fafb; -fx-border-color: #d1d5db; -fx-border-radius: 6;");
+        List<CheckBox> activityCheckBoxes = new ArrayList<>();
+        
+        try {
+            TeamBuildingActivityService activityService = new TeamBuildingActivityService();
+            List<TeamBuildingActivity> allActivities = activityService.readAll();
+            for (TeamBuildingActivity activity : allActivities) {
+                CheckBox cb = new CheckBox(activity.getName() + " - " + 
+                    String.format("%.2f", activity.getPricePerPerson()) + " TND/person (" + 
+                    activity.getCategory() + ")");
+                cb.setUserData(activity);
+                cb.setStyle("-fx-padding: 5; -fx-text-fill: #374151;");
+                activityCheckBoxes.add(cb);
+                activitiesBox.getChildren().add(cb);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            Label errorLabel = new Label("No activities available. Please restart the app.");
+            errorLabel.setStyle("-fx-text-fill: red;");
+            activitiesBox.getChildren().add(errorLabel);
+        }
+        
+        ScrollPane activitiesScroll = new ScrollPane(activitiesBox);
+        activitiesScroll.setPrefHeight(150);
+        activitiesScroll.setStyle("-fx-background: transparent;");
+        
+        // Selected activities display with prices
+        Label selectedActivitiesLabel = new Label("Selected Activities:");
+        selectedActivitiesLabel.setStyle("-fx-font-weight: bold; -fx-text-fill: #374151; -fx-padding: 10 0 5 0;");
+        TextArea selectedActivitiesArea = new TextArea();
+        selectedActivitiesArea.setEditable(false);
+        selectedActivitiesArea.setPrefHeight(100);
+        selectedActivitiesArea.setStyle("-fx-background-color: #f3f4f6; -fx-border-color: #d1d5db; -fx-border-radius: 6;");
+        selectedActivitiesArea.setText("No activities selected yet. Click 'Calculate Price' to see your selection.");
+        
+        // Price display
+        Label priceLabel = new Label("Estimated Price: 0 TND");
+        priceLabel.setStyle("-fx-font-size: 18; -fx-font-weight: bold; -fx-text-fill: #059669; -fx-padding: 15 0 5 0;");
+        
+        // Calculate price button
+        Button calculateBtn = new Button("Calculate Price");
+        calculateBtn.setStyle("-fx-background-color: #059669; -fx-text-fill: white; -fx-padding: 10 20; -fx-font-weight: bold;");
+        calculateBtn.setOnAction(e -> {
+            // Get selected activities from checkboxes
+            List<TeamBuildingActivity> selectedItems = new ArrayList<>();
+            for (CheckBox cb : activityCheckBoxes) {
+                if (cb.isSelected()) {
+                    selectedItems.add((TeamBuildingActivity) cb.getUserData());
+                }
+            }
+            
+            // Update selected activities display
+            StringBuilder selectedText = new StringBuilder();
+            double activitiesTotal = 0;
+            double venueCost = 0;
+            int participants = 10;
+            try {
+                String capacityText = capacityField.getText();
+                if (capacityText != null && !capacityText.trim().isEmpty()) {
+                    participants = Integer.parseInt(capacityText.trim());
+                }
+            } catch (NumberFormatException ex) {
+                participants = 10;
+            }
+            
+            // Calculate venue cost
+            Venue selectedVenue = venueCombo.getValue();
+            if (selectedVenue != null && selectedVenue.getType() != null) {
+                switch (selectedVenue.getType().toUpperCase()) {
+                    case "HOTEL":
+                    case "RESORT":
+                        venueCost = 500;
+                        break;
+                    case "RESTAURANT":
+                        venueCost = 300;
+                        break;
+                    default:
+                        venueCost = 200;
+                }
+            }
+            
+            // Build price breakdown
+            selectedText.append("===== PRICE BREAKDOWN =====\n\n");
+            
+            // Venue section
+            selectedText.append("📍 VENUE:\n");
+            selectedText.append("-".repeat(30)).append("\n");
+            if (selectedVenue != null) {
+                selectedText.append(String.format("  Venue: %s\n", selectedVenue.getName()));
+                selectedText.append(String.format("  Type: %s\n", selectedVenue.getType()));
+            } else {
+                selectedText.append("  No venue selected\n");
+            }
+            selectedText.append(String.format("  Venue Cost: %.2f TND\n\n", venueCost));
+            
+            // Activities section
+            selectedText.append("🎯 ACTIVITIES:\n");
+            selectedText.append("-".repeat(30)).append("\n");
+            
+            if (selectedItems.isEmpty()) {
+                selectedText.append("  No activities selected.\n");
+            } else {
+                for (TeamBuildingActivity activity : selectedItems) {
+                    double activityPrice = activity.getPricePerPerson() != null ? activity.getPricePerPerson() : 0;
+                    double totalActivityPrice = activityPrice * participants;
+                    selectedText.append(String.format("  • %s\n", activity.getName()));
+                    selectedText.append(String.format("    Price/person: %.2f TND\n", activityPrice));
+                    selectedText.append(String.format("    Total (%d persons): %.2f TND\n", participants, totalActivityPrice));
+                    activitiesTotal += totalActivityPrice;
+                }
+            }
+            selectedText.append(String.format("\n  Activities Subtotal: %.2f TND\n\n", activitiesTotal));
+            
+            // Total
+            double totalPrice = venueCost + activitiesTotal;
+            selectedText.append("=".repeat(30)).append("\n");
+            selectedText.append(String.format("TOTAL ESTIMATED PRICE: %.2f TND\n", totalPrice));
+            selectedText.append(String.format("(Venue: %.2f + Activities: %.2f)\n", venueCost, activitiesTotal));
+            
+            selectedActivitiesArea.setText(selectedText.toString());
+            
+            // Also update the price label
+            priceLabel.setText("Estimated Price: " + String.format("%.2f", totalPrice) + " TND");
+        });
+        
+        // Submit button
+        Button submitBtn = new Button("Submit Request");
+        submitBtn.setStyle("-fx-background-color: #2563eb; -fx-text-fill: white; -fx-padding: 12 24; -fx-font-weight: bold; -fx-margin: 20 0 0 0;");
+        submitBtn.setOnAction(e -> {
+            // Get capacity from text field
+            int capacity = 10;
+            try {
+                String capacityText = capacityField.getText();
+                if (capacityText != null && !capacityText.trim().isEmpty()) {
+                    capacity = Integer.parseInt(capacityText.trim());
+                }
+            } catch (NumberFormatException ex) {
+                capacity = 10;
+            }
+            
+            // Get selected activities from checkboxes
+            List<TeamBuildingActivity> selectedActivities = new ArrayList<>();
+            for (CheckBox cb : activityCheckBoxes) {
+                if (cb.isSelected()) {
+                    selectedActivities.add((TeamBuildingActivity) cb.getUserData());
+                }
+            }
+            
+            // Save the custom request
+            saveCustomTeamBuildingRequest(
+                venueCombo.getValue() != null ? venueCombo.getValue().getName() : "",
+                datePicker.getValue(),
+                capacity,
+                selectedActivities,
+                venueCombo.getValue(),
+                priceLabel.getText()
+            );
+        });
+        
+        formBox.getChildren().addAll(titleLabel, venueLabel, venueCombo, dateLabel, datePicker, 
+            capacityLabel, capacityField, activitiesLabel, activitiesScroll, selectedActivitiesLabel, 
+            selectedActivitiesArea, calculateBtn, priceLabel, submitBtn);
+        eventCardsFlowPane.getChildren().add(formBox);
+        showUserBrowse();
+    }
+    
+    private double calculateUserPrice(Venue venue, Integer capacity, List<TeamBuildingActivity> activities) {
+        double basePrice = 0;
+        
+        // Venue cost
+        if (venue != null && venue.getType() != null) {
+            switch (venue.getType().toUpperCase()) {
+                case "HOTEL":
+                case "RESORT":
+                    basePrice += 500;
+                    break;
+                case "RESTAURANT":
+                    basePrice += 300;
+                    break;
+                default:
+                    basePrice += 200;
+            }
+        }
+        
+        // Activity costs per person
+        double activityCostPerPerson = 0;
+        if (activities != null) {
+            for (TeamBuildingActivity activity : activities) {
+                if (activity.getPricePerPerson() != null) {
+                    activityCostPerPerson += activity.getPricePerPerson();
+                }
+            }
+        }
+        
+        int participants = capacity != null ? capacity : 10;
+        return basePrice + (activityCostPerPerson * participants);
+    }
+    
+    private void saveCustomTeamBuildingRequest(String venue, LocalDate date, Integer capacity, 
+        List<TeamBuildingActivity> activities, Venue venueObj, String priceText) {
+        // Build activities string
+        StringBuilder activitiesStr = new StringBuilder();
+        if (activities != null) {
+            for (TeamBuildingActivity activity : activities) {
+                if (activitiesStr.length() > 0) activitiesStr.append(", ");
+                activitiesStr.append(activity.getName());
+            }
+        }
+        
+        // Extract price
+        double price = 0;
+        if (priceText != null && priceText.contains("TND")) {
+            try {
+                price = Double.parseDouble(priceText.replace("Estimated Price:", "").replace("TND", "").trim());
+            } catch (NumberFormatException e) {
+                price = 0;
+            }
+        }
+        
+        // Get user email
+        String userEmail = "user@synapse.com";
+        if (CurrentUser.getCurrentUser() != null && CurrentUser.getCurrentUser().getEmail() != null) {
+            userEmail = CurrentUser.getCurrentUser().getEmail();
+        }
+        
+        // Save as TeamBuildingEvent
+        com.synapseevent.entities.TeamBuildingEvent event = new com.synapseevent.entities.TeamBuildingEvent(
+            "Custom Request - " + (venue != null ? venue : "Team Building"),
+            date,
+            java.time.LocalTime.of(9, 0),
+            java.time.LocalTime.of(17, 0),
+            venue,
+            capacity,
+            price,
+            userEmail,
+            "Custom team building request with activities: " + activitiesStr.toString(),
+            "pending"
+        );
+        event.setIsPack(true);
+        event.setActivities(activitiesStr.toString());
+        
+        try {
+            com.synapseevent.service.TeamBuildingEventService service = new com.synapseevent.service.TeamBuildingEventService();
+            service.ajouter(event);
+            
+            // Also add to event_instance
+            EventInstance ei = new EventInstance(
+                event.getName(), date,
+                java.time.LocalTime.of(9, 0),
+                java.time.LocalTime.of(17, 0),
+                venue, capacity, price,
+                userEmail,
+                "Custom team building request with activities: " + activitiesStr.toString(),
+                "pending",
+                "TeamBuilding"
+            );
+            new com.synapseevent.service.EventInstanceService().ajouter(ei);
+            
+            // Show success message
+            categoryTitleLabel.setText("Request Submitted!");
+            categoryEventCountLabel.setText("Your custom team building request has been submitted successfully.");
+            eventCardsFlowPane.getChildren().clear();
+            
+            Label successLabel = new Label("✅ Your request has been submitted!\n\nWe will contact you soon with more details.");
+            successLabel.setStyle("-fx-font-size: 16; -fx-text-fill: #059669; -fx-padding: 30;");
+            eventCardsFlowPane.getChildren().add(successLabel);
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @FXML

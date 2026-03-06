@@ -23,6 +23,9 @@ public class TeamBuildingEvent {
     private String status = "draft";
 
     private final String type = "TeamBuilding";
+    
+    private Boolean isPack = false;
+    private String activities;
 
     public TeamBuildingEvent() {}
 
@@ -102,6 +105,12 @@ public class TeamBuildingEvent {
     }
 
     public String getType() { return type; }
+    
+    public Boolean getIsPack() { return isPack; }
+    public void setIsPack(Boolean isPack) { this.isPack = isPack; }
+    
+    public String getActivities() { return activities; }
+    public void setActivities(String activities) { this.activities = activities; }
 
     @Override
     public String toString() { return name; }

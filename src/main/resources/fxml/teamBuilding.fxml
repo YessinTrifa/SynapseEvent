@@ -35,17 +35,24 @@
                             <Label text="Event Name:" GridPane.rowIndex="0" GridPane.columnIndex="0" style="-fx-font-weight: 600; -fx-text-fill: #374151;" />
                             <TextField fx:id="nameField" promptText="Enter team building event name" GridPane.rowIndex="0" GridPane.columnIndex="1" style="-fx-pref-height: 35; -fx-border-color: #d1d5db; -fx-border-radius: 6;" />
                             
-                            <Label text="Description:" GridPane.rowIndex="1" GridPane.columnIndex="0" style="-fx-font-weight: 600; -fx-text-fill: #374151;" />
-                            <TextArea fx:id="descriptionField" wrapText="true" prefRowCount="3" GridPane.rowIndex="1" GridPane.columnIndex="1" style="-fx-border-color: #d1d5db; -fx-border-radius: 6;" />
+                            <Label text="Is Pack:" GridPane.rowIndex="1" GridPane.columnIndex="0" style="-fx-font-weight: 600; -fx-text-fill: #374151;" />
+                            <CheckBox fx:id="isPackCheckBox" text="Create as a pack (with activities)" GridPane.rowIndex="1" GridPane.columnIndex="1" style="-fx-text-fill: #374151;" />
                             
-                            <Label text="Activity Type:" GridPane.rowIndex="2" GridPane.columnIndex="0" style="-fx-font-weight: 600; -fx-text-fill: #374151;" />
-                            <ComboBox fx:id="activityTypeComboBox" GridPane.rowIndex="2" GridPane.columnIndex="1" style="-fx-pref-height: 35; -fx-border-color: #d1d5db; -fx-border-radius: 6;" />
+                            <Label text="Activities:" GridPane.rowIndex="2" GridPane.columnIndex="0" style="-fx-font-weight: 600; -fx-text-fill: #374151;" />
+                            <VBox GridPane.rowIndex="2" GridPane.columnIndex="1" spacing="5">
+                                <ComboBox fx:id="activitiesComboBox" prefHeight="35" style="-fx-border-color: #d1d5db; -fx-border-radius: 6;" />
+                                <Button fx:id="addActivityBtn" text="+ Add Activity" onAction="#addActivityToEvent" style="-fx-background-color: #10b981; -fx-text-fill: white; -fx-padding: 5 10;" />
+                                <Label fx:id="selectedActivitiesLabel" text="Selected: None" style="-fx-text-fill: #6b7280; -fx-font-size: 12;" />
+                            </VBox>
                             
-                            <Label text="Objectives:" GridPane.rowIndex="3" GridPane.columnIndex="0" style="-fx-font-weight: 600; -fx-text-fill: #374151;" />
-                            <TextArea fx:id="objectivesField" wrapText="true" prefRowCount="2" GridPane.rowIndex="3" GridPane.columnIndex="1" style="-fx-border-color: #d1d5db; -fx-border-radius: 6;" />
+                            <Label text="Description:" GridPane.rowIndex="3" GridPane.columnIndex="0" style="-fx-font-weight: 600; -fx-text-fill: #374151;" />
+                            <TextArea fx:id="descriptionField" wrapText="true" prefRowCount="3" GridPane.rowIndex="3" GridPane.columnIndex="1" style="-fx-border-color: #d1d5db; -fx-border-radius: 6;" />
                             
-                            <Label text="Status:" GridPane.rowIndex="4" GridPane.columnIndex="0" style="-fx-font-weight: 600; -fx-text-fill: #374151;" />
-                            <ComboBox fx:id="statusComboBox" GridPane.rowIndex="4" GridPane.columnIndex="1" style="-fx-pref-height: 35; -fx-border-color: #d1d5db; -fx-border-radius: 6;" />
+                            <Label text="Objectives:" GridPane.rowIndex="4" GridPane.columnIndex="0" style="-fx-font-weight: 600; -fx-text-fill: #374151;" />
+                            <TextArea fx:id="objectivesField" wrapText="true" prefRowCount="2" GridPane.rowIndex="4" GridPane.columnIndex="1" style="-fx-border-color: #d1d5db; -fx-border-radius: 6;" />
+                            
+                            <Label text="Status:" GridPane.rowIndex="5" GridPane.columnIndex="0" style="-fx-font-weight: 600; -fx-text-fill: #374151;" />
+                            <ComboBox fx:id="statusComboBox" GridPane.rowIndex="5" GridPane.columnIndex="1" style="-fx-pref-height: 35; -fx-border-color: #d1d5db; -fx-border-radius: 6;" />
                         </GridPane>
                     </VBox>
                     
