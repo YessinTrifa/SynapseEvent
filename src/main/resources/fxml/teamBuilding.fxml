@@ -141,7 +141,7 @@
                     <Button text="📤 Publish" onAction="#publishEvent" style="-fx-padding: 8 16; -fx-font-weight: bold; -fx-background-color: #059669; -fx-text-fill: white; -fx-border-radius: 6; -fx-background-radius: 6;" />
                     <Button text="📝 Save Draft" onAction="#saveAsDraft" style="-fx-padding: 8 16; -fx-font-weight: bold; -fx-background-color: #f59e0b; -fx-text-fill: white; -fx-border-radius: 6; -fx-background-radius: 6;" />
                     <Button text="📊 Generate Report" onAction="#generateReport" style="-fx-padding: 8 16; -fx-font-weight: bold; -fx-background-color: #6366f1; -fx-text-fill: white; -fx-border-radius: 6; -fx-background-radius: 6;" />
-                    <Button text="💰 Calculate Budget" style="-fx-padding: 8 16; -fx-font-weight: bold; -fx-background-color: #8b5cf6; -fx-text-fill: white; -fx-border-radius: 6; -fx-background-radius: 6;" />
+                    <Button text="💰 Calculate Budget" onAction="#calculateBudget" style="-fx-padding: 8 16; -fx-font-weight: bold; -fx-background-color: #8b5cf6; -fx-text-fill: white; -fx-border-radius: 6; -fx-background-radius: 6;" />
                 </HBox>
             </VBox>
         </SplitPane>

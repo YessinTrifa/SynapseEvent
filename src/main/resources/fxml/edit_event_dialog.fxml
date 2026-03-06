@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.Spinner?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+
+<StackPane fx:id="overlayRoot"
+           xmlns="http://javafx.com/javafx/17"
+           xmlns:fx="http://javafx.com/fxml/1"
+           fx:controller="com.synapseevent.controller.EditEventDialogController"
+           styleClass="overlay-root">
+
+    <!-- The actual dialog card -->
+    <VBox fx:id="card" styleClass="dialog-card" maxWidth="520" prefWidth="520" spacing="0">
+        
+        <!-- Header with gradient -->
+        <VBox style="-fx-background-color: linear-gradient(to right, #059669, #10b981); -fx-padding: 14;" spacing="2">
+            <HBox alignment="CENTER_LEFT" spacing="12">
+                <Label text="✏️ Edit Event" style="-fx-text-fill: white; -fx-font-size: 18; -fx-font-weight: bold;" />
+                <Region HBox.hgrow="ALWAYS" />
+                <Button fx:id="closeBtn" text="✕" onAction="#onClose" style="-fx-background-color: transparent; -fx-text-fill: white; -fx-font-size: 14; -fx-padding: 4 8; -fx-background-radius: 8; -fx-cursor: hand;" />
+            </HBox>
+            <Label fx:id="eventTypeLabel" text="Event Type" style="-fx-text-fill: rgba(255,255,255,0.9); -fx-font-size: 11;" />
+        </VBox>
+
+        <!-- Scrollable Content -->
+        <ScrollPane fitToWidth="true" maxHeight="450" style="-fx-background-color: #f8fafc;">
+            <VBox spacing="12" style="-fx-padding: 14;">
+                
+                <!-- Basic Information Section -->
+                <VBox spacing="8" style="-fx-background-color: white; -fx-padding: 12; -fx-border-radius: 8; -fx-background-radius: 8; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 8, 0, 0, 2);">
+                    <Label text="🎯 Basic Information" style="-fx-font-size: 13; -fx-font-weight: bold; -fx-text-fill: #059669;" />
+                    <GridPane hgap="10" vgap="8">
+                        <columnConstraints>
+                            <ColumnConstraints percentWidth="28" />
+                            <ColumnConstraints percentWidth="72" />
+                        </columnConstraints>
+                        
+                        <Label text="Name:" GridPane.rowIndex="0" GridPane.columnIndex="0" style="-fx-font-weight: 600; -fx-text-fill: #374151; -fx-font-size: 12;" />
+                        <TextField fx:id="nameField" promptText="Enter event name" GridPane.rowIndex="0" GridPane.columnIndex="1" style="-fx-pref-height: 30; -fx-border-color: #d1d5db; -fx-border-radius: 4; -fx-font-size: 12;" />
+                        
+                        <Label text="Organizer:" GridPane.rowIndex="1" GridPane.columnIndex="0" style="-fx-font-weight: 600; -fx-text-fill: #374151; -fx-font-size: 12;" />
+                        <TextField fx:id="organizerField" promptText="Enter organizer" GridPane.rowIndex="1" GridPane.columnIndex="1" style="-fx-pref-height: 30; -fx-border-color: #d1d5db; -fx-border-radius: 4; -fx-font-size: 12;" />
+                        
+                        <Label text="Status:" GridPane.rowIndex="2" GridPane.columnIndex="0" style="-fx-font-weight: 600; -fx-text-fill: #374151; -fx-font-size: 12;" />
+                        <ComboBox fx:id="statusComboBox" GridPane.rowIndex="2" GridPane.columnIndex="1" style="-fx-pref-height: 30; -fx-border-color: #d1d5db; -fx-border-radius: 4; -fx-font-size: 12;" />
+                        
+                        <Label text="Description:" GridPane.rowIndex="3" GridPane.columnIndex="0" style="-fx-font-weight: 600; -fx-text-fill: #374151; -fx-font-size: 12;" />
+                        <TextArea fx:id="descriptionField" wrapText="true" prefRowCount="2" GridPane.rowIndex="3" GridPane.columnIndex="1" style="-fx-border-color: #d1d5db; -fx-border-radius: 4; -fx-font-size: 12;" />
+                    </GridPane>
+                </VBox>
+                
+                <!-- Schedule &amp; Location Section -->
+                <VBox spacing="8" style="-fx-background-color: white; -fx-padding: 12; -fx-border-radius: 8; -fx-background-radius: 8; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 8, 0, 0, 2);">
+                    <Label text="📅 Schedule &amp; Location" style="-fx-font-size: 13; -fx-font-weight: bold; -fx-text-fill: #059669;" />
+                    <GridPane hgap="10" vgap="8">
+                        <columnConstraints>
+                            <ColumnConstraints percentWidth="28" />
+                            <ColumnConstraints percentWidth="72" />
+                        </columnConstraints>
+                        
+                        <Label text="Date:" GridPane.rowIndex="0" GridPane.columnIndex="0" style="-fx-font-weight: 600; -fx-text-fill: #374151; -fx-font-size: 12;" />
+                        <DatePicker fx:id="datePicker" GridPane.rowIndex="0" GridPane.columnIndex="1" style="-fx-pref-height: 30; -fx-border-color: #d1d5db; -fx-border-radius: 4; -fx-font-size: 12;" />
+                        
+                        <Label text="Start:" GridPane.rowIndex="1" GridPane.columnIndex="0" style="-fx-font-weight: 600; -fx-text-fill: #374151; -fx-font-size: 12;" />
+                        <TextField fx:id="startTimeField" promptText="HH:mm" GridPane.rowIndex="1" GridPane.columnIndex="1" style="-fx-pref-height: 30; -fx-border-color: #d1d5db; -fx-border-radius: 4; -fx-font-size: 12;" />
+                        
+                        <Label text="End:" GridPane.rowIndex="2" GridPane.columnIndex="0" style="-fx-font-weight: 600; -fx-text-fill: #374151; -fx-font-size: 12;" />
+                        <TextField fx:id="endTimeField" promptText="HH:mm" GridPane.rowIndex="2" GridPane.columnIndex="1" style="-fx-pref-height: 30; -fx-border-color: #d1d5db; -fx-border-radius: 4; -fx-font-size: 12;" />
+                        
+                        <Label text="Location:" GridPane.rowIndex="3" GridPane.columnIndex="0" style="-fx-font-weight: 600; -fx-text-fill: #374151; -fx-font-size: 12;" />
+                        <TextField fx:id="locationField" promptText="Enter location" GridPane.rowIndex="3" GridPane.columnIndex="1" style="-fx-pref-height: 30; -fx-border-color: #d1d5db; -fx-border-radius: 4; -fx-font-size: 12;" />
+                    </GridPane>
+                </VBox>
+                
+                <!-- Pricing &amp; Capacity Section -->
+                <VBox spacing="8" style="-fx-background-color: white; -fx-padding: 12; -fx-border-radius: 8; -fx-background-radius: 8; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 8, 0, 0, 2);">
+                    <Label text="💰 Pricing &amp; Capacity" style="-fx-font-size: 13; -fx-font-weight: bold; -fx-text-fill: #059669;" />
+                    <GridPane hgap="10" vgap="8">
+                        <columnConstraints>
+                            <ColumnConstraints percentWidth="28" />
+                            <ColumnConstraints percentWidth="72" />
+                        </columnConstraints>
+                        
+                        <Label text="Capacity:" GridPane.rowIndex="0" GridPane.columnIndex="0" style="-fx-font-weight: 600; -fx-text-fill: #374151; -fx-font-size: 12;" />
+                        <Spinner fx:id="capacitySpinner" GridPane.rowIndex="0" GridPane.columnIndex="1" style="-fx-pref-height: 30; -fx-border-color: #d1d5db; -fx-border-radius: 4;" />
+                        
+                        <Label text="Price (TND):" GridPane.rowIndex="1" GridPane.columnIndex="0" style="-fx-font-weight: 600; -fx-text-fill: #374151; -fx-font-size: 12;" />
+                        <Spinner fx:id="priceSpinner" GridPane.rowIndex="1" GridPane.columnIndex="1" style="-fx-pref-height: 30; -fx-border-color: #d1d5db; -fx-border-radius: 4;" />
+                    </GridPane>
+                </VBox>
+                
+            </VBox>
+        </ScrollPane>
+
+        <!-- Buttons row -->
+        <HBox alignment="CENTER_RIGHT" spacing="10" style="-fx-padding: 12 14 14 14; -fx-background-color: white;">
+            <Button text="Cancel" onAction="#onCancel" style="-fx-padding: 8 16; -fx-font-weight: 600; -fx-background-color: #6b7280; -fx-text-fill: white; -fx-border-radius: 4; -fx-background-radius: 4; -fx-cursor: hand; -fx-font-size: 12;" />
+            <Button text="💾 Save" onAction="#onSave" style="-fx-padding: 8 16; -fx-font-weight: 600; -fx-background-color: #059669; -fx-text-fill: white; -fx-border-radius: 4; -fx-background-radius: 4; -fx-cursor: hand; -fx-font-size: 12;" />
+        </HBox>
+    </VBox>
+</StackPane>

@@ -895,83 +895,30 @@ public class AdminDashboardController {
     }
 
     private void editEvent(EventInstance event) {
-        // Show a dialog to edit event details
-        Dialog<String[]> dialog = new Dialog<>();
-        dialog.setTitle("Edit Event");
-        dialog.setHeaderText("Edit event: " + event.getName());
-
-        // Create form fields
-        TextField nameField = new TextField(event.getName());
-        nameField.setPromptText("Event Name");
-
-        DatePicker datePicker = new DatePicker(event.getDate());
-        datePicker.setPromptText("Event Date");
-
-        TextField locationField = new TextField(event.getLocation());
-        locationField.setPromptText("Location");
-
-        Spinner<Integer> capacitySpinner = new Spinner<>(1, 1000, event.getCapacity() != null ? event.getCapacity() : 50);
-        capacitySpinner.setPromptText("Capacity");
-
-        Spinner<Double> priceSpinner = new Spinner<>(0.0, 10000.0, event.getPrice() != null ? event.getPrice() : 0.0, 10.0);
-        priceSpinner.setPromptText("Price");
-
-        ComboBox<String> statusCombo = new ComboBox<>();
-        statusCombo.getItems().addAll("draft", "published", "pending", "confirmed", "cancelled");
-        statusCombo.setValue(event.getStatus());
-
-        TextArea descriptionArea = new TextArea(event.getDescription());
-        descriptionArea.setPromptText("Description");
-        descriptionArea.setPrefRowCount(3);
-
-        GridPane grid = new GridPane();
-        grid.setHgap(10);
-        grid.setVgap(10);
-        grid.setPadding(new Insets(20));
-
-        grid.add(new Label("Name:"), 0, 0);
-        grid.add(nameField, 1, 0);
-        grid.add(new Label("Date:"), 0, 1);
-        grid.add(datePicker, 1, 1);
-        grid.add(new Label("Location:"), 0, 2);
-        grid.add(locationField, 1, 2);
-        grid.add(new Label("Capacity:"), 0, 3);
-        grid.add(capacitySpinner, 1, 3);
-        grid.add(new Label("Price:"), 0, 4);
-        grid.add(priceSpinner, 1, 4);
-        grid.add(new Label("Status:"), 0, 5);
-        grid.add(statusCombo, 1, 5);
-        grid.add(new Label("Description:"), 0, 6);
-        grid.add(descriptionArea, 1, 6);
-
-        dialog.getDialogPane().setContent(grid);
-        dialog.getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
-
-        dialog.setResultConverter(button -> {
-            if (button == ButtonType.OK) {
-                return new String[]{
-                    nameField.getText(),
-                    datePicker.getValue() != null ? datePicker.getValue().toString() : "",
-                    locationField.getText(),
-                    String.valueOf(capacitySpinner.getValue()),
-                    String.valueOf(priceSpinner.getValue()),
-                    statusCombo.getValue(),
-                    descriptionArea.getText()
-                };
-            }
-            return null;
-        });
-
-        dialog.showAndWait().ifPresent(result -> {
-            if (!result[0].trim().isEmpty()) {
-                event.setName(result[0]);
-                event.setDate(LocalDate.parse(result[1]));
-                event.setLocation(result[2]);
-                event.setCapacity(Integer.parseInt(result[3]));
-                event.setPrice(Double.parseDouble(result[4]));
-                event.setStatus(result[5]);
-                event.setDescription(result[6]);
-
+        try {
+            // Load the edit event dialog FXML
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/edit_event_dialog.fxml"));
+            Parent root = loader.load();
+            
+            // Get the controller and set the event data
+            EditEventDialogController controller = loader.getController();
+            controller.setEvent(event);
+            
+            // Create a new stage for the dialog
+            Stage dialogStage = new Stage();
+            dialogStage.setTitle("Edit Event");
+            dialogStage.initModality(Modality.APPLICATION_MODAL);
+            dialogStage.setResizable(false);
+            
+            // Set the scene
+            Scene scene = new Scene(root);
+            dialogStage.setScene(scene);
+            
+            // Show and wait for the dialog
+            dialogStage.showAndWait();
+            
+            // Check if the user confirmed the changes
+            if (controller.isConfirmed()) {
                 try {
                     eventService.modifier(event);
                     loadEvents();
@@ -979,7 +926,10 @@ public class AdminDashboardController {
                     e.printStackTrace();
                 }
             }
-        });
+        } catch (Exception e) {
+            e.printStackTrace();
+            showAlert("Error", "Failed to open edit dialog: " + e.getMessage());
+        }
     }
 
     private void deleteEvent(EventInstance event) {

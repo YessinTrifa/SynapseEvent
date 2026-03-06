@@ -449,6 +449,43 @@ public class TeamBuildingController implements TemplateAware{
         alert.showAndWait();
     }
     
+    @FXML
+    private void calculateBudget() {
+        // Get selected event or calculate based on form fields
+        TeamBuildingEvent selected = teamBuildingTable.getSelectionModel().getSelectedItem();
+        
+        double basePrice = 0;
+        int capacity = 0;
+        
+        if (selected != null) {
+            // Use selected event's data
+            basePrice = selected.getPrice() != null ? selected.getPrice() : 0;
+            capacity = selected.getCapacity() != null ? selected.getCapacity() : 0;
+        } else {
+            // Use form fields
+            try {
+                if (priceSpinner.getValue() != null) {
+                    basePrice = ((Number) priceSpinner.getValue()).doubleValue();
+                }
+                if (capacitySpinner.getValue() != null) {
+                    capacity = ((Number) capacitySpinner.getValue()).intValue();
+                }
+            } catch (Exception e) {
+                // Ignore parsing errors
+            }
+        }
+        
+        // Calculate estimated budget
+        double estimatedTotal = basePrice * capacity;
+        
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Calculate Budget");
+        alert.setHeaderText("Estimated Budget Calculation");
+        alert.setContentText(String.format("Base Price per Person: $%.2f\nEstimated Capacity: %d\n\nEstimated Total Budget: $%.2f", 
+            basePrice, capacity, estimatedTotal));
+        alert.showAndWait();
+    }
+    
     @Override
     public void applyTemplate(EventTemplate t) {
         if (t == null) return;
