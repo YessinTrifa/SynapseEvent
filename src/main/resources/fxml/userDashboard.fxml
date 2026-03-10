@@ -56,6 +56,7 @@
                 <Button fx:id="userNavHome"     styleClass="user-nav-btn" text="🏠  Home"            maxWidth="9999" onAction="#showUserHome" />
                 <Button fx:id="userNavBrowse"   styleClass="user-nav-btn" text="🔍  Browse By Type"  maxWidth="9999" onAction="#showUserBrowse" />
                 <Button fx:id="userNavBookings" styleClass="user-nav-btn" text="📋  My Booking"      maxWidth="9999" onAction="#showUserBookings" />
+                <Button fx:id="userNavCalendar" styleClass="user-nav-btn" text="📅  Calendar"        maxWidth="9999" onAction="#showGlobalCalendar" />
                 <Button fx:id="userNavRequests" styleClass="user-nav-btn" text="✨  Custom Requests" maxWidth="9999" onAction="#showUserRequests" />
                 <Button fx:id="userNavProfile"  styleClass="user-nav-btn" text="👤  Profile"         maxWidth="9999" onAction="#showUserProfile" />
 

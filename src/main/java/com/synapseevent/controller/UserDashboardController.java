@@ -139,6 +139,7 @@ public class UserDashboardController {
     @FXML private Button userNavHome;
     @FXML private Button userNavBrowse;
     @FXML private Button userNavBookings;
+    @FXML private Button userNavCalendar;
     @FXML private Button userNavRequests;
     @FXML private Button userNavProfile;
 
@@ -2832,7 +2833,7 @@ public class UserDashboardController {
     @FXML private void showUserBookings() { activateUserNav(userNavBookings); showUserPage(userPageBookings); }
     @FXML private void showUserRequests() { activateUserNav(userNavRequests); showUserPage(userPageRequests); }
     @FXML private void showUserProfile()  { activateUserNav(userNavProfile);  showUserPage(userPageProfile); }
-    
+    @FXML private void showGlobalCalendar() { Navigator.get().go("/fxml/calendar.fxml", "Global Calendar"); }
 
     private void loadCustomTypeBrowseButtons() {
         if (userPageBrowsePanel == null) return;

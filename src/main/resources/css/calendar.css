@@ -1,0 +1,74 @@
+/* ════════════════════════════════════════════════════════════════
+   calendar.css  –  Global Calendar Screen
+   ════════════════════════════════════════════════════════════════ */
+
+/* Day-of-week header cells */
+.cal-day-header {
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #6b7280;
+    -fx-alignment: CENTER;
+    -fx-padding: 6 0 6 0;
+    -fx-min-width: 90px;
+}
+
+/* ── Navigation buttons (‹ ›) ─────────────────────────────── */
+.cal-nav-btn {
+    -fx-background-color: #f3f4f6;
+    -fx-text-fill: #374151;
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+    -fx-background-radius: 8px;
+    -fx-border-radius: 8px;
+    -fx-border-color: #e5e7eb;
+    -fx-border-width: 1px;
+    -fx-padding: 4 14 4 14;
+    -fx-cursor: hand;
+}
+
+.cal-nav-btn:hover {
+    -fx-background-color: #e5e7eb;
+}
+
+/* ── "Today" button ───────────────────────────────────────── */
+.cal-today-btn {
+    -fx-background-color: #6366f1;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-font-size: 13px;
+    -fx-background-radius: 8px;
+    -fx-border-radius: 8px;
+    -fx-padding: 5 16 5 16;
+    -fx-cursor: hand;
+}
+
+.cal-today-btn:hover {
+    -fx-background-color: #4f46e5;
+}
+
+/* ── Sidebar navigation button for Calendar ──────────────── */
+.cal-sidebar-btn {
+    -fx-background-color: transparent;
+    -fx-text-fill: #d1d5db;
+    -fx-font-size: 14px;
+    -fx-alignment: CENTER_LEFT;
+    -fx-padding: 10 16 10 16;
+    -fx-border-color: transparent;
+    -fx-cursor: hand;
+    -fx-background-radius: 0;
+}
+
+.cal-sidebar-btn:hover {
+    -fx-background-color: rgba(255,255,255,0.08);
+    -fx-text-fill: white;
+}
+
+/* ── Scroll-pane chrome removal ──────────────────────────── */
+.scroll-pane > .viewport {
+    -fx-background-color: transparent;
+}
+
+.scroll-pane {
+    -fx-background-color: transparent;
+    -fx-background: transparent;
+}

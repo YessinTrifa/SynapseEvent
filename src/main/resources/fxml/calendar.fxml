@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.FlowPane?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Priority?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.geometry.Insets?>
+<?import java.net.URL?>
+
+<StackPane styleClass="page-wrap"
+           xmlns="http://javafx.com/javafx/17"
+           xmlns:fx="http://javafx.com/fxml/1"
+           fx:controller="com.synapseevent.controller.GlobalCalendarController">
+
+    <stylesheets>
+        <URL value="@../css/dashboard.css"/>
+        <URL value="@../css/calendar.css"/>
+    </stylesheets>
+
+    <!-- ═══════════════════  MAIN LAYOUT  ═══════════════════════════════ -->
+    <VBox spacing="0" VBox.vgrow="ALWAYS">
+
+        <!-- ── TOP BAR ──────────────────────────────────────────────── -->
+        <HBox alignment="CENTER_LEFT" spacing="14"
+              style="-fx-padding: 14 24 14 24;
+                     -fx-background-color: #f8f7ff;
+                     -fx-border-color: #e5e7eb;
+                     -fx-border-width: 0 0 1 0;">
+
+            <!-- Back button -->
+            <Button text="← Retour"
+                    onAction="#goBack"
+                    style="-fx-background-color: transparent;
+                           -fx-text-fill: #6366f1;
+                           -fx-font-weight: bold;
+                           -fx-font-size: 13;
+                           -fx-cursor: hand;
+                           -fx-border-color: #6366f1;
+                           -fx-border-width: 1;
+                           -fx-border-radius: 8;
+                           -fx-background-radius: 8;
+                           -fx-padding: 5 14 5 14;"/>
+
+            <Label text="📅  Global Calendar"
+                   style="-fx-font-size: 20; -fx-font-weight: bold; -fx-text-fill: #1f2937;"/>
+
+            <Region HBox.hgrow="ALWAYS"/>
+
+            <!-- Month navigation -->
+            <Button text="‹" onAction="#previousMonth" styleClass="cal-nav-btn"/>
+            <Label fx:id="monthYearLabel"
+                   text="Month Year"
+                   style="-fx-font-size: 16; -fx-font-weight: bold;
+                          -fx-text-fill: #374151; -fx-min-width: 180;
+                          -fx-alignment: CENTER;"/>
+            <Button text="›" onAction="#nextMonth" styleClass="cal-nav-btn"/>
+
+            <Button text="Today" onAction="#goToToday" styleClass="cal-today-btn"/>
+        </HBox>
+
+        <!-- ── LEGEND BAR ────────────────────────────────────────────── -->
+        <HBox spacing="20" alignment="CENTER_LEFT"
+              style="-fx-padding: 8 24 8 24;
+                     -fx-background-color: #f8f7ff;
+                     -fx-border-color: #e5e7eb;
+                     -fx-border-width: 0 0 1 0;">
+
+            <Label text="Legend:" style="-fx-font-weight: bold; -fx-text-fill: #6b7280; -fx-font-size:12;"/>
+
+            <!-- Anniversary -->
+            <HBox spacing="5" alignment="CENTER_LEFT">
+                <Region prefWidth="12" prefHeight="12"
+                        style="-fx-background-color:#f43f5e; -fx-background-radius:6;"/>
+                <Label text="Anniversary" style="-fx-font-size:12; -fx-text-fill:#374151;"/>
+            </HBox>
+
+            <!-- Formation -->
+            <HBox spacing="5" alignment="CENTER_LEFT">
+                <Region prefWidth="12" prefHeight="12"
+                        style="-fx-background-color:#3b82f6; -fx-background-radius:6;"/>
+                <Label text="Formation" style="-fx-font-size:12; -fx-text-fill:#374151;"/>
+            </HBox>
+
+            <!-- Paddle -->
+            <HBox spacing="5" alignment="CENTER_LEFT">
+                <Region prefWidth="12" prefHeight="12"
+                        style="-fx-background-color:#10b981; -fx-background-radius:6;"/>
+                <Label text="Paddle" style="-fx-font-size:12; -fx-text-fill:#374151;"/>
+            </HBox>
+
+            <!-- Partying -->
+            <HBox spacing="5" alignment="CENTER_LEFT">
+                <Region prefWidth="12" prefHeight="12"
+                        style="-fx-background-color:#f59e0b; -fx-background-radius:6;"/>
+                <Label text="Partying" style="-fx-font-size:12; -fx-text-fill:#374151;"/>
+            </HBox>
+
+            <!-- TeamBuilding -->
+            <HBox spacing="5" alignment="CENTER_LEFT">
+                <Region prefWidth="12" prefHeight="12"
+                        style="-fx-background-color:#8b5cf6; -fx-background-radius:6;"/>
+                <Label text="TeamBuilding" style="-fx-font-size:12; -fx-text-fill:#374151;"/>
+            </HBox>
+
+            <!-- Custom -->
+            <HBox spacing="5" alignment="CENTER_LEFT">
+                <Region prefWidth="12" prefHeight="12"
+                        style="-fx-background-color:#6b7280; -fx-background-radius:6;"/>
+                <Label text="Other" style="-fx-font-size:12; -fx-text-fill:#374151;"/>
+            </HBox>
+
+        </HBox>
+
+        <!-- ── BODY: CALENDAR + EVENT PANEL ─────────────────────────── -->
+        <HBox VBox.vgrow="ALWAYS" spacing="0">
+
+            <!-- ── CALENDAR AREA ─────────────────────────────────────── -->
+            <ScrollPane fitToWidth="true" fitToHeight="true"
+                        hbarPolicy="NEVER" vbarPolicy="AS_NEEDED"
+                        HBox.hgrow="ALWAYS"
+                        style="-fx-background-color: #f9fafb; -fx-border-color: transparent;">
+                <VBox spacing="0" style="-fx-padding: 16 20 20 20;">
+
+                    <!-- Day-of-week headers -->
+                    <GridPane fx:id="calendarGrid" hgap="8" vgap="8">
+                        <columnConstraints>
+                            <ColumnConstraints hgrow="ALWAYS" percentWidth="14.28"/>
+                            <ColumnConstraints hgrow="ALWAYS" percentWidth="14.28"/>
+                            <ColumnConstraints hgrow="ALWAYS" percentWidth="14.28"/>
+                            <ColumnConstraints hgrow="ALWAYS" percentWidth="14.28"/>
+                            <ColumnConstraints hgrow="ALWAYS" percentWidth="14.28"/>
+                            <ColumnConstraints hgrow="ALWAYS" percentWidth="14.28"/>
+                            <ColumnConstraints hgrow="ALWAYS" percentWidth="14.28"/>
+                        </columnConstraints>
+
+                        <!-- Row 0: Header labels -->
+                        <Label text="Sun" styleClass="cal-day-header" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+                        <Label text="Mon" styleClass="cal-day-header" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
+                        <Label text="Tue" styleClass="cal-day-header" GridPane.columnIndex="2" GridPane.rowIndex="0"/>
+                        <Label text="Wed" styleClass="cal-day-header" GridPane.columnIndex="3" GridPane.rowIndex="0"/>
+                        <Label text="Thu" styleClass="cal-day-header" GridPane.columnIndex="4" GridPane.rowIndex="0"/>
+                        <Label text="Fri" styleClass="cal-day-header" GridPane.columnIndex="5" GridPane.rowIndex="0"/>
+                        <Label text="Sat" styleClass="cal-day-header" GridPane.columnIndex="6" GridPane.rowIndex="0"/>
+
+                        <!-- Day cells are added programmatically by GlobalCalendarController -->
+                    </GridPane>
+                </VBox>
+            </ScrollPane>
+
+            <!-- ── RIGHT PANEL: Event List for selected day ──────────── -->
+            <VBox fx:id="eventListPanel"
+                  prefWidth="340"
+                  spacing="0"
+                  visible="false" managed="false"
+                  style="-fx-background-color: #ffffff;
+                         -fx-border-color: #e5e7eb;
+                         -fx-border-width: 0 0 0 1;">
+
+                <!-- Panel header -->
+                <HBox alignment="CENTER_LEFT" spacing="10"
+                      style="-fx-padding: 16 16 14 16;
+                             -fx-border-color: #e5e7eb;
+                             -fx-border-width: 0 0 1 0;
+                             -fx-background-color: #f8f7ff;">
+                    <VBox HBox.hgrow="ALWAYS" spacing="2">
+                        <Label text="Events" style="-fx-font-size:16; -fx-font-weight:bold; -fx-text-fill:#1f2937;"/>
+                        <Label fx:id="selectedDateLabel" text="—"
+                               style="-fx-font-size:12; -fx-text-fill:#6b7280;"/>
+                    </VBox>
+                    <Button text="✕" onAction="#closeEventPanel"
+                            style="-fx-background-color: transparent;
+                                   -fx-text-fill: #9ca3af;
+                                   -fx-font-size: 16;
+                                   -fx-cursor: hand;"/>
+                </HBox>
+
+                <!-- Scrollable event cards -->
+                <ScrollPane fitToWidth="true" VBox.vgrow="ALWAYS"
+                            hbarPolicy="NEVER" vbarPolicy="AS_NEEDED"
+                            style="-fx-background-color: transparent;">
+                    <VBox fx:id="eventListContainer" spacing="10"
+                          style="-fx-padding: 14;"/>
+                </ScrollPane>
+            </VBox>
+
+        </HBox>
+    </VBox>
+</StackPane>
