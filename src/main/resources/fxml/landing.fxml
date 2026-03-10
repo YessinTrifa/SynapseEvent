@@ -10,50 +10,80 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 
-<StackPane fx:id="rootPane" styleClass="landing-root" stylesheets="@../css/landing.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.synapseevent.controller.LandingController">
+<StackPane fx:id="rootPane" styleClass="landing-root" stylesheets="@../css/landing.css"
+           xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1"
+           fx:controller="com.synapseevent.controller.LandingController">
 
-   <BorderPane style="-fx-background-color: transparent;">
+    <!-- BACKGROUND IMAGE -->
+    <ImageView fx:id="bgImage" preserveRatio="false" smooth="true"
+               fitWidth="1280" fitHeight="800"
 
-      <!-- ═══ TOP BAR ═══ -->
-      <top>
-         <HBox alignment="CENTER_LEFT" styleClass="landing-topbar">
+               StackPane.alignment="CENTER"
+        >
+        <image>
+            <Image url="@../images/back-landing.png" />
+        </image>
+    </ImageView>
 
-            <!-- Logo, top-left, bigger -->
-            <ImageView fitHeight="106.0" fitWidth="147.0" preserveRatio="true">
-               <image>
-                  <Image url="@../images/logo.png" />
-               </image>
-            </ImageView>
+    <!-- DARK OVERLAY for text readability -->
+    <!-- LIGHT OVERLAY for text readability -->
+    <StackPane style="-fx-background-color: rgba(255,255,255,0.55);" mouseTransparent="true" />
 
-            <Region HBox.hgrow="ALWAYS" />
+    <BorderPane style="-fx-background-color: transparent;">
 
-            <!-- Login pill button -->
-            <Button onAction="#goToLogin" styleClass="pill-button" text="Login" />
+        <!-- TOP BAR -->
+        <top>
+            <HBox alignment="CENTER_LEFT" styleClass="landing-topbar">
+                <!-- Logo -->
+                <ImageView fitHeight="72.0" fitWidth="180.0" preserveRatio="true">
+                    <image>
+                        <Image url="@../images/logo.png" />
+                    </image>
+                </ImageView>
 
-         </HBox>
-      </top>
+                <Region HBox.hgrow="ALWAYS" />
 
-      <!-- ═══ CENTER CONTENT ═══ -->
-      <center>
-         <VBox alignment="CENTER" style="-fx-background-color: transparent;">
+                <!-- Login button -->
+                <Button onAction="#goToLogin" styleClass="pill-button" text="Log In" />
+            </HBox>
+        </top>
 
-            <!-- Title block: Synapse + Event stacked, centered as a unit -->
-            <VBox alignment="CENTER" spacing="-15" style="-fx-background-color: transparent;">
-               <Label styleClass="brand-title" text="Synapse" />
-               <Label style="-fx-padding: 0 0 0 100;" styleClass="brand-title" text="Event" />
+        <!-- CENTER CONTENT -->
+        <center>
+            <VBox alignment="CENTER" spacing="24" style="-fx-padding: 0 40;">
+
+                <!-- Brand name -->
+                <Label styleClass="brand-title" text="Synapse Event" />
+
+                <Region prefHeight="16" />
+
+                <!-- Tagline / value proposition -->
+                <Label styleClass="tagline" text="Professional Event Management – Simplified" />
+
+                <Region prefHeight="40" />
+
+                <!-- Subtitle / benefit -->
+                <Label styleClass="subtitle"
+                       text="Plan, promote, manage, and analyze your events with powerful yet simple tools"
+                       wrapText="true"
+                       maxWidth="620" />
+
+                <Region prefHeight="64" />
+
+                <!-- Primary CTA -->
+                <Button onAction="#goToRegister" styleClass="primary-button" text="Get Started Free" />
+
+                <Region prefHeight="24" />
+
+                <!-- Trust / secondary text -->
+                <Label styleClass="trust-text"
+                       text="No credit card required • Trusted by event organizers worldwide" />
+
+                <!-- Optional small space before potential future content -->
+                <Region prefHeight="120" />
+
             </VBox>
+        </center>
 
-            <Region prefHeight="36" />
-
-            <!-- Tagline centered -->
-            <Label styleClass="tagline" text="E V E N T   M A N A G E M E N T ,   S I M P L I F I E D" />
-
-            <Region prefHeight="48" />
-
-            <!-- Get Started centered -->
-            <Button onAction="#goToRegister" styleClass="outline-button" text="Get Started" />
-
-         </VBox>
-      </center>
-   </BorderPane>
+    </BorderPane>
 </StackPane>

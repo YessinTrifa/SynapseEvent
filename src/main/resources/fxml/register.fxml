@@ -2,210 +2,162 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
-<?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
 
 <StackPane
-        styleClass="register-bg"
+        styleClass="login-bg"
         stylesheets="@../css/auth.css"
         xmlns="http://javafx.com/javafx/17"
         xmlns:fx="http://javafx.com/fxml/1"
         fx:controller="com.synapseevent.controller.RegisterController">
 
-    <!-- Centered card: HBox with left + right panels -->
-    <HBox styleClass="auth-card"
-          maxWidth="900" maxHeight="640"
+    <!-- Centered card -->
+    <VBox maxWidth="520"
           StackPane.alignment="CENTER"
-          style="-fx-background-radius: 32;
-             -fx-border-radius: 32;
-             -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.55), 40, 0.2, 0, 8);">
-        <!-- ══════════════ LEFT PANEL ══════════════ -->
-        <StackPane styleClass="left-panel" HBox.hgrow="NEVER"
-                   minWidth="300" prefWidth="360" maxWidth="400"
-                   style="-fx-background-radius: 32 0 0 32;
-                  -fx-border-radius: 32 0 0 32;">
+          styleClass="login-right-panel"
+          spacing="16"
+          style="-fx-background-radius: 24;
+                 -fx-border-radius: 24;
+                 -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.18), 32, 0, 0, 8);">
 
-            <!-- Background image (cover-fill via Region trick) -->
-            <Region styleClass="left-bg-image" />
-            <!-- Warm beige overlay -->
-            <VBox styleClass="left-overlay"
-                  spacing="0"
-                  StackPane.alignment="CENTER">
-                <padding>
-                    <Insets top="90" right="28" bottom="32" left="28"/>
-                </padding>
+        <!-- Title -->
+        <Label text="Sign Up"
+               styleClass="login-form-title"
+               maxWidth="9999"
+               style="-fx-alignment: center; -fx-text-alignment: center;" />
 
-                <!-- Headline top -->
-                <Label text="Create your"
-                       styleClass="reg-headline" />
-                <Label text="Account"
-                       styleClass="reg-headline" />
+        <Region prefHeight="4" />
 
-                <Region prefHeight="14" />
+        <!-- FORM -->
+        <GridPane hgap="12" vgap="10" maxWidth="9999">
+            <columnConstraints>
+                <ColumnConstraints percentWidth="50" hgrow="ALWAYS" />
+                <ColumnConstraints percentWidth="50" hgrow="ALWAYS" />
+            </columnConstraints>
 
-                <!-- Subtitle -->
-                <Label text="Manage events , guests, teams in one place"
-                       styleClass="reg-subhead"
-                       wrapText="true" />
-
-                <!-- Spacer pushes "already" link to bottom -->
-                <Region VBox.vgrow="ALWAYS" />
-
-                <!-- Already have an account row -->
-                <HBox alignment="CENTER_LEFT" spacing="4">
-                    <Label text="Already have an account ?"
-                           styleClass="reg-already" />
-                    <Button text="Login"
-                            styleClass="reg-login-link"
-                            onAction="#goToLogin" />
-                </HBox>
-
-            </VBox>
-        </StackPane>
-
-        <!-- ══════════════ RIGHT PANEL ══════════════ -->
-        <VBox styleClass="right-panel"
-              spacing="10"
-              HBox.hgrow="ALWAYS">
-
-            <!-- "Sign Up" title, centered -->
-            <Label text="Sign Up"
-                   styleClass="reg-form-title"
-                   maxWidth="1e9"
-                   style="-fx-alignment: center; -fx-text-alignment: center;" />
-
-            <Region prefHeight="6" />
-
-            <!-- FORM GRID -->
-        <VBox spacing="8">
-            <GridPane hgap="12" vgap="8" maxWidth="1e9">
-                <columnConstraints>
-                    <ColumnConstraints percentWidth="50" hgrow="ALWAYS" />
-                    <ColumnConstraints percentWidth="50" hgrow="ALWAYS" />
-                </columnConstraints>
-
-                <!-- Row 0: Name | Last name -->
-                <VBox spacing="4" GridPane.columnIndex="0" GridPane.rowIndex="0">
-                    <Label text="Name" styleClass="reg-label" />
-                    <TextField fx:id="prenomField"
-                               promptText="Name"
-                               styleClass="pill-field" />
-                    <Label fx:id="prenomError"
-                           styleClass="reg-error"
-                           visible="false" managed="false" />
-                </VBox>
-
-                <VBox spacing="4" GridPane.columnIndex="1" GridPane.rowIndex="0">
-                    <Label text="Last name" styleClass="reg-label" />
-                    <TextField fx:id="nomField"
-                               promptText="Last name"
-                               styleClass="pill-field" />
-                    <Label fx:id="nomError"
-                           styleClass="reg-error"
-                           visible="false" managed="false" />
-                </VBox>
-
-                <!-- Row 1: Email (full width) -->
-                <VBox spacing="4"
-                      GridPane.columnIndex="0" GridPane.rowIndex="1"
-                      GridPane.columnSpan="2">
-                    <Label text="Email" styleClass="reg-label" />
-                    <TextField fx:id="emailField"
-                               promptText="email"
-                               styleClass="pill-field"
-                               maxWidth="1e9" />
-                    <Label fx:id="emailError"
-                           styleClass="reg-error"
-                           visible="false" managed="false" />
-                </VBox>
-
-                <!-- Row 2: Password | Confirm Password -->
-                <VBox spacing="4" GridPane.columnIndex="0" GridPane.rowIndex="2">
-                    <Label text="Password" styleClass="reg-label" />
-                    <PasswordField fx:id="passwordField"
-                                   promptText="............"
-                                   styleClass="pill-field" />
-                    <Label fx:id="passwordError"
-                           styleClass="reg-error"
-                           visible="false" managed="false" />
-                </VBox>
-
-                <VBox spacing="4" GridPane.columnIndex="1" GridPane.rowIndex="2">
-                    <Label text="Confirm Password" styleClass="reg-label" />
-                    <PasswordField fx:id="confirmPasswordField"
-                                   promptText="............"
-                                   styleClass="pill-field" />
-                    <Label fx:id="confirmPasswordError"
-                           styleClass="reg-error"
-                           visible="false" managed="false" />
-                </VBox>
-
-                <!-- Row 3: Phone | Address -->
-                <VBox spacing="4" GridPane.columnIndex="0" GridPane.rowIndex="3">
-                    <Label text="Phone (optional)" styleClass="reg-label" />
-                    <TextField fx:id="phoneField"
-                               promptText="phone"
-                               styleClass="pill-field" />
-                    <Label fx:id="phoneError"
-                           styleClass="reg-error"
-                           visible="false" managed="false" />
-                </VBox>
-
-                <VBox spacing="4" GridPane.columnIndex="1" GridPane.rowIndex="3">
-                    <Label text="Adress (optional)" styleClass="reg-label" />
-                    <TextField fx:id="addressField"
-                               promptText="address"
-                               styleClass="pill-field" />
-                </VBox>
-
-
-            </GridPane>
-            <!-- Entreprise row — framed box only around this section -->
-            <HBox alignment="CENTER_LEFT" spacing="16"
-                  style="-fx-background-color: #DED1C6;
-                    -fx-border-color: #A77693;
-                    -fx-border-width: 1.5;
-                    -fx-border-radius: 12;
-                    -fx-background-radius: 12;
-                    -fx-padding: 10 16 10 16;">
-                <Label text="Entreprise" styleClass="reg-label"
-                       style="-fx-font-size: 13px; -fx-font-weight: 800;"
-                       HBox.hgrow="NEVER" />
-                <Region HBox.hgrow="ALWAYS" />
-                <ComboBox fx:id="entrepriseCombo"
-                          promptText=""
-                          styleClass="pill-combo"
-                          minWidth="180"
-                          prefWidth="220"
-                          prefHeight="38" />
-            </HBox>
-        </VBox>
-
-            <!-- Hidden enterprise boxes — kept for controller logic, invisible -->
-            <VBox fx:id="existingEnterpriseBox"
-                  visible="false" managed="false" />
-            <VBox fx:id="newEnterpriseBox"
-                  visible="false" managed="false">
-                <TextField fx:id="entrepriseNameField" />
-                <TextField fx:id="entrepriseSiretField" />
-                <Label fx:id="siretError" visible="false" managed="false" />
+            <!-- Row 0: Name | Last name -->
+            <VBox spacing="4" GridPane.columnIndex="0" GridPane.rowIndex="0">
+                <Label text="Name" styleClass="login-label" />
+                <TextField fx:id="prenomField"
+                           promptText="Name"
+                           styleClass="login-pill-field" />
+                <Label fx:id="prenomError"
+                       styleClass="reg-error"
+                       visible="false" managed="false" />
             </VBox>
 
-            <!-- Message label (success/error feedback) -->
-            <Label fx:id="messageLabel"
-                   styleClass="reg-message"
-                   wrapText="true"
-                   maxWidth="1e9" />
+            <VBox spacing="4" GridPane.columnIndex="1" GridPane.rowIndex="0">
+                <Label text="Last name" styleClass="login-label" />
+                <TextField fx:id="nomField"
+                           promptText="Last name"
+                           styleClass="login-pill-field" />
+                <Label fx:id="nomError"
+                       styleClass="reg-error"
+                       visible="false" managed="false" />
+            </VBox>
 
-            <Region prefHeight="4" />
+            <!-- Row 1: Email full width -->
+            <VBox spacing="4"
+                  GridPane.columnIndex="0" GridPane.rowIndex="1"
+                  GridPane.columnSpan="2">
+                <Label text="Email" styleClass="login-label" />
+                <TextField fx:id="emailField"
+                           promptText="email"
+                           styleClass="login-pill-field"
+                           maxWidth="9999" />
+                <Label fx:id="emailError"
+                       styleClass="reg-error"
+                       visible="false" managed="false" />
+            </VBox>
 
-            <!-- CREATE ACCOUNT button -->
-            <Button text="Create Account"
-                    defaultButton="true"
-                    onAction="#registerUser"
-                    styleClass="reg-primary-btn"
-                    maxWidth="1e9" />
+            <!-- Row 2: Password | Confirm Password -->
+            <VBox spacing="4" GridPane.columnIndex="0" GridPane.rowIndex="2">
+                <Label text="Password" styleClass="login-label" />
+                <PasswordField fx:id="passwordField"
+                               promptText="............"
+                               styleClass="login-pill-field" />
+                <Label fx:id="passwordError"
+                       styleClass="reg-error"
+                       visible="false" managed="false" />
+            </VBox>
 
+            <VBox spacing="4" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                <Label text="Confirm Password" styleClass="login-label" />
+                <PasswordField fx:id="confirmPasswordField"
+                               promptText="............"
+                               styleClass="login-pill-field" />
+                <Label fx:id="confirmPasswordError"
+                       styleClass="reg-error"
+                       visible="false" managed="false" />
+            </VBox>
+
+            <!-- Row 3: Phone | Address -->
+            <VBox spacing="4" GridPane.columnIndex="0" GridPane.rowIndex="3">
+                <Label text="Phone (optional)" styleClass="login-label" />
+                <TextField fx:id="phoneField"
+                           promptText="phone"
+                           styleClass="login-pill-field" />
+                <Label fx:id="phoneError"
+                       styleClass="reg-error"
+                       visible="false" managed="false" />
+            </VBox>
+
+            <VBox spacing="4" GridPane.columnIndex="1" GridPane.rowIndex="3">
+                <Label text="Address (optional)" styleClass="login-label" />
+                <TextField fx:id="addressField"
+                           promptText="address"
+                           styleClass="login-pill-field" />
+            </VBox>
+
+        </GridPane>
+
+        <!-- Entreprise row -->
+        <HBox alignment="CENTER_LEFT" spacing="16"
+              style="-fx-background-color: #eff6ff;
+                     -fx-border-color: #3b82f6;
+                     -fx-border-width: 1.5;
+                     -fx-border-radius: 12;
+                     -fx-background-radius: 12;
+                     -fx-padding: 10 16 10 16;">
+            <Label text="Entreprise" styleClass="login-label"
+                   style="-fx-font-size: 13px; -fx-font-weight: 800;"
+                   HBox.hgrow="NEVER" />
+            <Region HBox.hgrow="ALWAYS" />
+            <ComboBox fx:id="entrepriseCombo"
+                      promptText="Select"
+                      minWidth="180"
+                      prefWidth="220"
+                      prefHeight="38" />
+        </HBox>
+
+        <!-- Hidden boxes for controller logic -->
+        <VBox fx:id="existingEnterpriseBox" visible="false" managed="false" />
+        <VBox fx:id="newEnterpriseBox" visible="false" managed="false">
+            <TextField fx:id="entrepriseNameField" />
+            <TextField fx:id="entrepriseSiretField" />
+            <Label fx:id="siretError" visible="false" managed="false" />
         </VBox>
-    </HBox>
+
+        <!-- Feedback message -->
+        <Label fx:id="messageLabel"
+               styleClass="reg-message"
+               wrapText="true"
+               maxWidth="9999" />
+
+        <!-- Create Account button -->
+        <Button text="Create Account"
+                defaultButton="true"
+                onAction="#registerUser"
+                styleClass="login-primary-btn"
+                maxWidth="9999" />
+
+        <!-- Already have account -->
+        <HBox alignment="CENTER" spacing="6">
+            <Label text="Already have an account?" styleClass="login-label" />
+            <Button text="Login"
+                    styleClass="login-create-link"
+                    onAction="#goToLogin" />
+        </HBox>
+
+    </VBox>
 </StackPane>

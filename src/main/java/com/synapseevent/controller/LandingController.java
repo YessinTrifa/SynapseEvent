@@ -10,12 +10,19 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
+import javafx.scene.image.ImageView;
+
 public class LandingController {
 
     @FXML private StackPane rootPane;
-
+    @FXML private ImageView bgImage;
     @FXML
     private void initialize() {
+
+
+// inside initialize():
+        bgImage.fitWidthProperty().bind(rootPane.widthProperty());
+        bgImage.fitHeightProperty().bind(rootPane.heightProperty());
 
     }
 

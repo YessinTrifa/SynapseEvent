@@ -3,6 +3,8 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.image.Image?>
 
 <StackPane
         styleClass="login-bg"
@@ -11,94 +13,91 @@
         xmlns:fx="http://javafx.com/fxml/1"
         fx:controller="com.synapseevent.controller.LoginController">
 
-   <!-- Centered card -->
-   <HBox maxWidth="780" maxHeight="500"
-         StackPane.alignment="CENTER"
-         style="-fx-background-radius: 32;
-                 -fx-border-radius: 32;
-                 -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.55), 40, 0.2, 0, 8);">
+    <!-- Centered card -->
+    <HBox maxWidth="780" maxHeight="500"
+          spacing="0"
+          StackPane.alignment="CENTER"
+          style="-fx-background-radius: 32;
+                -fx-border-radius: 32;
+                -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.55), 40, 0.2, 0, 8);">
 
-      <!-- ══════════════ LEFT PANEL ══════════════ -->
-      <StackPane styleClass="login-left-panel"
-                 HBox.hgrow="NEVER"
-                 minWidth="280" prefWidth="320" maxWidth="360"
-                 style="-fx-background-radius: 32 0 0 32;
-                          -fx-border-radius: 32 0 0 32;">
+        <!-- ══════════════ LEFT PANEL ══════════════ -->
+        <StackPane styleClass="login-left-panel"
+                   HBox.hgrow="NEVER"
+                   minWidth="340" prefWidth="380" maxWidth="420"
+                   style="-fx-background-radius: 32 0 0 32;
+                        -fx-border-radius: 32 0 0 32;">
 
-         <!-- Clock background image -->
-         <Region styleClass="login-left-bg" />
+            <!-- Background image -->
+            <ImageView fitWidth="420" fitHeight="500"
+                       preserveRatio="false"
+                       opacity="1.0">
+                <image>
+                    <Image url="@../images/backg2.png" />
+                </image>
+            </ImageView>
 
-         <!-- Warm beige overlay + text -->
-         <VBox styleClass="login-left-overlay"
-               spacing="0"
-               StackPane.alignment="CENTER">
-            <padding>
-               <Insets top="80" right="28" bottom="32" left="28"/>
-            </padding>
+            <!-- Overlay + text -->
+            <VBox styleClass="login-left-overlay"
+                  spacing="0"
+                  StackPane.alignment="CENTER">
+                <padding>
+                    <Insets top="80" right="28" bottom="32" left="28"/>
+                </padding>
 
-            <!-- Headline -->
-            <Label text="Create your"  styleClass="login-headline" />
-            <Label text="Account"      styleClass="login-headline" />
 
-            <Region prefHeight="14" />
 
-            <!-- Subtitle -->
-            <Label text="Manage events , guests, teams in one place"
-                   styleClass="login-subhead"
-                   wrapText="true" />
 
-            <!-- Push link to bottom -->
-            <Region VBox.vgrow="ALWAYS" />
 
-            <!-- No account row -->
-            <HBox alignment="CENTER_LEFT" spacing="4">
-               <Label text="No account ?" styleClass="login-already" />
-               <Button text="Create one"
-                       styleClass="login-create-link"
-                       onAction="#goToRegister" />
-            </HBox>
 
-         </VBox>
-      </StackPane>
 
-      <!-- ══════════════ RIGHT PANEL ══════════════ -->
-      <VBox styleClass="login-right-panel"
-            spacing="20"
-            HBox.hgrow="ALWAYS">
 
-         <!-- "Sign In" title -->
-         <Label text="Sign In"
-                styleClass="login-form-title"
-                maxWidth="9999"
-                style="-fx-alignment: center; -fx-text-alignment: center;" />
+                <Region VBox.vgrow="ALWAYS" />
 
-         <!-- Email field -->
-         <VBox spacing="6">
-            <Label text="Email" styleClass="login-label" />
-            <TextField fx:id="emailField"
-                       promptText="email"
-                       styleClass="login-pill-field"
-                       maxWidth="9999" />
-         </VBox>
+                <HBox alignment="CENTER_LEFT" spacing="4">
+                    <Label text="No account ?" styleClass="login-already" />
+                    <Button text="Create one"
+                            styleClass="login-create-link"
+                            onAction="#goToRegister" />
+                </HBox>
 
-         <!-- Password field -->
-         <VBox spacing="6">
-            <Label text="Password" styleClass="login-label" />
-            <PasswordField fx:id="passwordField"
-                           promptText="..............."
+            </VBox>
+        </StackPane>
+
+        <!-- ══════════════ RIGHT PANEL ══════════════ -->
+        <VBox styleClass="login-right-panel"
+              spacing="20"
+              HBox.hgrow="ALWAYS">
+
+            <Label text="Sign In"
+                   styleClass="login-form-title"
+                   maxWidth="9999"
+                   style="-fx-alignment: center; -fx-text-alignment: center;" />
+
+            <VBox spacing="6">
+                <Label text="Email" styleClass="login-label" />
+                <TextField fx:id="emailField"
+                           promptText="email"
                            styleClass="login-pill-field"
                            maxWidth="9999" />
-         </VBox>
+            </VBox>
 
-         <Region prefHeight="8" />
+            <VBox spacing="6">
+                <Label text="Password" styleClass="login-label" />
+                <PasswordField fx:id="passwordField"
+                               promptText="..............."
+                               styleClass="login-pill-field"
+                               maxWidth="9999" />
+            </VBox>
 
-         <!-- Sign In button -->
-         <Button text="Sign In"
-                 defaultButton="true"
-                 onAction="#login"
-                 styleClass="login-primary-btn"
-                 maxWidth="9999" />
+            <Region prefHeight="8" />
 
-      </VBox>
-   </HBox>
+            <Button text="Sign In"
+                    defaultButton="true"
+                    onAction="#login"
+                    styleClass="login-primary-btn"
+                    maxWidth="9999" />
+
+        </VBox>
+    </HBox>
 </StackPane>

@@ -151,6 +151,8 @@ public class UserDashboardController {
 
     @FXML private VBox userPageBrowsePanel;
 
+    @FXML private Label userTopTitle;
+
     // For booking confirmation
     private EventInstance selectedEventForBooking;
 
@@ -2072,117 +2074,152 @@ public class UserDashboardController {
     }
 
     private VBox createEventCard(EventInstance ei) {
-        // Determine card color based on event type
-        String cardColor = getCardColor(ei.getType());
-        String emoji = getEventEmoji(ei.getType());
-
         VBox card = new VBox();
-        card.setPrefWidth(280);
-        card.setPrefHeight(280);
+        card.setPrefWidth(260);
         card.setStyle(
-                "-fx-background-color: #DED1C6;" +
+                "-fx-background-color: rgba(255,255,255,0.55);" +
                         "-fx-background-radius: 14;" +
                         "-fx-border-radius: 14;" +
-                        "-fx-border-color: #2a0b33;" +
-                        "-fx-border-width: 1.5;" +
-                        "-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.18), 10, 0, 0, 3);" +
+                        "-fx-border-color: transparent;" +
+                        "-fx-border-width: 0;" +
+                        "-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 10, 0, 0, 3);" +
                         "-fx-padding: 0;"
         );
 
-        // Header with gradient
-        Label header = new Label(emoji + " " + (ei.getType() != null ? ei.getType() : "Event"));
+        // Header bar - blue like table header
+        String emoji = getEventEmoji(ei.getType());
+        Label header = new Label(emoji + "  " + (ei.getType() != null ? ei.getType() : "Event"));
+        header.setMaxWidth(Double.MAX_VALUE);
         header.setStyle(
-            "-fx-font-size: 14; " +
-            "-fx-font-weight: bold; " +
-            "-fx-text-fill: white; " +
-            "-fx-padding: 15; " +
-            "-fx-background-color: " + cardColor + "; " +
-            "-fx-background-radius: 15 15 0 0;"
+                "-fx-background-color: #3b82f6;" +
+                        "-fx-background-radius: 14 14 0 0;" +
+                        "-fx-text-fill: white;" +
+                        "-fx-font-family: 'Segoe UI';" +
+                        "-fx-font-size: 13px;" +
+                        "-fx-font-weight: 700;" +
+                        "-fx-padding: 12 16;"
         );
-        header.setPrefHeight(50);
-        header.setAlignment(Pos.CENTER_LEFT);
 
-        // Event Name
+        // Content area
+        VBox content = new VBox(8);
+        content.setStyle("-fx-padding: 14 16 16 16;");
+
+        // Event name
         Label nameLabel = new Label(ei.getName() != null ? ei.getName() : "Unnamed Event");
-        nameLabel.setStyle("-fx-font-size: 15; -fx-font-weight: bold; -fx-text-fill: #0F2D4D; -fx-font-family: Georgia; -fx-padding: 12 14 4 14;");
+        nameLabel.setStyle(
+                "-fx-font-family: 'Segoe UI';" +
+                        "-fx-font-size: 15px;" +
+                        "-fx-font-weight: 700;" +
+                        "-fx-text-fill: #0f172a;"
+        );
         nameLabel.setWrapText(true);
 
-        // Date with icon
-        Label dateLabel = new Label("Date: " + (ei.getDate() != null ? ei.getDate().toString() : "TBD"));
-        dateLabel.setStyle("-fx-font-size: 12; -fx-text-fill: #174871; -fx-padding: 4 14;");
-        // Location with icon
-        Label locationLabel = new Label("Location: " + (ei.getLocation() != null ? ei.getLocation() : "TBD"));
-        locationLabel.setStyle("-fx-font-size: 12; -fx-text-fill: #174871; -fx-padding: 4 14;");
+        // Date
+        Label dateLabel = new Label("📅  " + (ei.getDate() != null ? ei.getDate().toString() : "TBD"));
+        dateLabel.setStyle(
+                "-fx-font-family: 'Segoe UI';" +
+                        "-fx-font-size: 12px;" +
+                        "-fx-text-fill: #475569;"
+        );
+
+        // Location
+        Label locationLabel = new Label("📍  " + (ei.getLocation() != null ? ei.getLocation() : "TBD"));
+        locationLabel.setStyle(
+                "-fx-font-family: 'Segoe UI';" +
+                        "-fx-font-size: 12px;" +
+                        "-fx-text-fill: #475569;"
+        );
         locationLabel.setWrapText(true);
 
         // Price
-        Label priceLabel = new Label("Price: " + (ei.getPrice() != null ? ei.getPrice() + " TND" : "Free"));
-        priceLabel.setStyle("-fx-font-size: 14; -fx-font-weight: bold; -fx-text-fill: #A77693; -fx-padding: 8 14;");
+        Label priceLabel = new Label(ei.getPrice() != null ? ei.getPrice() + " TND" : "Free");
+        priceLabel.setStyle(
+                "-fx-font-family: 'Segoe UI';" +
+                        "-fx-font-size: 16px;" +
+                        "-fx-font-weight: 700;" +
+                        "-fx-text-fill: #1e40af;"
+        );
 
         // Status badge
-        Label statusLabel = new Label(ei.getStatus() != null ? ei.getStatus().toUpperCase() : "AVAILABLE");
-        String statusColor = "published".equalsIgnoreCase(ei.getStatus()) ? "#174871" :
-                "available".equalsIgnoreCase(ei.getStatus()) ? "#174871" :
-                        "pending".equalsIgnoreCase(ei.getStatus()) ? "#4b3a7c" : "rgba(70,48,117,0.3)";
+        String status = ei.getStatus() != null ? ei.getStatus().toUpperCase() : "AVAILABLE";
+        Label statusLabel = new Label(status);
+        String badgeColor = "published".equalsIgnoreCase(ei.getStatus()) ? "#dcfce7" :
+                "pending".equalsIgnoreCase(ei.getStatus())   ? "#fef9c3" : "#dbeafe";
+        String badgeText  = "published".equalsIgnoreCase(ei.getStatus()) ? "#166534" :
+                "pending".equalsIgnoreCase(ei.getStatus())   ? "#854d0e" : "#1e40af";
         statusLabel.setStyle(
-                "-fx-font-size: 11;" +
-                        "-fx-font-weight: bold;" +
-                        "-fx-text-fill: #2a0b33;" +
-                        "-fx-background-color: " + statusColor + ";" +
-                        "-fx-padding: 4 10;" +
-                        "-fx-background-radius: 10;" +
-                        "-fx-border-color: #2a0b33;" +
-                        "-fx-border-width: 1;" +
-                        "-fx-border-radius: 10;"
+                "-fx-background-color: " + badgeColor + ";" +
+                        "-fx-text-fill: " + badgeText + ";" +
+                        "-fx-font-family: 'Segoe UI';" +
+                        "-fx-font-size: 10px;" +
+                        "-fx-font-weight: 700;" +
+                        "-fx-padding: 3 10;" +
+                        "-fx-background-radius: 999;"
         );
-        HBox statusBox = new HBox(statusLabel);
-        statusBox.setStyle("-fx-padding: 0 14 8 14;");
-        // Book Button
+
+        // Book button
         Button bookBtn = new Button("Book Now");
+        bookBtn.setMaxWidth(Double.MAX_VALUE);
         bookBtn.setStyle(
-                "-fx-background-color: " + cardColor + ";" +
-                        "-fx-text-fill: #2a0b33;" +
-                        "-fx-font-size: 13;" +
-                        "-fx-font-weight: bold;" +
+                "-fx-background-color: #3b82f6;" +
+                        "-fx-text-fill: white;" +
+                        "-fx-font-family: 'Segoe UI';" +
+                        "-fx-font-size: 13px;" +
+                        "-fx-font-weight: 700;" +
                         "-fx-padding: 10 20;" +
-                        "-fx-background-radius: 999;" +
-                        "-fx-border-color: #2a0b33;" +
-                        "-fx-border-width: 1;" +
-                        "-fx-border-radius: 999;" +
-                        "-fx-cursor: hand;"
+                        "-fx-background-radius: 10;" +
+                        "-fx-border-color: transparent;" +
+                        "-fx-cursor: hand;" +
+                        "-fx-effect: dropshadow(gaussian, rgba(59,130,246,0.30), 8, 0, 0, 3);"
         );
-        bookBtn.setPrefHeight(36);
         bookBtn.setOnAction(e -> showEventDetailsDialog(ei));
 
-        VBox content = new VBox(nameLabel, dateLabel, locationLabel, priceLabel, statusBox, bookBtn);
-        content.setStyle("-fx-padding: 0;");
+        bookBtn.setOnMouseEntered(e -> bookBtn.setStyle(
+                "-fx-background-color: #2563eb;" +
+                        "-fx-text-fill: white;" +
+                        "-fx-font-family: 'Segoe UI';" +
+                        "-fx-font-size: 13px;" +
+                        "-fx-font-weight: 700;" +
+                        "-fx-padding: 10 20;" +
+                        "-fx-background-radius: 10;" +
+                        "-fx-border-color: transparent;" +
+                        "-fx-cursor: hand;"
+        ));
+        bookBtn.setOnMouseExited(e -> bookBtn.setStyle(
+                "-fx-background-color: #3b82f6;" +
+                        "-fx-text-fill: white;" +
+                        "-fx-font-family: 'Segoe UI';" +
+                        "-fx-font-size: 13px;" +
+                        "-fx-font-weight: 700;" +
+                        "-fx-padding: 10 20;" +
+                        "-fx-background-radius: 10;" +
+                        "-fx-border-color: transparent;" +
+                        "-fx-cursor: hand;" +
+                        "-fx-effect: dropshadow(gaussian, rgba(59,130,246,0.30), 8, 0, 0, 3);"
+        ));
 
+        content.getChildren().addAll(nameLabel, dateLabel, locationLabel, priceLabel, statusLabel, bookBtn);
         card.getChildren().addAll(header, content);
 
-        // Hover effect
-        card.setOnMouseEntered(e -> {
-            card.setStyle(
-                    "-fx-background-color: #DED1C6;" +
-                            "-fx-background-radius: 14;" +
-                            "-fx-border-radius: 14;" +
-                            "-fx-border-color: " + cardColor + ";" +
-                            "-fx-border-width: 2;" +
-                            "-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.28), 14, 0, 0, 4);" +
-                            "-fx-padding: 0;"
-            );
-        });
-
-        card.setOnMouseExited(e -> {
-            card.setStyle(
-                    "-fx-background-color: #938abd;" +
-                            "-fx-background-radius: 14;" +
-                            "-fx-border-radius: 14;" +
-                            "-fx-border-color: #8a6a20;" +
-                            "-fx-border-width: 1.5;" +
-                            "-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.18), 10, 0, 0, 3);" +
-                            "-fx-padding: 0;"
-            );
-        });
+        // Hover effect on card
+        card.setOnMouseEntered(e -> card.setStyle(
+                "-fx-background-color: rgba(255,255,255,0.85);" +
+                        "-fx-background-radius: 14;" +
+                        "-fx-border-radius: 14;" +
+                        "-fx-border-color: #3b82f6;" +
+                        "-fx-border-width: 1.5;" +
+                        "-fx-effect: dropshadow(gaussian, rgba(59,130,246,0.18), 14, 0, 0, 4);" +
+                        "-fx-padding: 0;"
+        ));
+        card.setOnMouseExited(e -> card.setStyle(
+                "-fx-background-color: rgba(255,255,255,0.55);" +
+                        "-fx-background-radius: 14;" +
+                        "-fx-border-radius: 14;" +
+                        "-fx-border-color: transparent;" +
+                        "-fx-border-width: 0;" +
+                        "-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 10, 0, 0, 3);" +
+                        "-fx-padding: 0;"
+        ));
 
         return card;
     }
@@ -2771,6 +2808,15 @@ public class UserDashboardController {
             if (b != null) b.getStyleClass().remove("user-nav-btn-active");
         }
         if (active != null) active.getStyleClass().add("user-nav-btn-active");
+
+        // Update top title
+        if (userTopTitle != null) {
+            if (active == userNavHome)      userTopTitle.setText("Home");
+            else if (active == userNavBrowse)    userTopTitle.setText("Browse By Type");
+            else if (active == userNavBookings)  userTopTitle.setText("My Booking");
+            else if (active == userNavRequests)  userTopTitle.setText("Custom Requests");
+            else if (active == userNavProfile)   userTopTitle.setText("Profile");
+        }
     }
 
     private void showUserPage(javafx.scene.Node page) {
@@ -2807,6 +2853,21 @@ public class UserDashboardController {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    private void setActivePage(Button activeBtn, String title) {
+        // Remove active style from all nav buttons
+        userNavHome.getStyleClass().remove("user-nav-btn-active");
+        userNavBrowse.getStyleClass().remove("user-nav-btn-active");
+        userNavBookings.getStyleClass().remove("user-nav-btn-active");
+        userNavRequests.getStyleClass().remove("user-nav-btn-active");
+        userNavProfile.getStyleClass().remove("user-nav-btn-active");
+
+        // Add active style to clicked button
+        activeBtn.getStyleClass().add("user-nav-btn-active");
+
+        // Update top title
+        userTopTitle.setText(title);
     }
 }
 
