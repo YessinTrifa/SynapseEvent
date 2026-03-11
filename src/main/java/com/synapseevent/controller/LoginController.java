@@ -4,6 +4,8 @@ import com.synapseevent.entities.User;
 import com.synapseevent.service.UserService;
 import com.synapseevent.utils.CurrentUser;
 import com.synapseevent.utils.Navigator;
+import com.synapseevent.utils.ScrollingPlaceholder;
+import com.synapseevent.utils.ErrorPopup;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -24,14 +26,40 @@ public class LoginController {
     private UserService userService = new UserService();
 
     @FXML
+    public void initialize() {
+        // Clear errors when user starts typing
+        emailField.textProperty().addListener((obs, old, v) -> {
+            if (!v.isEmpty()) {
+                clearFieldErrors();
+            }
+        });
+        
+        passwordField.textProperty().addListener((obs, old, v) -> {
+            if (!v.isEmpty()) {
+                clearFieldErrors();
+            }
+        });
+    }
+
+    @FXML
     private void login() {
         String emailText = emailField.getText();
         String passwordText = passwordField.getText();
 
+        // Reset field styles and placeholders
+        clearFieldErrors();
+
+        // Basic validation
+        if (emailText == null || emailText.trim().isEmpty() || 
+            passwordText == null || passwordText.trim().isEmpty()) {
+            setAuthenticationError();
+            return;
+        }
+
         User user = userService.authenticate(emailText, passwordText);
 
         if (user == null) {
-            System.out.println("Invalid credentials");
+            setAuthenticationError();
             return;
         }
 
@@ -64,5 +92,28 @@ public class LoginController {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    private void setAuthenticationError() {
+        String errorMessage = "Invalid email or password. Please check your credentials and try again.";
+        
+        // Clear both fields and set error message for security
+        emailField.clear();
+        emailField.setPromptText("Invalid email or password");
+        emailField.setStyle("-fx-prompt-text-fill: #ff6b6b; -fx-border-color: #ff6b6b; -fx-border-width: 2;");
+        
+        passwordField.clear();
+        passwordField.setPromptText("Invalid email or password. Please check your credentials and try again.");
+        passwordField.setStyle("-fx-prompt-text-fill: #ff6b6b; -fx-border-color: #ff6b6b; -fx-border-width: 2;");
+    }
+
+    private void clearFieldErrors() {
+        ScrollingPlaceholder.stopScrolling(emailField);
+        emailField.setPromptText("email");
+        emailField.setStyle("");
+        
+        ScrollingPlaceholder.stopScrolling(passwordField);
+        passwordField.setPromptText("...............");
+        passwordField.setStyle("");
     }
 }

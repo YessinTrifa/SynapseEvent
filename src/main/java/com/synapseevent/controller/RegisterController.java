@@ -8,6 +8,8 @@ import com.synapseevent.service.RoleService;
 import com.synapseevent.service.UserService;
 import com.synapseevent.utils.MaConnection;
 import com.synapseevent.utils.Navigator;
+import com.synapseevent.utils.ScrollingPlaceholder;
+import com.synapseevent.utils.ErrorPopup;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -96,13 +98,25 @@ public class RegisterController {
             e.printStackTrace();
         }
 
-        // Clear errors live
-        nomField.textProperty().addListener((obs, old, v) -> clearError(nomError, nomField));
-        prenomField.textProperty().addListener((obs, old, v) -> clearError(prenomError, prenomField));
-        emailField.textProperty().addListener((obs, old, v) -> clearError(emailError, emailField));
-        passwordField.textProperty().addListener((obs, old, v) -> clearError(passwordError, passwordField));
-        confirmPasswordField.textProperty().addListener((obs, old, v) -> clearError(confirmPasswordError, confirmPasswordField));
-        phoneField.textProperty().addListener((obs, old, v) -> clearError(phoneError, phoneField));
+        // Clear errors and placeholders when user starts typing
+        nomField.textProperty().addListener((obs, old, v) -> {
+            clearFieldError(nomField, "Last name");
+        });
+        prenomField.textProperty().addListener((obs, old, v) -> {
+            clearFieldError(prenomField, "Name");
+        });
+        emailField.textProperty().addListener((obs, old, v) -> {
+            clearFieldError(emailField, "email");
+        });
+        passwordField.textProperty().addListener((obs, old, v) -> {
+            clearFieldError(passwordField, "............");
+        });
+        confirmPasswordField.textProperty().addListener((obs, old, v) -> {
+            clearFieldError(confirmPasswordField, "............");
+        });
+        phoneField.textProperty().addListener((obs, old, v) -> {
+            clearFieldError(phoneField, "phone");
+        });
     }
 
     @FXML
@@ -118,53 +132,70 @@ public class RegisterController {
         boolean hasError = false;
 
         if (nom.isEmpty() || nom.length() < 2 || !nom.matches("[a-zA-ZÀ-ÿ\\s]+")) {
-            showError(nomError, nomField, "Last name must be at least 2 letters, no numbers.");
+            nomField.clear();
+            nomField.setPromptText("Last name must be at least 2 letters, no numbers.");
+            nomField.setStyle("-fx-prompt-text-fill: #ff6b6b; -fx-border-color: #ff6b6b; -fx-border-width: 2;");
             hasError = true;
         }
 
         if (prenom.isEmpty() || prenom.length() < 2 || !prenom.matches("[a-zA-ZÀ-ÿ\\s]+")) {
-            showError(prenomError, prenomField, "First name must be at least 2 letters, no numbers.");
+            prenomField.clear();
+            prenomField.setPromptText("First name must be at least 2 letters, no numbers.");
+            prenomField.setStyle("-fx-prompt-text-fill: #ff6b6b; -fx-border-color: #ff6b6b; -fx-border-width: 2;");
             hasError = true;
         }
 
         if (!email.matches("^[a-zA-Z0-9._%+\\-]+@[a-zA-Z0-9.\\-]+\\.[a-zA-Z]{2,}$")) {
-            showError(emailError, emailField, "Please enter a valid email address.");
+            emailField.clear();
+            emailField.setPromptText("Please enter a valid email address.");
+            emailField.setStyle("-fx-prompt-text-fill: #ff6b6b; -fx-border-color: #ff6b6b; -fx-border-width: 2;");
             hasError = true;
         }
 
         if (!password.matches("^(?=.*[A-Z])(?=.*\\d).{8,}$")) {
-            showError(passwordError, passwordField, "Min 8 characters, 1 uppercase letter, 1 number.");
+            passwordField.clear();
+            passwordField.setPromptText("Password must be at least 8 characters with 1 uppercase letter and 1 number.");
+            passwordField.setStyle("-fx-prompt-text-fill: #ff6b6b; -fx-border-color: #ff6b6b; -fx-border-width: 2;");
             hasError = true;
         }
 
         if (!password.equals(confirmPassword)) {
-            showError(confirmPasswordError, confirmPasswordField, "Passwords do not match.");
+            confirmPasswordField.clear();
+            confirmPasswordField.setPromptText("Passwords do not match.");
+            confirmPasswordField.setStyle("-fx-prompt-text-fill: #ff6b6b; -fx-border-color: #ff6b6b; -fx-border-width: 2;");
             hasError = true;
         }
 
         if (!phone.isEmpty() && !phone.matches("^[+0-9\\s]{8,15}$")) {
-            showError(phoneError, phoneField, "Phone must be 8-15 digits.");
+            phoneField.clear();
+            phoneField.setPromptText("Phone number must be 8-15 digits long.");
+            phoneField.setStyle("-fx-prompt-text-fill: #ff6b6b; -fx-border-color: #ff6b6b; -fx-border-width: 2;");
             hasError = true;
         }
 
-        if (hasError) return;
+        if (hasError) {
+            return;
+        }
 
         if (userService.findByEmail(email) != null) {
-            showError(emailError, emailField, "This email is already registered.");
+            emailField.clear();
+            emailField.setPromptText("This email address is already registered.");
+            emailField.setStyle("-fx-prompt-text-fill: #ff6b6b; -fx-border-color: #ff6b6b; -fx-border-width: 2;");
             return;
         }
 
         try {
             Role userRole = roleService.getByName("User");
             if (userRole == null) {
-                messageLabel.setText("Error: User role not found");
+                messageLabel.setText("User role not found in the database. Please contact the system administrator.");
+                messageLabel.setStyle("-fx-text-fill: #ff6b6b; -fx-font-size: 13; -fx-font-weight: 700;");
                 return;
             }
 
             // ✅ ONLY select existing enterprise (no type, no create-new)
             Entreprise enterprise = entrepriseCombo.getValue();
             if (enterprise == null) {
-                messageLabel.setText("Please select an enterprise.");
+                messageLabel.setText("Please select an enterprise from the dropdown list.");
                 messageLabel.setStyle("-fx-text-fill: #ff6b6b; -fx-font-size: 13; -fx-font-weight: 700;");
                 return;
             }
@@ -199,12 +230,12 @@ public class RegisterController {
                     }
                 }).start();
             } else {
-                messageLabel.setText("Error during registration");
+                messageLabel.setText("Failed to create your account. Please try again later or contact support if the problem persists.");
                 messageLabel.setStyle("-fx-text-fill: #ff6b6b; -fx-font-size: 13; -fx-font-weight: 700;");
             }
 
         } catch (Exception e) {
-            messageLabel.setText("Error: " + e.getMessage());
+            messageLabel.setText("An error occurred during registration: " + e.getMessage());
             messageLabel.setStyle("-fx-text-fill: #ff6b6b; -fx-font-size: 13; -fx-font-weight: 700;");
             e.printStackTrace();
         }
@@ -219,17 +250,9 @@ public class RegisterController {
         }
     }
 
-    private void showError(Label errorLabel, TextField field, String message) {
-        errorLabel.setText(message);
-        errorLabel.setVisible(true);
-        errorLabel.setManaged(true);
-        field.setStyle(field.getStyle() + "; -fx-border-color: #ff6b6b; -fx-border-width: 2;");
-    }
-
-    private void clearError(Label errorLabel, TextField field) {
-        errorLabel.setVisible(false);
-        errorLabel.setManaged(false);
-        // ✅ IMPORTANT: do NOT force white backgrounds — let CSS handle it
+    private void clearFieldError(TextField field, String originalPlaceholder) {
+        ScrollingPlaceholder.stopScrolling(field);
+        field.setPromptText(originalPlaceholder);
         field.setStyle("");
     }
 }
