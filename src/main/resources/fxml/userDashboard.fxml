@@ -22,6 +22,7 @@
 <?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.control.Tooltip?>
 <?import javafx.scene.layout.VBox?>
 
 <StackPane styleClass="page-wrap" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.synapseevent.controller.UserDashboardController">
@@ -368,62 +369,136 @@
 
     <!-- OVERLAY DIALOG (from remote) -->
     <StackPane fx:id="eventDialogPane" managed="true" StackPane.alignment="CENTER" style="-fx-background-color: rgba(0,0,0,0.45);" visible="false">
-        <VBox maxHeight="480" prefWidth="420" spacing="14" styleClass="dialog-card">
-            <Label fx:id="dialogEventTitle" styleClass="dialog-title" text="Event Details" />
-            <Separator />
-            <GridPane hgap="15" vgap="10">
-                <Label styleClass="dialog-label" text="Type:" GridPane.columnIndex="0" GridPane.rowIndex="0" />
-                <Label fx:id="dialogEventType" text="-" styleClass="dialog-value" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
-                <Label styleClass="dialog-label" text="Date:" GridPane.columnIndex="0" GridPane.rowIndex="1" />
-                <Label fx:id="dialogEventDate" text="-" styleClass="dialog-value" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
-                <Label styleClass="dialog-label" text="Location:" GridPane.columnIndex="0" GridPane.rowIndex="2" />
-                <Label fx:id="dialogEventLocation" text="-" styleClass="dialog-value" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+        <VBox maxHeight="580" prefWidth="520" spacing="0"
+              style="-fx-background-color: white; -fx-border-radius: 14; -fx-background-radius: 14;
+                     -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.28), 24, 0, 0, 8);">
 
-                <Label styleClass="dialog-label" text="Price:" GridPane.columnIndex="0" GridPane.rowIndex="3" />
-                <Label fx:id="dialogEventPrice" text="-" styleClass="dialog-value" GridPane.columnIndex="1" GridPane.rowIndex="3"/>
-
-                <Label styleClass="dialog-label" text="Status:" GridPane.columnIndex="0" GridPane.rowIndex="4" />
-                <Label fx:id="dialogEventStatus" text="-" styleClass="dialog-value" GridPane.columnIndex="1" GridPane.rowIndex="4"/>
-
-                <Label styleClass="dialog-label" text="Description:" GridPane.columnIndex="0" GridPane.rowIndex="5" />
-            <columnConstraints>
-               <ColumnConstraints />
-               <ColumnConstraints />
-            </columnConstraints>
-            <rowConstraints>
-               <RowConstraints />
-               <RowConstraints />
-               <RowConstraints />
-               <RowConstraints />
-               <RowConstraints />
-               <RowConstraints />
-            </rowConstraints>
-            </GridPane>
-
-            <TextArea fx:id="dialogEventDescription" editable="false" prefRowCount="2" styleClass="dialog-textarea" />
-
-            <Separator />
-
-            <HBox spacing="12" alignment="CENTER_LEFT">
-                <VBox spacing="4" HBox.hgrow="ALWAYS">
-                    <Label styleClass="dialog-label" text="Headcount (persons)" />
-                    <TextField fx:id="dialogHeadcountField" promptText="e.g. 10" styleClass="user-input" prefWidth="120" />
-                </VBox>
-                <VBox spacing="4" HBox.hgrow="ALWAYS">
-                    <Label styleClass="dialog-label" text="Coupon Code" />
-                    <TextField fx:id="dialogCouponCodeField" promptText="e.g. WELCOME10" styleClass="user-input" prefWidth="140" />
-                </VBox>
-                <Button onAction="#applyDialogCoupon" styleClass="btn-primary-sm" text="Preview Price"
-                        style="-fx-padding: 8 14; -fx-background-radius: 8;" VBox.vgrow="ALWAYS" />
+            <!-- Green header bar -->
+            <HBox alignment="CENTER_LEFT"
+                  style="-fx-background-color: #059669; -fx-padding: 16 22;
+                         -fx-background-radius: 13 13 0 0;">
+                <Label fx:id="dialogEventTitle" text="Event Details"
+                       style="-fx-font-size: 17; -fx-font-weight: bold; -fx-text-fill: white;" />
             </HBox>
 
-            <Label fx:id="dialogPricingBreakdown" text="" wrapText="true"
-                   style="-fx-font-family: 'Monospace'; -fx-font-size: 11px; -fx-text-fill: #374151; -fx-background-color: #f3f4f6; -fx-background-radius: 6; -fx-padding: 8;" />
+            <!-- Event info section -->
+            <VBox spacing="14" style="-fx-padding: 20 22 16 22;">
 
-            <HBox alignment="CENTER" spacing="15">
-                <Button onAction="#confirmBooking" styleClass="btn-success" text="Confirm Booking" />
-                <Button onAction="#closeEventDialog" styleClass="btn-ghost" text="Cancel" />
-            </HBox>
+                <!-- Type + Status badge chips -->
+                <HBox spacing="10" alignment="CENTER_LEFT">
+                    <Label fx:id="dialogEventType" text="-"
+                           style="-fx-background-color: #ecfdf5; -fx-border-color: #a7f3d0; -fx-border-width: 1;
+                                  -fx-border-radius: 20; -fx-background-radius: 20; -fx-padding: 4 14;
+                                  -fx-font-size: 12; -fx-font-weight: bold; -fx-text-fill: #065f46;" />
+                    <Label fx:id="dialogEventStatus" text="-"
+                           style="-fx-background-color: #eff6ff; -fx-border-color: #bfdbfe; -fx-border-width: 1;
+                                  -fx-border-radius: 20; -fx-background-radius: 20; -fx-padding: 4 14;
+                                  -fx-font-size: 12; -fx-font-weight: bold; -fx-text-fill: #1e40af;" />
+                </HBox>
+
+                <!-- Date + Location side-by-side -->
+                <HBox spacing="40">
+                    <VBox spacing="3">
+                        <Label text="📅  DATE"
+                               style="-fx-font-size: 10; -fx-font-weight: bold; -fx-text-fill: #9ca3af;" />
+                        <Label fx:id="dialogEventDate" text="-"
+                               style="-fx-font-size: 13; -fx-text-fill: #1f2937;" />
+                    </VBox>
+                    <VBox spacing="3">
+                        <Label text="📍  LOCATION"
+                               style="-fx-font-size: 10; -fx-font-weight: bold; -fx-text-fill: #9ca3af;" />
+                        <Label fx:id="dialogEventLocation" text="-"
+                               style="-fx-font-size: 13; -fx-text-fill: #1f2937;" />
+                    </VBox>
+                </HBox>
+
+                <!-- Price chip -->
+                <VBox spacing="3"
+                      style="-fx-background-color: #fff7ed; -fx-border-color: #fed7aa; -fx-border-width: 1;
+                             -fx-border-radius: 8; -fx-background-radius: 8; -fx-padding: 9 16;
+                             -fx-max-width: 200;">
+                    <Label text="💰  PRICE PER PERSON"
+                           style="-fx-font-size: 10; -fx-font-weight: bold; -fx-text-fill: #9a3412;" />
+                    <Label fx:id="dialogEventPrice" text="-"
+                           style="-fx-font-size: 16; -fx-font-weight: bold; -fx-text-fill: #ea580c;" />
+                </VBox>
+
+                <!-- Description -->
+                <VBox spacing="4">
+                    <Label text="📝  DESCRIPTION"
+                           style="-fx-font-size: 10; -fx-font-weight: bold; -fx-text-fill: #9ca3af;" />
+                    <TextArea fx:id="dialogEventDescription" editable="false" prefRowCount="2"
+                              style="-fx-font-size: 12; -fx-text-fill: #4b5563;
+                                     -fx-background-color: #f9fafb; -fx-border-color: #e5e7eb;
+                                     -fx-border-radius: 6; -fx-background-radius: 6;" />
+                </VBox>
+            </VBox>
+
+            <Separator />
+
+            <!-- Booking section -->
+            <VBox spacing="12" style="-fx-padding: 16 22 22 22;">
+                <Label text="🎯  Booking Details"
+                       style="-fx-font-size: 13; -fx-font-weight: bold; -fx-text-fill: #065f46;" />
+
+                <!-- Headcount + Coupon + Preview -->
+                <HBox spacing="12" alignment="BOTTOM_LEFT">
+                    <VBox spacing="5" HBox.hgrow="ALWAYS">
+                        <HBox spacing="6" alignment="CENTER_LEFT">
+                            <Label text="Headcount (persons)"
+                                   style="-fx-font-size: 12; -fx-font-weight: bold; -fx-text-fill: #374151;" />
+                            <Label text="ℹ"
+                                   style="-fx-font-size: 11; -fx-text-fill: #9ca3af; -fx-cursor: hand;">
+                                <tooltip>
+                                    <Tooltip text="Number of participants. The total price will update accordingly." wrapText="true" prefWidth="210" />
+                                </tooltip>
+                            </Label>
+                        </HBox>
+                        <TextField fx:id="dialogHeadcountField" promptText="e.g. 10"
+                                   style="-fx-font-size: 13; -fx-padding: 7 10; -fx-border-color: #d1d5db;
+                                          -fx-border-radius: 6; -fx-background-radius: 6;" />
+                    </VBox>
+                    <VBox spacing="5" HBox.hgrow="ALWAYS">
+                        <HBox spacing="6" alignment="CENTER_LEFT">
+                            <Label text="Coupon Code"
+                                   style="-fx-font-size: 12; -fx-font-weight: bold; -fx-text-fill: #374151;" />
+                            <Label text="ℹ"
+                                   style="-fx-font-size: 11; -fx-text-fill: #9ca3af; -fx-cursor: hand;">
+                                <tooltip>
+                                    <Tooltip text="Enter a valid promo code to receive a discount on your booking." wrapText="true" prefWidth="210" />
+                                </tooltip>
+                            </Label>
+                        </HBox>
+                        <TextField fx:id="dialogCouponCodeField" promptText="e.g. WELCOME10"
+                                   style="-fx-font-size: 13; -fx-padding: 7 10; -fx-border-color: #d1d5db;
+                                          -fx-border-radius: 6; -fx-background-radius: 6;" />
+                    </VBox>
+                    <Button onAction="#applyDialogCoupon" text="Preview Price"
+                            style="-fx-background-color: #374151; -fx-text-fill: white;
+                                   -fx-padding: 9 16; -fx-border-radius: 6; -fx-background-radius: 6;
+                                   -fx-font-weight: bold; -fx-cursor: hand; -fx-font-size: 12;" />
+                </HBox>
+
+                <!-- Price breakdown box -->
+                <Label fx:id="dialogPricingBreakdown" text="" wrapText="true"
+                       style="-fx-font-family: 'Monospace'; -fx-font-size: 11; -fx-text-fill: #374151;
+                              -fx-background-color: #f0fdf4; -fx-border-color: #a7f3d0; -fx-border-width: 1;
+                              -fx-border-radius: 6; -fx-background-radius: 6; -fx-padding: 10;" />
+
+                <!-- CTA buttons -->
+                <HBox alignment="CENTER_RIGHT" spacing="10">
+                    <Button onAction="#closeEventDialog" text="Cancel"
+                            style="-fx-background-color: transparent; -fx-text-fill: #6b7280;
+                                   -fx-padding: 10 22; -fx-border-radius: 8; -fx-background-radius: 8;
+                                   -fx-border-color: #d1d5db; -fx-border-width: 1;
+                                   -fx-font-weight: bold; -fx-cursor: hand; -fx-font-size: 13;" />
+                    <Button onAction="#confirmBooking" text="✓  Confirm Booking"
+                            style="-fx-background-color: #059669; -fx-text-fill: white;
+                                   -fx-padding: 11 26; -fx-border-radius: 8; -fx-background-radius: 8;
+                                   -fx-font-weight: bold; -fx-font-size: 13; -fx-cursor: hand;
+                                   -fx-effect: dropshadow(three-pass-box, rgba(5,150,105,0.4), 8, 0, 0, 3);" />
+                </HBox>
+            </VBox>
         </VBox>
     </StackPane>
          <StackPane fx:id="reviewDialogPane" visible="false" managed="true"

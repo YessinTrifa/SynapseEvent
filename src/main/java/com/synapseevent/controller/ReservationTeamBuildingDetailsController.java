@@ -11,6 +11,7 @@ import com.synapseevent.utils.Navigator;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
+import javafx.scene.control.TextFormatter;
 
 public class ReservationTeamBuildingDetailsController {
     
@@ -23,6 +24,8 @@ public class ReservationTeamBuildingDetailsController {
     @FXML private Label addressLabel;
     @FXML private Label priceLabel;
     @FXML private Label capacityLabel;
+    @FXML private Label totalPriceLabel;
+    @FXML private TextField headcountField;
     @FXML private TextArea descriptionArea;
     @FXML private Label organizerLabel;
     @FXML private Button reserveBtn;
@@ -33,6 +36,9 @@ public class ReservationTeamBuildingDetailsController {
     
     @FXML
     public void initialize() {
+        // Clear any existing pricing info first
+        clearPricingInfo();
+        
         Long eventId = EventContext.getSelectedEventId();
         System.out.println("DEBUG: EventContext.getSelectedEventId() = " + eventId);
         
@@ -42,6 +48,8 @@ public class ReservationTeamBuildingDetailsController {
             System.err.println("DEBUG: No event ID found in EventContext");
             showError("Aucun événement sélectionné");
         }
+        
+        setupHeadcountField();
     }
     
     private void loadEventDetails(Long eventId) {
@@ -58,6 +66,8 @@ public class ReservationTeamBuildingDetailsController {
             return;
         }
         
+        clearPricingInfo();
+        
         // Update UI
         eventNameLabel.setText(currentEvent.getName());
         statusLabel.setText("✅ " + currentEvent.getStatus());
@@ -72,11 +82,66 @@ public class ReservationTeamBuildingDetailsController {
         descriptionArea.setText(currentEvent.getDescription() != null ? currentEvent.getDescription() : "Aucune description");
         organizerLabel.setText("Organisateur: " + (currentEvent.getOrganizer() != null ? currentEvent.getOrganizer() : "Non spécifié"));
         
+        updateTotalPrice();
+        
         // Disable reserve button if no seats available
         if (currentEvent.getCapacity() <= 0) {
             reserveBtn.setDisable(true);
             reserveBtn.setText("Complet");
             reserveBtn.setStyle("-fx-background-color: #6b7280; -fx-text-fill: white; -fx-padding: 12 24; -fx-border-radius: 8; -fx-background-radius: 8; -fx-font-weight: bold; -fx-font-size: 14;");
+        }
+    }
+    
+    private void clearPricingInfo() {
+        // Reset headcount to default
+        if (headcountField != null) {
+            headcountField.setText("1");
+        }
+        
+        // Clear total price
+        if (totalPriceLabel != null) {
+            totalPriceLabel.setText("");
+        }
+        
+        // Clear any cached pricing calculations
+        // This ensures no old pricing data persists when loading a new event
+    }
+    
+    private void setupHeadcountField() {
+        headcountField.setTextFormatter(new TextFormatter<>(change -> {
+            String text = change.getControlNewText();
+            if (text.matches("\\d*")) {
+                return change;
+            }
+            return null;
+        }));
+        
+        headcountField.textProperty().addListener((obs, oldVal, newVal) -> {
+            if (!newVal.isEmpty() && currentEvent != null) {
+                updateTotalPrice();
+            }
+        });
+    }
+    
+    private void updateTotalPrice() {
+        if (currentEvent == null || headcountField == null) return;
+        
+        try {
+            int headcount = Integer.parseInt(headcountField.getText().trim());
+            if (headcount < 1) {
+                headcount = 1;
+                headcountField.setText("1");
+            }
+            
+            if (headcount > currentEvent.getCapacity()) {
+                headcount = currentEvent.getCapacity();
+                headcountField.setText(String.valueOf(headcount));
+            }
+            
+            double totalPrice = headcount * currentEvent.getPrice();
+            totalPriceLabel.setText(String.format("%.2f TND", totalPrice));
+        } catch (NumberFormatException e) {
+            totalPriceLabel.setText("0.00 TND");
         }
     }
     
@@ -88,6 +153,13 @@ public class ReservationTeamBuildingDetailsController {
     @FXML
     private void showReservationDialog() {
         if (currentEvent == null) return;
+        
+        int defaultHeadcount = 1;
+        try {
+            defaultHeadcount = Integer.parseInt(headcountField.getText().trim());
+        } catch (NumberFormatException e) {
+            defaultHeadcount = 1;
+        }
         
         // Create reservation dialog
         Dialog<Void> dialog = new Dialog<>();
@@ -106,7 +178,7 @@ public class ReservationTeamBuildingDetailsController {
         Label infoLabel = new Label(String.format("Places disponibles: %d", currentEvent.getCapacity()));
         infoLabel.setStyle("-fx-font-size: 14; -fx-text-fill: #374151;");
         
-        Spinner<Integer> seatsSpinner = new Spinner<>(1, currentEvent.getCapacity(), 1);
+        Spinner<Integer> seatsSpinner = new Spinner<>(1, currentEvent.getCapacity(), defaultHeadcount);
         seatsSpinner.setStyle("-fx-font-size: 14;");
         
         Label priceInfoLabel = new Label();
@@ -117,7 +189,7 @@ public class ReservationTeamBuildingDetailsController {
             double totalPrice = newVal * currentEvent.getPrice();
             priceInfoLabel.setText(String.format("Prix total: %.2f TND", totalPrice));
         });
-        priceInfoLabel.setText(String.format("Prix total: %.2f TND", currentEvent.getPrice()));
+        priceInfoLabel.setText(String.format("Prix total: %.2f TND", defaultHeadcount * currentEvent.getPrice()));
         
         content.getChildren().addAll(infoLabel, new Label("Nombre de places:"), seatsSpinner, priceInfoLabel);
         
@@ -150,8 +222,10 @@ public class ReservationTeamBuildingDetailsController {
             
             if (success) {
                 showSuccess(String.format("Réservation réussie ! %d place(s) réservée(s)", seats));
-                // Refresh event details
-                loadEventDetails(currentEvent.getId());
+                // Clear pricing info and EventContext before navigation
+                clearPricingInfo();
+                EventContext.setSelectedEventId(null);
+                Navigator.get().go("/fxml/reservationTeamBuildingDashboard.fxml", "Réservation Team Building");
             } else {
                 showError("Erreur lors de la réservation. Vérifiez la disponibilité.");
             }

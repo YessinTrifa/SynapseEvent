@@ -605,15 +605,17 @@ public class UserDashboardController {
 
             if (selectedEventForBooking.getPrice() != null) {
                 Venue v = new Venue();
-                v.setBaseFee(selectedEventForBooking.getPrice());
-                v.setPerPersonFee(0.0);
+                v.setBaseFee(0.0);
+                v.setPerPersonFee(selectedEventForBooking.getPrice());
                 req.setVenue(v);
             }
 
             PricingCalculation calc = pricingService.calculateEventPrice(req);
 
             StringBuilder sb = new StringBuilder();
-            sb.append(String.format("Base: %.2f TND", calc.getVenueBaseFee()));
+            sb.append(String.format("%.2f TND × %d person(s) = %.2f TND",
+                    calc.getVenuePerPersonFee(), headcount,
+                    calc.getVenuePerPersonFee() * headcount));
             if (calc.getDiscountAmount() > 0) {
                 sb.append(String.format("  |  Discount: -%.2f TND", calc.getDiscountAmount()));
             }

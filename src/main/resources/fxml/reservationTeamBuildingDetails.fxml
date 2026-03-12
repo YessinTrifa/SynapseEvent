@@ -1,88 +1,164 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Separator?>
-<?import javafx.scene.control.Spinner?>
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" 
+<VBox xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="com.synapseevent.controller.ReservationTeamBuildingDetailsController"
-      style="-fx-background-color: #f8f9fa; -fx-padding: 30;">
-    
-    <!-- Header -->
-    <HBox spacing="15" alignment="CENTER_LEFT" style="-fx-padding: 0 0 25 0;">
-        <Button fx:id="backBtn" text="← Retour" 
-                style="-fx-background-color: #6b7280; -fx-text-fill: white; -fx-padding: 8 16; -fx-border-radius: 6; -fx-background-radius: 6;"
+      style="-fx-background-color: #f0fdf4; -fx-padding: 28;" spacing="20">
+
+    <!-- ── PAGE HEADER ── -->
+    <HBox spacing="14" alignment="CENTER_LEFT">
+        <Button fx:id="backBtn" text="← Retour"
+                style="-fx-background-color: #6b7280; -fx-text-fill: white; -fx-padding: 8 18;
+                       -fx-border-radius: 6; -fx-background-radius: 6; -fx-cursor: hand; -fx-font-size: 13;"
                 onAction="#goBack" />
-        <Label fx:id="titleLabel" text="Détails du Team Building" 
-               style="-fx-font-size: 24; -fx-font-weight: bold; -fx-text-fill: #059669;" />
+        <Label fx:id="titleLabel" text="Détails du Team Building"
+               style="-fx-font-size: 22; -fx-font-weight: bold; -fx-text-fill: #059669;" />
         <Region HBox.hgrow="ALWAYS" />
     </HBox>
-    
-    <!-- Event Details Card -->
-    <VBox spacing="20" style="-fx-background-color: white; -fx-border-color: #e5e7eb; -fx-border-width: 1; -fx-border-radius: 12; -fx-background-radius: 12; -fx-padding: 25;">
-        
-        <!-- Title and Status -->
-        <VBox spacing="5">
-            <Label fx:id="eventNameLabel" text="" style="-fx-font-size: 20; -fx-font-weight: bold; -fx-text-fill: #1f2937;" />
-            <Label fx:id="statusLabel" text="" style="-fx-font-size: 14; -fx-text-fill: #059669; -fx-font-weight: bold;" />
-        </VBox>
-        
-        <Separator />
-        
-        <!-- Date and Time -->
-        <VBox spacing="8">
-            <Label text="📅 Date et Heure" style="-fx-font-size: 14; -fx-font-weight: bold; -fx-text-fill: #374151;" />
-            <Label fx:id="dateTimeLabel" text="" style="-fx-font-size: 14; -fx-text-fill: #6b7280;" />
-        </VBox>
-        
-        <!-- Location -->
-        <VBox spacing="8">
-            <Label text="📍 Lieu" style="-fx-font-size: 14; -fx-font-weight: bold; -fx-text-fill: #374151;" />
-            <Label fx:id="locationLabel" text="" style="-fx-font-size: 14; -fx-text-fill: #6b7280;" />
-            <Label fx:id="addressLabel" text="" style="-fx-font-size: 13; -fx-text-fill: #9ca3af;" />
-        </VBox>
-        
-        <!-- Pricing and Capacity -->
-        <HBox spacing="40">
-            <VBox spacing="8">
-                <Label text="💰 Prix" style="-fx-font-size: 14; -fx-font-weight: bold; -fx-text-fill: #374151;" />
-                <Label fx:id="priceLabel" text="" style="-fx-font-size: 16; -fx-text-fill: #dc2626; -fx-font-weight: bold;" />
-            </VBox>
-            <VBox spacing="8">
-                <Label text="🪑 Places" style="-fx-font-size: 14; -fx-font-weight: bold; -fx-text-fill: #374151;" />
-                <Label fx:id="capacityLabel" text="" style="-fx-font-size: 16; -fx-text-fill: #059669; -fx-font-weight: bold;" />
-            </VBox>
+
+    <!-- ── EVENT INFO CARD ── -->
+    <VBox spacing="0"
+          style="-fx-background-color: white; -fx-border-color: #e5e7eb; -fx-border-width: 1;
+                 -fx-border-radius: 14; -fx-background-radius: 14;
+                 -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.06), 8, 0, 0, 2);">
+
+        <!-- Card colour bar -->
+        <HBox style="-fx-background-color: #ecfdf5; -fx-padding: 13 22;
+                     -fx-background-radius: 13 13 0 0;
+                     -fx-border-color: #d1fae5; -fx-border-width: 0 0 1 0;">
+            <Label text="📋  Informations sur l'événement"
+                   style="-fx-font-size: 13; -fx-font-weight: bold; -fx-text-fill: #065f46;" />
         </HBox>
-        
-        <Separator />
-        
-        <!-- Description -->
-        <VBox spacing="8">
-            <Label text="📝 Description" style="-fx-font-size: 14; -fx-font-weight: bold; -fx-text-fill: #374151;" />
-            <TextArea fx:id="descriptionArea" editable="false" prefRowCount="4" wrapText="true"
-                      style="-fx-font-size: 14; -fx-text-fill: #6b7280; -fx-background-color: #f9fafb; -fx-border-color: #e5e7eb;" />
+
+        <VBox spacing="18" style="-fx-padding: 22;">
+
+            <!-- Name + Status -->
+            <VBox spacing="5">
+                <Label fx:id="eventNameLabel" text=""
+                       style="-fx-font-size: 20; -fx-font-weight: bold; -fx-text-fill: #1f2937;" />
+                <Label fx:id="statusLabel" text=""
+                       style="-fx-font-size: 13; -fx-text-fill: #059669; -fx-font-weight: bold;" />
+            </VBox>
+
+            <Separator />
+
+            <!-- Date/Time + Location (side by side) -->
+            <HBox spacing="50">
+                <VBox spacing="4">
+                    <Label text="📅  DATE ET HEURE"
+                           style="-fx-font-size: 10; -fx-font-weight: bold; -fx-text-fill: #9ca3af;" />
+                    <Label fx:id="dateTimeLabel" text=""
+                           style="-fx-font-size: 14; -fx-text-fill: #1f2937;" />
+                </VBox>
+                <VBox spacing="4">
+                    <Label text="📍  LIEU"
+                           style="-fx-font-size: 10; -fx-font-weight: bold; -fx-text-fill: #9ca3af;" />
+                    <Label fx:id="locationLabel" text=""
+                           style="-fx-font-size: 14; -fx-text-fill: #1f2937;" />
+                    <Label fx:id="addressLabel" text=""
+                           style="-fx-font-size: 12; -fx-text-fill: #9ca3af;" />
+                </VBox>
+            </HBox>
+
+            <!-- Price + Capacity chips -->
+            <HBox spacing="16">
+                <VBox spacing="4"
+                      style="-fx-background-color: #fff7ed; -fx-border-color: #fed7aa; -fx-border-width: 1;
+                             -fx-border-radius: 10; -fx-background-radius: 10; -fx-padding: 12 20;">
+                    <Label text="💰  PRIX PAR PERSONNE"
+                           style="-fx-font-size: 10; -fx-font-weight: bold; -fx-text-fill: #9a3412;" />
+                    <Label fx:id="priceLabel" text=""
+                           style="-fx-font-size: 18; -fx-font-weight: bold; -fx-text-fill: #ea580c;" />
+                </VBox>
+                <VBox spacing="4"
+                      style="-fx-background-color: #f0fdf4; -fx-border-color: #a7f3d0; -fx-border-width: 1;
+                             -fx-border-radius: 10; -fx-background-radius: 10; -fx-padding: 12 20;">
+                    <Label text="🪑  PLACES DISPONIBLES"
+                           style="-fx-font-size: 10; -fx-font-weight: bold; -fx-text-fill: #065f46;" />
+                    <Label fx:id="capacityLabel" text=""
+                           style="-fx-font-size: 18; -fx-font-weight: bold; -fx-text-fill: #059669;" />
+                </VBox>
+            </HBox>
+
+            <!-- Headcount + Total Price section -->
+            <VBox spacing="12"
+                  style="-fx-background-color: #fef3c7; -fx-border-color: #fbbf24; -fx-border-width: 1;
+                         -fx-border-radius: 10; -fx-background-radius: 10; -fx-padding: 16 20;">
+                <HBox spacing="15" alignment="CENTER_LEFT">
+                    <VBox spacing="4">
+                        <Label text="👥  NOMBRE DE PERSONNES"
+                               style="-fx-font-size: 10; -fx-font-weight: bold; -fx-text-fill: #92400e;" />
+                        <TextField fx:id="headcountField" text="1" prefWidth="80"
+                                   style="-fx-font-size: 16; -fx-font-weight: bold; -fx-text-fill: #78350f;
+                                          -fx-background-color: white; -fx-border-color: #f59e0b;
+                                          -fx-border-radius: 6; -fx-background-radius: 6;" />
+                    </VBox>
+                    <VBox spacing="4">
+                        <Label text="💵  PRIX TOTAL"
+                               style="-fx-font-size: 10; -fx-font-weight: bold; -fx-text-fill: #92400e;" />
+                        <Label fx:id="totalPriceLabel" text=""
+                               style="-fx-font-size: 18; -fx-font-weight: bold; -fx-text-fill: #dc2626;" />
+                    </VBox>
+                </HBox>
+            </VBox>
+
+            <Separator />
+
+            <!-- Description -->
+            <VBox spacing="6">
+                <Label text="📝  DESCRIPTION"
+                       style="-fx-font-size: 10; -fx-font-weight: bold; -fx-text-fill: #9ca3af;" />
+                <TextArea fx:id="descriptionArea" editable="false" prefRowCount="4" wrapText="true"
+                          style="-fx-font-size: 13; -fx-text-fill: #4b5563;
+                                 -fx-background-color: #f9fafb; -fx-border-color: #e5e7eb;
+                                 -fx-border-radius: 8; -fx-background-radius: 8;" />
+            </VBox>
+
+            <!-- Organizer -->
+            <VBox spacing="4">
+                <Label text="🤝  ORGANISATEUR"
+                       style="-fx-font-size: 10; -fx-font-weight: bold; -fx-text-fill: #9ca3af;" />
+                <Label fx:id="organizerLabel" text=""
+                       style="-fx-font-size: 13; -fx-text-fill: #4b5563;" />
+            </VBox>
+
         </VBox>
-        
-        <!-- Team Building Info -->
-        <VBox spacing="8">
-            <Label text="🤝 Informations Team Building" style="-fx-font-size: 14; -fx-font-weight: bold; -fx-text-fill: #374151;" />
-            <Label fx:id="organizerLabel" text="" style="-fx-font-size: 13; -fx-text-fill: #6b7280;" />
-        </VBox>
-        
-        <!-- Action Buttons -->
-        <HBox spacing="15" alignment="CENTER_RIGHT" style="-fx-padding: 15 0 0 0;">
+    </VBox>
+
+    <!-- ── BOOKING ACTION CARD ── -->
+    <VBox spacing="0"
+          style="-fx-background-color: white; -fx-border-color: #a7f3d0; -fx-border-width: 2;
+                 -fx-border-radius: 14; -fx-background-radius: 14;
+                 -fx-effect: dropshadow(three-pass-box, rgba(5,150,105,0.12), 10, 0, 0, 3);">
+
+        <HBox style="-fx-background-color: #059669; -fx-padding: 13 22; -fx-background-radius: 12 12 0 0;">
+            <Label text="🎯  Réserver cet événement"
+                   style="-fx-font-size: 14; -fx-font-weight: bold; -fx-text-fill: white;" />
+        </HBox>
+
+        <HBox spacing="0" style="-fx-padding: 20 22;" alignment="CENTER_LEFT">
+            <VBox spacing="4">
+                <Label text="Cliquez sur le bouton pour choisir le nombre de places"
+                       style="-fx-font-size: 13; -fx-text-fill: #6b7280;" />
+                <Label text="Le prix total sera calculé en fonction de votre sélection."
+                       style="-fx-font-size: 12; -fx-text-fill: #9ca3af;" />
+            </VBox>
             <Region HBox.hgrow="ALWAYS" />
-            <Button fx:id="reserveBtn" text="Réserver" 
-                    style="-fx-background-color: #10b981; -fx-text-fill: white; -fx-padding: 12 24; -fx-border-radius: 8; -fx-background-radius: 8; -fx-font-weight: bold; -fx-font-size: 14;"
+            <Button fx:id="reserveBtn" text="✓  Réserver maintenant"
+                    style="-fx-background-color: #059669; -fx-text-fill: white;
+                           -fx-padding: 13 30; -fx-border-radius: 9; -fx-background-radius: 9;
+                           -fx-font-weight: bold; -fx-font-size: 14; -fx-cursor: hand;
+                           -fx-effect: dropshadow(three-pass-box, rgba(5,150,105,0.35), 8, 0, 0, 3);"
                     onAction="#showReservationDialog" />
         </HBox>
-        
+
     </VBox>
-    
+
 </VBox>
