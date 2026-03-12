@@ -40,13 +40,24 @@ public class UserService implements IService<User> {
             stmt.setLong(8, user.getRoleId());
             stmt.setLong(9, user.getEnterpriseId());
 
-            int res = stmt.executeUpdate();
+            try {
+                int res = stmt.executeUpdate();
 
-            try (ResultSet rs = stmt.getGeneratedKeys()) {
-                if (rs.next()) user.setId(rs.getLong(1));
+                try (ResultSet rs = stmt.getGeneratedKeys()) {
+                    if (rs.next()) user.setId(rs.getLong(1));
+                }
+
+                return res > 0;
+            } catch (SQLException e) {
+                System.err.println("✗ Error creating user");
+                System.err.println("  Email: " + user.getEmail());
+                System.err.println("  SQLState=" + e.getSQLState() + ", ErrorCode=" + e.getErrorCode());
+                System.err.println("  Message: " + e.getMessage());
+                if (e.getErrorCode() == 1062) {
+                    System.err.println("  Hint: Email already exists (duplicate key on Utilisateur.email)");
+                }
+                throw e;
             }
-
-            return res > 0;
         }
     }
 

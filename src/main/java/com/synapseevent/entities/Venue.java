@@ -9,11 +9,15 @@ public class Venue {
     private String address;
     private String contactInfo;
     private String priceRange;
-
     private Double rating;
-
     private String description;
     private String amenities;
+    
+    // New pricing fields
+    private Double baseFee;
+    private Double perPersonFee;
+    private Integer capacity;
+    private Boolean hasPricingRules;
 
     public Venue() {}
 
@@ -73,6 +77,19 @@ public class Venue {
 
     public String getAmenities() { return amenities; }
     public void setAmenities(String amenities) { this.amenities = amenities; }
+    
+    // New pricing field getters and setters
+    public Double getBaseFee() { return baseFee; }
+    public void setBaseFee(Double baseFee) { this.baseFee = baseFee; }
+    
+    public Double getPerPersonFee() { return perPersonFee; }
+    public void setPerPersonFee(Double perPersonFee) { this.perPersonFee = perPersonFee; }
+    
+    public Integer getCapacity() { return capacity; }
+    public void setCapacity(Integer capacity) { this.capacity = capacity; }
+    
+    public Boolean getHasPricingRules() { return hasPricingRules; }
+    public void setHasPricingRules(Boolean hasPricingRules) { this.hasPricingRules = hasPricingRules; }
     
     // Alias methods for compatibility
     public String getCity() { return address; }

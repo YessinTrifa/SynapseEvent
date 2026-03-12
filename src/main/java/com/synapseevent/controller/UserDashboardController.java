@@ -122,6 +122,9 @@ public class UserDashboardController {
     @FXML private Label dialogEventPrice;
     @FXML private Label dialogEventStatus;
     @FXML private TextArea dialogEventDescription;
+    @FXML private TextField dialogHeadcountField;
+    @FXML private TextField dialogCouponCodeField;
+    @FXML private Label dialogPricingBreakdown;
 
     // Category Browse Fields
     @FXML private FlowPane eventCardsFlowPane;
@@ -159,6 +162,7 @@ public class UserDashboardController {
 
     private EventInstanceService eventInstanceService = new EventInstanceService();
     private BookingService bookingService = new BookingService();
+    private PricingService pricingService = new PricingService();
     private CustomEventRequestService customRequestService = new CustomEventRequestService();
     private VenueService venueService = new VenueService();
     private UserService userService = new UserService();
@@ -583,9 +587,52 @@ public class UserDashboardController {
     }
 
     @FXML
+    private void applyDialogCoupon() {
+        if (selectedEventForBooking == null) return;
+        try {
+            int headcount = 1;
+            if (dialogHeadcountField != null && !dialogHeadcountField.getText().isBlank()) {
+                headcount = Integer.parseInt(dialogHeadcountField.getText().trim());
+            }
+            String coupon = dialogCouponCodeField != null ? dialogCouponCodeField.getText().trim() : "";
+
+            EventPricingRequest req = new EventPricingRequest();
+            req.setEventType(selectedEventForBooking.getType());
+            req.setHeadcount(headcount);
+            req.setBookingDate(LocalDate.now());
+            req.setEventDate(selectedEventForBooking.getDate());
+            req.setCouponCode(coupon.isEmpty() ? null : coupon);
+
+            if (selectedEventForBooking.getPrice() != null) {
+                Venue v = new Venue();
+                v.setBaseFee(selectedEventForBooking.getPrice());
+                v.setPerPersonFee(0.0);
+                req.setVenue(v);
+            }
+
+            PricingCalculation calc = pricingService.calculateEventPrice(req);
+
+            StringBuilder sb = new StringBuilder();
+            sb.append(String.format("Base: %.2f TND", calc.getVenueBaseFee()));
+            if (calc.getDiscountAmount() > 0) {
+                sb.append(String.format("  |  Discount: -%.2f TND", calc.getDiscountAmount()));
+            }
+            if (calc.getTaxAmount() > 0) {
+                sb.append(String.format("  |  Tax: +%.2f TND", calc.getTaxAmount()));
+            }
+            sb.append(String.format("%n➡ TOTAL: %.2f TND", calc.getTotal()));
+            if (dialogPricingBreakdown != null) dialogPricingBreakdown.setText(sb.toString());
+        } catch (Exception e) {
+            if (dialogPricingBreakdown != null) dialogPricingBreakdown.setText("Could not preview price: " + e.getMessage());
+        }
+    }
+
+    @FXML
     private void confirmBooking() {
         if (selectedEventForBooking != null) {
-            bookEvent(selectedEventForBooking);
+            String breakdown = (dialogPricingBreakdown != null && !dialogPricingBreakdown.getText().isBlank())
+                ? "\n\nPricing: " + dialogPricingBreakdown.getText() : "";
+            bookEvent(selectedEventForBooking, breakdown);
             closeEventDialog();
         }
     }
@@ -2593,7 +2640,7 @@ public class UserDashboardController {
         }
     }
 
-    private void bookEvent(EventInstance ei) {
+    private void bookEvent(EventInstance ei, String pricingBreakdown) {
         User current = CurrentUser.getCurrentUser();
         if (current == null || current.getId() == null) {
             showAlert("Error", "You must be logged in to book an event.");
@@ -2616,12 +2663,15 @@ public class UserDashboardController {
             loadEvents();
             loadRecommendedEvents();
             loadBookings();
-            
-            showAlert("Booking Confirmed! 🎉", 
-                "You have successfully booked '" + ei.getName() + "'!\n\n" +
+
+            String msg = "You have successfully booked '" + ei.getName() + "'!\n\n" +
                 "Event Date: " + ei.getDate() + "\n" +
-                "Location: " + ei.getLocation() + "\n\n" +
-                "Check 'My Bookings' tab for details.");
+                "Location: " + ei.getLocation();
+            if (pricingBreakdown != null && !pricingBreakdown.isBlank()) {
+                msg += "\n" + pricingBreakdown;
+            }
+            msg += "\n\nCheck 'My Bookings' tab for details.";
+            showAlert("Booking Confirmed! 🎉", msg);
         } catch (SQLException e) {
             e.printStackTrace();
             showAlert("Error", "Error booking event: " + e.getMessage());

@@ -400,7 +400,25 @@
             </rowConstraints>
             </GridPane>
 
-            <TextArea fx:id="dialogEventDescription" editable="false" prefRowCount="3" styleClass="dialog-textarea" />
+            <TextArea fx:id="dialogEventDescription" editable="false" prefRowCount="2" styleClass="dialog-textarea" />
+
+            <Separator />
+
+            <HBox spacing="12" alignment="CENTER_LEFT">
+                <VBox spacing="4" HBox.hgrow="ALWAYS">
+                    <Label styleClass="dialog-label" text="Headcount (persons)" />
+                    <TextField fx:id="dialogHeadcountField" promptText="e.g. 10" styleClass="user-input" prefWidth="120" />
+                </VBox>
+                <VBox spacing="4" HBox.hgrow="ALWAYS">
+                    <Label styleClass="dialog-label" text="Coupon Code" />
+                    <TextField fx:id="dialogCouponCodeField" promptText="e.g. WELCOME10" styleClass="user-input" prefWidth="140" />
+                </VBox>
+                <Button onAction="#applyDialogCoupon" styleClass="btn-primary-sm" text="Preview Price"
+                        style="-fx-padding: 8 14; -fx-background-radius: 8;" VBox.vgrow="ALWAYS" />
+            </HBox>
+
+            <Label fx:id="dialogPricingBreakdown" text="" wrapText="true"
+                   style="-fx-font-family: 'Monospace'; -fx-font-size: 11px; -fx-text-fill: #374151; -fx-background-color: #f3f4f6; -fx-background-radius: 6; -fx-padding: 8;" />
 
             <HBox alignment="CENTER" spacing="15">
                 <Button onAction="#confirmBooking" styleClass="btn-success" text="Confirm Booking" />

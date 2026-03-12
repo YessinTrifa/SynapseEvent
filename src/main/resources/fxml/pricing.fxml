@@ -1,0 +1,475 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.net.URL?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox spacing="0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.synapseevent.controller.PricingController">
+    <stylesheets>
+        <URL value="@../css/dashboard.css" />
+    </stylesheets>
+
+    <Label styleClass="card-title-web" text="Pricing Engine &amp; Discounts"
+           style="-fx-padding: 0 0 12 0; -fx-font-size: 18px;" />
+
+    <TabPane fx:id="pricingTabPane" styleClass="tab-pane-web" VBox.vgrow="ALWAYS"
+             tabClosingPolicy="UNAVAILABLE">
+
+        <!-- ══════════════════════════════════════════════════════════
+             TAB 1 : COUPONS
+        ═══════════════════════════════════════════════════════════ -->
+        <Tab text="🎟  Coupons">
+            <HBox spacing="16" style="-fx-padding: 14;">
+
+                <!-- Table (left) -->
+                <VBox spacing="8" HBox.hgrow="ALWAYS">
+                    <HBox spacing="8" alignment="CENTER_LEFT">
+                        <Label styleClass="card-title-web" text="Coupon List" />
+                        <Region HBox.hgrow="ALWAYS" />
+                        <Button onAction="#deleteCoupon" styleClass="btn-danger-sm" text="Delete" />
+                    </HBox>
+                    <TableView fx:id="couponTable" styleClass="table-web" VBox.vgrow="ALWAYS" prefHeight="380">
+                        <columns>
+                            <TableColumn fx:id="couponCodeColumn"   text="Code"    prefWidth="110" />
+                            <TableColumn fx:id="couponTypeColumn"   text="Type"    prefWidth="80"  />
+                            <TableColumn fx:id="couponValueColumn"  text="Value"   prefWidth="80"  />
+                            <TableColumn fx:id="couponStartColumn"  text="Start"   prefWidth="100" />
+                            <TableColumn fx:id="couponEndColumn"    text="End"     prefWidth="100" />
+                            <TableColumn fx:id="couponUsageColumn"  text="Used/Limit" prefWidth="90" />
+                            <TableColumn fx:id="couponStatusColumn" text="Status"  prefWidth="70"  />
+                        </columns>
+                        <columnResizePolicy>
+                            <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                        </columnResizePolicy>
+                    </TableView>
+                </VBox>
+
+                <!-- Form (right) -->
+                <VBox spacing="10" prefWidth="310"
+                      style="-fx-background-color: rgba(255,255,255,0.55); -fx-background-radius: 12; -fx-padding: 14; -fx-effect: dropshadow(gaussian,rgba(0,0,0,0.07),8,0,0,2);">
+                    <Label styleClass="card-title-web" text="Add / Edit Coupon" style="-fx-font-size: 14px;" />
+                    <Separator />
+
+                    <Label styleClass="user-form-label" text="Code *" />
+                    <TextField fx:id="couponCodeField" promptText="e.g. WELCOME10" styleClass="user-input" />
+
+                    <HBox spacing="10">
+                        <VBox spacing="4" HBox.hgrow="ALWAYS">
+                            <Label styleClass="user-form-label" text="Type *" />
+                            <ComboBox fx:id="couponTypeComboBox" maxWidth="9999" />
+                        </VBox>
+                        <VBox spacing="4" HBox.hgrow="ALWAYS">
+                            <Label styleClass="user-form-label" text="Value *" />
+                            <TextField fx:id="couponValueField" promptText="10" styleClass="user-input" />
+                        </VBox>
+                    </HBox>
+
+                    <HBox spacing="10">
+                        <VBox spacing="4" HBox.hgrow="ALWAYS">
+                            <Label styleClass="user-form-label" text="Start Date" />
+                            <DatePicker fx:id="couponStartDate" maxWidth="9999" />
+                        </VBox>
+                        <VBox spacing="4" HBox.hgrow="ALWAYS">
+                            <Label styleClass="user-form-label" text="End Date" />
+                            <DatePicker fx:id="couponEndDate" maxWidth="9999" />
+                        </VBox>
+                    </HBox>
+
+                    <HBox spacing="10">
+                        <VBox spacing="4" HBox.hgrow="ALWAYS">
+                            <Label styleClass="user-form-label" text="Usage Limit" />
+                            <TextField fx:id="couponUsageLimitField" promptText="100" styleClass="user-input" />
+                        </VBox>
+                        <VBox spacing="4" HBox.hgrow="ALWAYS">
+                            <Label styleClass="user-form-label" text="Min Spend (TND)" />
+                            <TextField fx:id="couponMinSpendField" promptText="0" styleClass="user-input" />
+                        </VBox>
+                    </HBox>
+
+                    <Label styleClass="user-form-label" text="Applicable Event Types (comma-sep, blank=all)" />
+                    <TextField fx:id="couponApplicableField" promptText="TeamBuilding,Anniversary" styleClass="user-input" />
+
+                    <Label styleClass="user-form-label" text="Description" />
+                    <TextArea fx:id="couponDescriptionField" prefRowCount="2" styleClass="user-textarea" />
+
+                    <CheckBox fx:id="couponActiveCheckBox" text="Active" selected="true" />
+
+                    <HBox spacing="8">
+                        <Button onAction="#addCoupon"    styleClass="btn-primary-sm" text="Add New"    HBox.hgrow="ALWAYS" maxWidth="9999" />
+                        <Button onAction="#saveCoupon"   styleClass="btn-success-sm" text="Save Edit"  HBox.hgrow="ALWAYS" maxWidth="9999" />
+                        <Button onAction="#clearCouponFormAction" styleClass="btn-ghost-sm" text="Clear" HBox.hgrow="ALWAYS" maxWidth="9999" />
+                    </HBox>
+                </VBox>
+            </HBox>
+        </Tab>
+
+        <!-- ══════════════════════════════════════════════════════════
+             TAB 2 : PRICING RULES
+        ═══════════════════════════════════════════════════════════ -->
+        <Tab text="📐  Pricing Rules">
+            <HBox spacing="16" style="-fx-padding: 14;">
+
+                <!-- Table (left) -->
+                <VBox spacing="8" HBox.hgrow="ALWAYS">
+                    <HBox spacing="8" alignment="CENTER_LEFT">
+                        <Label styleClass="card-title-web" text="Pricing Rules" />
+                        <Region HBox.hgrow="ALWAYS" />
+                        <Button onAction="#deletePricingRule" styleClass="btn-danger-sm" text="Delete" />
+                    </HBox>
+                    <TableView fx:id="pricingRulesTable" styleClass="table-web" VBox.vgrow="ALWAYS" prefHeight="380">
+                        <columns>
+                            <TableColumn fx:id="ruleEventTypeColumn" text="Event Type" prefWidth="110" />
+                            <TableColumn fx:id="ruleTypeColumn"      text="Rule Type"  prefWidth="110" />
+                            <TableColumn fx:id="ruleConditionColumn" text="Condition"  prefWidth="150" />
+                            <TableColumn fx:id="ruleDiscountColumn"  text="Discount"   prefWidth="120" />
+                            <TableColumn fx:id="ruleActiveColumn"    text="Active"     prefWidth="70"  />
+                        </columns>
+                        <columnResizePolicy>
+                            <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                        </columnResizePolicy>
+                    </TableView>
+                </VBox>
+
+                <!-- Form (right) -->
+                <VBox spacing="10" prefWidth="310"
+                      style="-fx-background-color: rgba(255,255,255,0.55); -fx-background-radius: 12; -fx-padding: 14; -fx-effect: dropshadow(gaussian,rgba(0,0,0,0.07),8,0,0,2);">
+                    <Label styleClass="card-title-web" text="Add / Edit Rule" style="-fx-font-size: 14px;" />
+                    <Separator />
+
+                    <Label styleClass="user-form-label" text="Event Type" />
+                    <ComboBox fx:id="ruleEventTypeComboBox" maxWidth="9999" />
+
+                    <Label styleClass="user-form-label" text="Rule Type *" />
+                    <ComboBox fx:id="ruleTypeComboBox" maxWidth="9999" />
+
+                    <HBox spacing="10">
+                        <VBox spacing="4" HBox.hgrow="ALWAYS">
+                            <Label styleClass="user-form-label" text="Condition *" />
+                            <ComboBox fx:id="ruleConditionComboBox" maxWidth="9999" />
+                        </VBox>
+                        <VBox spacing="4" HBox.hgrow="ALWAYS">
+                            <Label styleClass="user-form-label" text="Cond. Value *" />
+                            <TextField fx:id="ruleConditionValueField" promptText="10" styleClass="user-input" />
+                        </VBox>
+                    </HBox>
+
+                    <HBox spacing="10">
+                        <VBox spacing="4" HBox.hgrow="ALWAYS">
+                            <Label styleClass="user-form-label" text="Discount Type *" />
+                            <ComboBox fx:id="ruleDiscountTypeComboBox" maxWidth="9999" />
+                        </VBox>
+                        <VBox spacing="4" HBox.hgrow="ALWAYS">
+                            <Label styleClass="user-form-label" text="Discount Value *" />
+                            <TextField fx:id="ruleDiscountValueField" promptText="10" styleClass="user-input" />
+                        </VBox>
+                    </HBox>
+
+                    <HBox spacing="10">
+                        <VBox spacing="4" HBox.hgrow="ALWAYS">
+                            <Label styleClass="user-form-label" text="Start Date" />
+                            <DatePicker fx:id="ruleStartDate" maxWidth="9999" />
+                        </VBox>
+                        <VBox spacing="4" HBox.hgrow="ALWAYS">
+                            <Label styleClass="user-form-label" text="End Date" />
+                            <DatePicker fx:id="ruleEndDate" maxWidth="9999" />
+                        </VBox>
+                    </HBox>
+
+                    <Label styleClass="user-form-label" text="Description" />
+                    <TextArea fx:id="ruleDescriptionField" prefRowCount="2" styleClass="user-textarea" />
+
+                    <CheckBox fx:id="ruleActiveCheckBox" text="Active" selected="true" />
+
+                    <HBox spacing="8">
+                        <Button onAction="#addPricingRule"    styleClass="btn-primary-sm" text="Add New"   HBox.hgrow="ALWAYS" maxWidth="9999" />
+                        <Button onAction="#savePricingRule"   styleClass="btn-success-sm" text="Save Edit" HBox.hgrow="ALWAYS" maxWidth="9999" />
+                        <Button onAction="#clearRuleFormAction" styleClass="btn-ghost-sm" text="Clear"     HBox.hgrow="ALWAYS" maxWidth="9999" />
+                    </HBox>
+                </VBox>
+            </HBox>
+        </Tab>
+
+        <!-- ══════════════════════════════════════════════════════════
+             TAB 3 : TAX RATES
+        ═══════════════════════════════════════════════════════════ -->
+        <Tab text="🏦  Tax Rates">
+            <HBox spacing="16" style="-fx-padding: 14;">
+
+                <!-- Table (left) -->
+                <VBox spacing="8" HBox.hgrow="ALWAYS">
+                    <HBox spacing="8" alignment="CENTER_LEFT">
+                        <Label styleClass="card-title-web" text="Tax Rates" />
+                        <Region HBox.hgrow="ALWAYS" />
+                        <Button onAction="#deleteTaxRate" styleClass="btn-danger-sm" text="Delete" />
+                    </HBox>
+                    <TableView fx:id="taxRateTable" styleClass="table-web" VBox.vgrow="ALWAYS" prefHeight="380">
+                        <columns>
+                            <TableColumn fx:id="taxNameColumn"          text="Name"          prefWidth="130" />
+                            <TableColumn fx:id="taxRateColumn"          text="Rate"          prefWidth="80"  />
+                            <TableColumn fx:id="taxTypeColumn"          text="Type"          prefWidth="110" />
+                            <TableColumn fx:id="taxApplicabilityColumn" text="Applies To"    prefWidth="100" />
+                            <TableColumn fx:id="taxActiveColumn"        text="Active"        prefWidth="70"  />
+                        </columns>
+                        <columnResizePolicy>
+                            <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                        </columnResizePolicy>
+                    </TableView>
+                </VBox>
+
+                <!-- Form (right) -->
+                <VBox spacing="10" prefWidth="310"
+                      style="-fx-background-color: rgba(255,255,255,0.55); -fx-background-radius: 12; -fx-padding: 14; -fx-effect: dropshadow(gaussian,rgba(0,0,0,0.07),8,0,0,2);">
+                    <Label styleClass="card-title-web" text="Add / Edit Tax Rate" style="-fx-font-size: 14px;" />
+                    <Separator />
+
+                    <Label styleClass="user-form-label" text="Name *" />
+                    <TextField fx:id="taxNameField" promptText="e.g. VAT" styleClass="user-input" />
+
+                    <HBox spacing="10">
+                        <VBox spacing="4" HBox.hgrow="ALWAYS">
+                            <Label styleClass="user-form-label" text="Rate (%) *" />
+                            <TextField fx:id="taxRateField" promptText="19" styleClass="user-input" />
+                        </VBox>
+                        <VBox spacing="4" HBox.hgrow="ALWAYS">
+                            <Label styleClass="user-form-label" text="Type *" />
+                            <ComboBox fx:id="taxTypeComboBox" maxWidth="9999" />
+                        </VBox>
+                    </HBox>
+
+                    <Label styleClass="user-form-label" text="Applicability *" />
+                    <ComboBox fx:id="taxApplicabilityComboBox" maxWidth="9999" />
+
+                    <Label styleClass="user-form-label" text="Event Type (blank=all)" />
+                    <ComboBox fx:id="taxEventTypeComboBox" maxWidth="9999" />
+
+                    <Label styleClass="user-form-label" text="Description" />
+                    <TextArea fx:id="taxDescriptionField" prefRowCount="2" styleClass="user-textarea" />
+
+                    <CheckBox fx:id="taxActiveCheckBox" text="Active" selected="true" />
+
+                    <HBox spacing="8">
+                        <Button onAction="#addTaxRate"       styleClass="btn-primary-sm" text="Add New"   HBox.hgrow="ALWAYS" maxWidth="9999" />
+                        <Button onAction="#saveTaxRate"      styleClass="btn-success-sm" text="Save Edit" HBox.hgrow="ALWAYS" maxWidth="9999" />
+                        <Button onAction="#clearTaxFormAction" styleClass="btn-ghost-sm" text="Clear"     HBox.hgrow="ALWAYS" maxWidth="9999" />
+                    </HBox>
+                </VBox>
+            </HBox>
+        </Tab>
+
+        <!-- ══════════════════════════════════════════════════════════
+             TAB 4 : SERVICE FEES
+        ═══════════════════════════════════════════════════════════ -->
+        <Tab text="💳  Service Fees">
+            <HBox spacing="16" style="-fx-padding: 14;">
+
+                <!-- Table (left) -->
+                <VBox spacing="8" HBox.hgrow="ALWAYS">
+                    <HBox spacing="8" alignment="CENTER_LEFT">
+                        <Label styleClass="card-title-web" text="Service Fee Rates" />
+                        <Region HBox.hgrow="ALWAYS" />
+                        <Button onAction="#deleteServiceFee" styleClass="btn-danger-sm" text="Delete" />
+                    </HBox>
+                    <TableView fx:id="serviceFeeTable" styleClass="table-web" VBox.vgrow="ALWAYS" prefHeight="380">
+                        <columns>
+                            <TableColumn fx:id="feeNameColumn"          text="Name"       prefWidth="130" />
+                            <TableColumn fx:id="feeRateColumn"          text="Rate"       prefWidth="80"  />
+                            <TableColumn fx:id="feeTypeColumn"          text="Type"       prefWidth="110" />
+                            <TableColumn fx:id="feeApplicabilityColumn" text="Applies To" prefWidth="100" />
+                            <TableColumn fx:id="feeActiveColumn"        text="Active"     prefWidth="70"  />
+                        </columns>
+                        <columnResizePolicy>
+                            <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                        </columnResizePolicy>
+                    </TableView>
+                </VBox>
+
+                <!-- Form (right) -->
+                <VBox spacing="10" prefWidth="310"
+                      style="-fx-background-color: rgba(255,255,255,0.55); -fx-background-radius: 12; -fx-padding: 14; -fx-effect: dropshadow(gaussian,rgba(0,0,0,0.07),8,0,0,2);">
+                    <Label styleClass="card-title-web" text="Add / Edit Service Fee" style="-fx-font-size: 14px;" />
+                    <Separator />
+
+                    <Label styleClass="user-form-label" text="Name *" />
+                    <TextField fx:id="feeNameField" promptText="e.g. Processing Fee" styleClass="user-input" />
+
+                    <HBox spacing="10">
+                        <VBox spacing="4" HBox.hgrow="ALWAYS">
+                            <Label styleClass="user-form-label" text="Rate (%) *" />
+                            <TextField fx:id="feeRateField" promptText="2.5" styleClass="user-input" />
+                        </VBox>
+                        <VBox spacing="4" HBox.hgrow="ALWAYS">
+                            <Label styleClass="user-form-label" text="Type *" />
+                            <ComboBox fx:id="feeTypeComboBox" maxWidth="9999" />
+                        </VBox>
+                    </HBox>
+
+                    <Label styleClass="user-form-label" text="Applicability *" />
+                    <ComboBox fx:id="feeApplicabilityComboBox" maxWidth="9999" />
+
+                    <HBox spacing="10">
+                        <VBox spacing="4" HBox.hgrow="ALWAYS">
+                            <Label styleClass="user-form-label" text="Min Amount (TND)" />
+                            <TextField fx:id="feeMinAmountField" promptText="0" styleClass="user-input" />
+                        </VBox>
+                        <VBox spacing="4" HBox.hgrow="ALWAYS">
+                            <Label styleClass="user-form-label" text="Max Amount (TND)" />
+                            <TextField fx:id="feeMaxAmountField" promptText="Optional cap" styleClass="user-input" />
+                        </VBox>
+                    </HBox>
+
+                    <Label styleClass="user-form-label" text="Description" />
+                    <TextArea fx:id="feeDescriptionField" prefRowCount="2" styleClass="user-textarea" />
+
+                    <CheckBox fx:id="feeActiveCheckBox" text="Active" selected="true" />
+
+                    <HBox spacing="8">
+                        <Button onAction="#addServiceFee"    styleClass="btn-primary-sm" text="Add New"   HBox.hgrow="ALWAYS" maxWidth="9999" />
+                        <Button onAction="#saveServiceFee"   styleClass="btn-success-sm" text="Save Edit" HBox.hgrow="ALWAYS" maxWidth="9999" />
+                        <Button onAction="#clearFeeFormAction" styleClass="btn-ghost-sm" text="Clear"     HBox.hgrow="ALWAYS" maxWidth="9999" />
+                    </HBox>
+                </VBox>
+            </HBox>
+        </Tab>
+
+        <!-- ══════════════════════════════════════════════════════════
+             TAB 5 : PRICE CALCULATOR
+        ═══════════════════════════════════════════════════════════ -->
+        <Tab text="🧮  Price Calculator">
+            <ScrollPane fitToWidth="true" hbarPolicy="NEVER" styleClass="scroll-clean">
+                <content>
+                    <HBox spacing="20" style="-fx-padding: 14;">
+
+                        <!-- Input form -->
+                        <VBox spacing="12" prefWidth="370"
+                              style="-fx-background-color: rgba(255,255,255,0.55); -fx-background-radius: 12; -fx-padding: 16; -fx-effect: dropshadow(gaussian,rgba(0,0,0,0.07),8,0,0,2);">
+                            <Label styleClass="card-title-web" text="Event Parameters" style="-fx-font-size: 15px;" />
+                            <Separator />
+
+                            <GridPane hgap="10" vgap="10">
+                                <columnConstraints>
+                                    <ColumnConstraints prefWidth="145" />
+                                    <ColumnConstraints hgrow="ALWAYS" />
+                                </columnConstraints>
+                                <rowConstraints>
+                                    <RowConstraints />
+                                    <RowConstraints />
+                                    <RowConstraints />
+                                    <RowConstraints />
+                                    <RowConstraints />
+                                    <RowConstraints />
+                                    <RowConstraints />
+                                    <RowConstraints />
+                                </rowConstraints>
+
+                                <Label styleClass="user-form-label" text="Event Type"
+                                       GridPane.columnIndex="0" GridPane.rowIndex="0" />
+                                <ComboBox fx:id="eventTypeComboBox" maxWidth="9999"
+                                          GridPane.columnIndex="1" GridPane.rowIndex="0" />
+
+                                <Label styleClass="user-form-label" text="Headcount"
+                                       GridPane.columnIndex="0" GridPane.rowIndex="1" />
+                                <TextField fx:id="headcountField" promptText="e.g. 20" styleClass="user-input"
+                                           GridPane.columnIndex="1" GridPane.rowIndex="1" />
+
+                                <Label styleClass="user-form-label" text="Venue Base Fee (TND)"
+                                       GridPane.columnIndex="0" GridPane.rowIndex="2" />
+                                <TextField fx:id="venueBaseFeeField" promptText="e.g. 500" styleClass="user-input"
+                                           GridPane.columnIndex="1" GridPane.rowIndex="2" />
+
+                                <Label styleClass="user-form-label" text="Per-Person Fee (TND)"
+                                       GridPane.columnIndex="0" GridPane.rowIndex="3" />
+                                <TextField fx:id="venuePerPersonFeeField" promptText="e.g. 25" styleClass="user-input"
+                                           GridPane.columnIndex="1" GridPane.rowIndex="3" />
+
+                                <Label styleClass="user-form-label" text="Activities Total (TND)"
+                                       GridPane.columnIndex="0" GridPane.rowIndex="4" />
+                                <TextField fx:id="activitiesTotalField" promptText="e.g. 300" styleClass="user-input"
+                                           GridPane.columnIndex="1" GridPane.rowIndex="4" />
+
+                                <Label styleClass="user-form-label" text="Extra Services (TND)"
+                                       GridPane.columnIndex="0" GridPane.rowIndex="5" />
+                                <TextField fx:id="totalAmountField" promptText="e.g. 100" styleClass="user-input"
+                                           GridPane.columnIndex="1" GridPane.rowIndex="5" />
+
+                                <Label styleClass="user-form-label" text="Event Date"
+                                       GridPane.columnIndex="0" GridPane.rowIndex="6" />
+                                <DatePicker fx:id="calcEventDatePicker" maxWidth="9999"
+                                            GridPane.columnIndex="1" GridPane.rowIndex="6" />
+
+                                <Label styleClass="user-form-label" text="Coupon Code"
+                                       GridPane.columnIndex="0" GridPane.rowIndex="7" />
+                                <TextField fx:id="calcCouponCodeField" promptText="WELCOME10" styleClass="user-input"
+                                           GridPane.columnIndex="1" GridPane.rowIndex="7" />
+                            </GridPane>
+
+                            <Button onAction="#calculatePricing" maxWidth="9999"
+                                    text="Calculate Price"
+                                    style="-fx-background-color: #3b82f6; -fx-text-fill: white; -fx-font-weight: 700; -fx-font-size: 13px; -fx-padding: 10 24; -fx-background-radius: 10; -fx-cursor: hand;" />
+
+                            <Separator />
+                            <Label styleClass="card-title-web" text="Payment Schedule" style="-fx-font-size: 14px;" />
+
+                            <HBox spacing="10">
+                                <VBox spacing="4" HBox.hgrow="ALWAYS">
+                                    <Label styleClass="user-form-label" text="Deposit %" />
+                                    <TextField fx:id="depositPercentageField" promptText="30" styleClass="user-input" />
+                                </VBox>
+                                <VBox spacing="4" HBox.hgrow="ALWAYS">
+                                    <Label styleClass="user-form-label" text="Installments" />
+                                    <TextField fx:id="installmentCountField" promptText="2" styleClass="user-input" />
+                                </VBox>
+                            </HBox>
+
+                            <Button onAction="#generateSchedule" maxWidth="9999"
+                                    text="Generate Payment Schedule"
+                                    style="-fx-background-color: #10b981; -fx-text-fill: white; -fx-font-weight: 700; -fx-font-size: 13px; -fx-padding: 10 24; -fx-background-radius: 10; -fx-cursor: hand;" />
+                        </VBox>
+
+                        <!-- Results area -->
+                        <VBox spacing="12" HBox.hgrow="ALWAYS">
+                            <Label styleClass="card-title-web" text="Pricing Breakdown" style="-fx-font-size: 15px;" />
+                            <TextArea fx:id="pricingResultArea" editable="false" prefRowCount="22"
+                                      styleClass="user-textarea"
+                                      style="-fx-font-family: 'Monospace'; -fx-font-size: 12px;"
+                                      VBox.vgrow="ALWAYS" />
+
+                            <Label styleClass="card-title-web" text="Payment Schedule" style="-fx-font-size: 14px;" />
+                            <TableView fx:id="paymentScheduleTable" prefHeight="180" styleClass="table-web">
+                                <columns>
+                                    <TableColumn fx:id="schedInstallmentColumn" text="#"           prefWidth="40"  />
+                                    <TableColumn fx:id="schedDescriptionColumn" text="Description" prefWidth="160" />
+                                    <TableColumn fx:id="schedAmountColumn"      text="Amount (TND)" prefWidth="120" />
+                                    <TableColumn fx:id="schedDueDateColumn"     text="Due Date"    prefWidth="110" />
+                                    <TableColumn fx:id="schedDepositColumn"     text="Deposit?"    prefWidth="75"  />
+                                </columns>
+                                <columnResizePolicy>
+                                    <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                                </columnResizePolicy>
+                            </TableView>
+                        </VBox>
+
+                    </HBox>
+                </content>
+            </ScrollPane>
+        </Tab>
+
+    </TabPane>
+</VBox>

@@ -46,6 +46,7 @@
             <Button fx:id="navBookings" maxWidth="9999" onAction="#showBookings" styleClass="nav-btn" text="Booking" />
             <Button fx:id="navRequests" maxWidth="9999" onAction="#showRequests" styleClass="nav-btn" text="Requests" />
             <Button fx:id="navEnterprises" maxWidth="9999" onAction="#showEnterprises" styleClass="nav-btn" text="Entreprises" />
+            <Button fx:id="navPricing" maxWidth="9999" onAction="#showPricing" styleClass="nav-btn" text="Pricing" />
 
             <Region VBox.vgrow="ALWAYS" />
 
@@ -240,6 +241,11 @@
                                 <TableColumn fx:id="entrepriseActionColumn" text="Actions" />
                             </columns>
                         </TableView>
+                    </VBox>
+
+                    <!-- PAGE: Pricing -->
+                    <VBox fx:id="pagePricing" managed="false" spacing="10" styleClass="card-web" visible="false">
+                        <fx:include source="pricing.fxml" fx:id="pricingPanel" />
                     </VBox>
 
                 </VBox>

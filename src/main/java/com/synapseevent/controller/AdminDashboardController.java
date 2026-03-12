@@ -101,9 +101,9 @@ public class AdminDashboardController {
 
     @FXML private VBox sidebar;
 
-    @FXML private Button navDashboard, navUsers, navEvents, navBookings, navRequests, navEnterprises;
+    @FXML private Button navDashboard, navUsers, navEvents, navBookings, navRequests, navEnterprises, navPricing;
 
-    @FXML private VBox pageDashboard, pageUsers, pageEvents, pageBookings, pageRequests, pageEnterprises;
+    @FXML private VBox pageDashboard, pageUsers, pageEvents, pageBookings, pageRequests, pageEnterprises, pagePricing;
 
     @FXML private LineChart<String, Number> bookingsChart;
     @FXML private BarChart<String, Number> popularChart;
@@ -154,13 +154,13 @@ public class AdminDashboardController {
     }
     private void activate(Button b) {
         if (navDashboard == null) return; // means you’re not using the new FXML yet
-        Button[] all = {navDashboard, navUsers, navEvents, navBookings, navRequests, navEnterprises};
+        Button[] all = {navDashboard, navUsers, navEvents, navBookings, navRequests, navEnterprises, navPricing};
         for (Button x : all) if (x != null) x.getStyleClass().remove("active");
         if (b != null) b.getStyleClass().add("active");
     }
 
     private void showPage(VBox page) {
-        VBox[] all = {pageDashboard, pageUsers, pageEvents, pageBookings, pageRequests, pageEnterprises};
+        VBox[] all = {pageDashboard, pageUsers, pageEvents, pageBookings, pageRequests, pageEnterprises, pagePricing};
         for (VBox p : all) {
             if (p != null) { p.setVisible(false); p.setManaged(false); }
         }
@@ -1325,6 +1325,11 @@ private void openEventFormWithOptionalTemplate(String eventType) {
         showPage(pageEnterprises);
         loadEnterprises();
         updateStatistics();
+    }
+
+    @FXML private void showPricing() {
+        activate(navPricing);
+        showPage(pagePricing);
     }
     private void enableResponsiveSidebar() {
         if (sidebar == null) return;
