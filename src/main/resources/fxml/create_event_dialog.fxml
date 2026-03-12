@@ -13,43 +13,73 @@
            xmlns="http://javafx.com/javafx/17"
            xmlns:fx="http://javafx.com/fxml/1"
            fx:controller="com.synapseevent.controller.CreateEventDialogController"
-           styleClass="overlay-root">
+           style="-fx-background-color: rgba(0,0,0,0.45);">
 
-    <!-- The actual dialog card -->
-    <VBox fx:id="card" styleClass="dialog-card" maxWidth="460" prefWidth="460" spacing="18">
-        <padding>
-            <Insets top="18" right="18" bottom="18" left="18"/>
-        </padding>
+    <VBox fx:id="card" maxWidth="460" prefWidth="460" spacing="18"
+          style="-fx-background-color: white; -fx-background-radius: 16; -fx-border-radius: 16;
+                 -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.30), 24, 0, 0, 8);">
 
-        <!-- Header row -->
-        <HBox alignment="CENTER_LEFT" spacing="12">
-            <Label text="Create Event" styleClass="dialog-title"/>
-            <Region HBox.hgrow="ALWAYS"/>
-            <Button fx:id="closeBtn" text="✕" onAction="#onClose" styleClass="icon-close"/>
-        </HBox>
-
-        <Region styleClass="divider"/>
+        <!-- Blue gradient header -->
+        <VBox style="-fx-background-color: linear-gradient(to right, #1e40af, #3b82f6);
+                     -fx-background-radius: 16 16 0 0; -fx-padding: 16 20;">
+            <HBox alignment="CENTER_LEFT" spacing="12">
+                <Label text="🎉  Create Event"
+                       style="-fx-text-fill: white; -fx-font-size: 18; -fx-font-weight: bold;
+                              -fx-font-family: 'Segoe UI';" />
+                <Region HBox.hgrow="ALWAYS" />
+                <Button fx:id="closeBtn" text="✕" onAction="#onClose"
+                        style="-fx-background-color: rgba(255,255,255,0.20); -fx-text-fill: white;
+                               -fx-font-size: 13; -fx-padding: 4 9; -fx-background-radius: 8;
+                               -fx-border-color: transparent; -fx-cursor: hand;" />
+            </HBox>
+            <Label text="Choose the type of event to create"
+                   style="-fx-text-fill: rgba(255,255,255,0.80); -fx-font-size: 12;
+                          -fx-font-family: 'Segoe UI'; -fx-padding: 4 0 0 0;" />
+        </VBox>
 
         <!-- Content -->
-        <VBox spacing="8">
-            <Label text="Select Event Type" styleClass="field-label"/>
-            <ComboBox fx:id="eventTypeCombo" promptText="Choose type..." styleClass="combo"/>
+        <VBox spacing="10" style="-fx-padding: 20 20 0 20;">
+            <Label text="Event Type"
+                   style="-fx-font-size: 12; -fx-font-weight: 700; -fx-text-fill: #1e40af;
+                          -fx-font-family: 'Segoe UI';" />
+            <ComboBox fx:id="eventTypeCombo" promptText="Choose type..." maxWidth="9999"
+                      style="-fx-background-color: white; -fx-border-color: #cbd5e1;
+                             -fx-border-width: 1.5; -fx-border-radius: 8; -fx-background-radius: 8;
+                             -fx-font-size: 13; -fx-font-family: 'Segoe UI'; -fx-pref-height: 36;" />
         </VBox>
 
         <!-- Info box -->
-        <HBox spacing="10" styleClass="info-box" alignment="CENTER_LEFT">
-            <Label text="i" styleClass="info-icon"/>
-            <Label wrapText="true"
-                   text="New events will be added to the SynapseEvent global calendar. You can configure notifications after creation."
-                   styleClass="info-text"/>
+        <HBox spacing="10" alignment="CENTER_LEFT"
+              style="-fx-background-color: #eff6ff; -fx-border-color: #bfdbfe; -fx-border-width: 1;
+                     -fx-border-radius: 8; -fx-background-radius: 8; -fx-padding: 10 14;
+                     -fx-margin: 0 20;">
+            <padding>
+                <Insets left="20" right="20" />
+            </padding>
+            <Label text="ℹ"
+                   style="-fx-font-size: 14; -fx-text-fill: #3b82f6; -fx-font-weight: bold;" />
+            <Label wrapText="true" maxWidth="360"
+                   text="New events will be added to the SynapseEvent global calendar."
+                   style="-fx-font-size: 12; -fx-text-fill: #1e40af;
+                          -fx-font-family: 'Segoe UI';" />
         </HBox>
 
-        <Region styleClass="spacer" VBox.vgrow="ALWAYS"/>
+        <Region VBox.vgrow="ALWAYS" prefHeight="10" />
 
         <!-- Buttons row -->
-        <HBox alignment="CENTER_RIGHT" spacing="10">
-            <Button fx:id="cancelBtn" text="Cancel" onAction="#onCancel" styleClass="btn-secondary"/>
-            <Button fx:id="okBtn" text="OK" onAction="#onOk" styleClass="btn-primary"/>
+        <HBox alignment="CENTER_RIGHT" spacing="10" style="-fx-padding: 0 20 20 20;">
+            <Button fx:id="cancelBtn" text="Cancel" onAction="#onCancel"
+                    style="-fx-background-color: transparent; -fx-text-fill: #6b7280;
+                           -fx-border-color: #d1d5db; -fx-border-width: 1;
+                           -fx-border-radius: 8; -fx-background-radius: 8;
+                           -fx-font-weight: 600; -fx-font-size: 13; -fx-padding: 8 20;
+                           -fx-cursor: hand; -fx-font-family: 'Segoe UI';" />
+            <Button fx:id="okBtn" text="✓  Create" onAction="#onOk"
+                    style="-fx-background-color: #3b82f6; -fx-text-fill: white;
+                           -fx-border-color: transparent; -fx-border-radius: 8; -fx-background-radius: 8;
+                           -fx-font-weight: 700; -fx-font-size: 13; -fx-padding: 8 20;
+                           -fx-cursor: hand; -fx-font-family: 'Segoe UI';
+                           -fx-effect: dropshadow(gaussian, rgba(59,130,246,0.35), 8, 0, 0, 3);" />
         </HBox>
     </VBox>
 </StackPane>

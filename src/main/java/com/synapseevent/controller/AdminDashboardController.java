@@ -40,7 +40,7 @@ public class AdminDashboardController {
     @FXML private Label totalEventsLabel;
     @FXML private Label pendingBookingsLabel;
     @FXML private Label openRequestsLabel;
-
+    @FXML private Label adminTopTitle;
     // Users Tab
     @FXML private TableView<User> usersTable;
     @FXML private TableColumn<User, String> userNameColumn;
@@ -1288,6 +1288,7 @@ private void openEventFormWithOptionalTemplate(String eventType) {
     @FXML private void showDashboard() {
         activate(navDashboard);
         showPage(pageDashboard);
+        if (adminTopTitle != null) adminTopTitle.setText("Dashboard");
         updateStatistics();
         setupChartsIfNeeded();
     }
@@ -1295,6 +1296,7 @@ private void openEventFormWithOptionalTemplate(String eventType) {
     @FXML private void showUsers() {
         activate(navUsers);
         showPage(pageUsers);
+        if (adminTopTitle != null) adminTopTitle.setText("Users");
         loadUsers();
         updateStatistics();
     }
@@ -1302,6 +1304,7 @@ private void openEventFormWithOptionalTemplate(String eventType) {
     @FXML private void showEvents() {
         activate(navEvents);
         showPage(pageEvents);
+        if (adminTopTitle != null) adminTopTitle.setText("Events");
         loadEvents();
         updateStatistics();
     }
@@ -1309,6 +1312,7 @@ private void openEventFormWithOptionalTemplate(String eventType) {
     @FXML private void showBookings() {
         activate(navBookings);
         showPage(pageBookings);
+        if (adminTopTitle != null) adminTopTitle.setText("Bookings");
         loadBookings();
         updateStatistics();
     }
@@ -1316,6 +1320,7 @@ private void openEventFormWithOptionalTemplate(String eventType) {
     @FXML private void showRequests() {
         activate(navRequests);
         showPage(pageRequests);
+        if (adminTopTitle != null) adminTopTitle.setText("Custom Requests");
         loadCustomRequests();
         updateStatistics();
     }
@@ -1323,6 +1328,7 @@ private void openEventFormWithOptionalTemplate(String eventType) {
     @FXML private void showEnterprises() {
         activate(navEnterprises);
         showPage(pageEnterprises);
+        if (adminTopTitle != null) adminTopTitle.setText("Enterprises");
         loadEnterprises();
         updateStatistics();
     }
@@ -1330,6 +1336,7 @@ private void openEventFormWithOptionalTemplate(String eventType) {
     @FXML private void showPricing() {
         activate(navPricing);
         showPage(pagePricing);
+        if (adminTopTitle != null) adminTopTitle.setText("Pricing");
     }
     private void enableResponsiveSidebar() {
         if (sidebar == null) return;

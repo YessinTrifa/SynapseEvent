@@ -440,7 +440,7 @@
 
                             <Button onAction="#generateSchedule" maxWidth="9999"
                                     text="Generate Payment Schedule"
-                                    style="-fx-background-color: #10b981; -fx-text-fill: white; -fx-font-weight: 700; -fx-font-size: 13px; -fx-padding: 10 24; -fx-background-radius: 10; -fx-cursor: hand;" />
+                                    style="-fx-background-color: #22c55e; -fx-text-fill: white; -fx-font-weight: 700; -fx-font-size: 13px; -fx-padding: 10 24; -fx-background-radius: 10; -fx-cursor: hand;" />
                         </VBox>
 
                         <!-- Results area -->
